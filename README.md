@@ -1,5 +1,14 @@
 ## 프로젝트
 
+---
+
+### 프로젝트 분석 및 설계
+- [마일스톤](https://github.com/users/ahdrn2016/projects/1)
+- [시퀀스 다이어그램](docs/SequenceDiagram/SequenceDiagram.md)
+- [ERD](docs/erd/ERD.md)
+
+---
+
 ## Getting Started
 
 ### Prerequisites
