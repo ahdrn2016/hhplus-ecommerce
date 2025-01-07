@@ -33,9 +33,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/balance/charge")
-    public ResponseEntity<BalanceResponse> chargeBalance(@RequestBody ChargeBalanceRequest request) {
-        BalanceResponse response = new BalanceResponse();
     @PostMapping(path="/balance/charge", produces = { "application/json" }, consumes = { "application/json" })
     @Operation(summary = "잔액 충전", description = "유저의 잔액을 충전합니다.", tags = { "users" })
     @ApiResponses(value = {
