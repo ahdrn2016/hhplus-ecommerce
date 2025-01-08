@@ -1,10 +1,9 @@
 package kr.hhplus.be.server.domain.product;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class Product {
 
@@ -13,8 +12,12 @@ public class Product {
     private Long id;
 
     private String name;
+
     private int price;
-    private ProductStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private ProductStatus productStatus;
+
     private int stock;
 
 }

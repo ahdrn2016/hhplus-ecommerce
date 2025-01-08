@@ -51,6 +51,10 @@ dependencies {
 	// Lombok
 	compileOnly ("org.projectlombok:lombok")
 	annotationProcessor ("org.projectlombok:lombok")
+
+	// Query DSL
+	implementation ("com.querydsl:querydsl-jpa:5.0.0")
+	annotationProcessor ("com.querydsl:querydsl-apt:5.0.0:jpa")
 }
 
 tasks.withType<Test> {
