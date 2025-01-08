@@ -1,12 +1,12 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Getter
 @Entity
 public class Coupon {
 
@@ -15,8 +15,16 @@ public class Coupon {
     private Long id;
 
     private String name;
+
     private int amount;
+
     private LocalDateTime validStartDate;
+
     private LocalDateTime validEndDate;
+
     private int quantity;
+
+    @OneToMany(mappedBy = "coupon")
+    private List<UserCoupon> userCoupons;
+
 }

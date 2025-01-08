@@ -1,12 +1,12 @@
 package kr.hhplus.be.server.interfaces.api.user;
 
-import kr.hhplus.be.server.application.user.UserParam;
+import kr.hhplus.be.server.domain.user.UserCommand;
 
 public class UserRequest {
 
     public record ChargeBalance(Long userId, int amount) {
-        public UserParam.ChargeBalance toParam() {
-            return UserParam.ChargeBalance.builder()
+        public UserCommand.ChargeBalance toCommand() {
+            return UserCommand.ChargeBalance.builder()
                     .userId(userId)
                     .amount(amount)
                     .build();

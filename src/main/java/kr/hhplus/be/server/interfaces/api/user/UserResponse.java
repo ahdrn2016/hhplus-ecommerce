@@ -4,7 +4,6 @@ import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class UserResponse {
 
@@ -13,12 +12,12 @@ public class UserResponse {
         public Balance {}
     }
 
-    public record UserCoupons(Long userId, List<UserCoupon> userCoupons) {
+    public record UserCoupon(Long userId, Coupon coupon) {
         @Builder
-        public UserCoupons{}
+        public UserCoupon{}
     }
 
-    public static class UserCoupon {
+    public static class Coupon {
         private Long couponId;
         private String name;
         private BigDecimal amount;
