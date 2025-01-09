@@ -16,7 +16,7 @@ public class Product {
     private int price;
 
     @Enumerated(EnumType.STRING)
-    private ProductStatus productStatus;
+    private ProductStatus status;
 
     private int stock;
 
