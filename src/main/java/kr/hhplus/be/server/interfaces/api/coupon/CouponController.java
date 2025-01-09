@@ -17,10 +17,10 @@ public class CouponController {
 
     @GetMapping(path = "/coupons/{userId}", produces = { "application/json" })
     @Operation(summary = "보유 쿠폰 조회", description = "유저의 보유 쿠폰을 조회합니다.", tags = { "coupon" })
-    public ResponseEntity<List<CouponResponse.Coupons>> getCoupons(
+    public ResponseEntity<List<CouponResponse.Coupon>> getCoupons(
             @PathVariable Long userId
     ) {
-        List<CouponResponse.Coupons> response = couponService.getCoupons(userId);
+        List<CouponResponse.Coupon> response = couponService.getCoupons(userId);
         return ResponseEntity.ok(response);
     }
 

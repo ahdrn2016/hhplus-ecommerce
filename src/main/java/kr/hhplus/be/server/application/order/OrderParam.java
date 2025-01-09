@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.order;
 
+import kr.hhplus.be.server.domain.product.ProductCommand;
 import kr.hhplus.be.server.interfaces.api.order.OrderRequest;
 import lombok.Builder;
 
@@ -24,6 +25,13 @@ public class OrderParam {
             return OrderProduct.builder()
                     .productId(orderProductRequest.productId())
                     .quantity(orderProductRequest.quantity())
+                    .build();
+        }
+
+        public ProductCommand.OrderProduct toCommand() {
+            return ProductCommand.OrderProduct.builder()
+                    .productId(productId)
+                    .quantity(quantity)
                     .build();
         }
     }

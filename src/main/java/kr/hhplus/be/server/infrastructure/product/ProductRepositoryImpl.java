@@ -25,8 +25,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final ProductJpaRepository productJpaRepository;
 
     @Override
-    public Page<Product> findAllByProductStatus(ProductStatus productStatus, PageRequest pageable) {
-        return productJpaRepository.findAllByProductStatus(productStatus, pageable);
+    public Page<Product> findAllByStatus(ProductStatus status, PageRequest pageable) {
+        return productJpaRepository.findAllByStatus(status, pageable);
     }
 
     @Override
@@ -47,8 +47,8 @@ public class ProductRepositoryImpl implements ProductRepository {
                         qOrderProduct.quantity.sum().as("totalQuantity")
                 ))
                 .from(qOrderProduct)
-                .join(qOrder).on(qOrderProduct.orderId.eq(qOrder.id))
-                .join(qProduct).on(qOrderProduct.productId.eq(qProduct.id))
+                .join(qOrder).on(qOrderProduct.order.id.eq(qOrder.id))
+                .join(qProduct).on(qOrderProduct.product.id.eq(qProduct.id))
                 .where(qOrder.createdAt.goe(threeDaysAgo))
                 .groupBy(qProduct.id, qProduct.name, qProduct.price)
                 .orderBy(qOrderProduct.quantity.sum().desc())
@@ -56,6 +56,16 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .fetch();
 
         return result;
+    }
+
+    @Override
+    public boolean existsByIdInAndStatus(List<Long> productIds, ProductStatus status) {
+        return productJpaRepository.existsByIdInAndStatus(productIds, status);
+    }
+
+    @Override
+    public List<Product> findAllByIdIn(List<Long> productIds) {
+        return productJpaRepository.findAllByIdIn(productIds);
     }
 
 }

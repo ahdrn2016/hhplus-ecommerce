@@ -47,4 +47,12 @@ public class User {
 
         this.balance += amount;
     }
+
+    public void minusBalance(int amount) {
+        if (this.balance < amount) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE);
+        }
+
+        this.balance -= amount;
+    }
 }

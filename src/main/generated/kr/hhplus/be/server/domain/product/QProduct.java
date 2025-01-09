@@ -25,7 +25,7 @@ public class QProduct extends EntityPathBase<Product> {
 
     public final NumberPath<Integer> price = createNumber("price", Integer.class);
 
-    public final EnumPath<ProductStatus> productStatus = createEnum("productStatus", ProductStatus.class);
+    public final EnumPath<ProductStatus> status = createEnum("status", ProductStatus.class);
 
     public final NumberPath<Integer> stock = createNumber("stock", Integer.class);
 

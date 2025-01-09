@@ -7,8 +7,11 @@ import java.util.List;
 
 public interface ProductRepository {
 
-    Page<Product> findAllByProductStatus(ProductStatus productStatus, PageRequest pageable);
+    Page<Product> findAllByStatus(ProductStatus status, PageRequest pageable);
 
     List<ProductInfo.PopularProduct> findPopularProducts();
 
+    boolean existsByIdInAndStatus(List<Long> productIds, ProductStatus status);
+
+    List<Product> findAllByIdIn(List<Long> productIds);
 }

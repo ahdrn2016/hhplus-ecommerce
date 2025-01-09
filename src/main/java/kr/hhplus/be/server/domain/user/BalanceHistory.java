@@ -28,10 +28,10 @@ public class BalanceHistory extends BaseEntity {
         this.amount = amount;
     }
 
-    public static BalanceHistory create(Long userId, int amount) {
+    public static BalanceHistory create(Long userId, BalanceHistoryType type, int amount) {
         return BalanceHistory.builder()
                 .userId(userId)
-                .type(BalanceHistoryType.CHARGE)
+                .type(type)
                 .amount(amount)
                 .build();
     }

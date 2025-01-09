@@ -2,6 +2,7 @@ package kr.hhplus.be.server.infrastructure.coupon;
 
 import kr.hhplus.be.server.domain.coupon.UserCoupon;
 import kr.hhplus.be.server.domain.coupon.UserCouponRepository;
+import kr.hhplus.be.server.domain.coupon.UserCouponStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -26,6 +27,11 @@ public class UserCouponRepositoryImpl implements UserCouponRepository {
     @Override
     public UserCoupon save(UserCoupon userCoupon) {
         return userCouponJpaRepository.save(userCoupon);
+    }
+
+    @Override
+    public UserCoupon findByUserIdAndCouponIdAndStatus(Long userId, Long couponId, UserCouponStatus status) {
+        return userCouponJpaRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, status);
     }
 
 }

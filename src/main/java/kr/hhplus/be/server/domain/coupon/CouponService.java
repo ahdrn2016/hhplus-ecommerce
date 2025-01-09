@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -16,7 +15,7 @@ public class CouponService {
     private final UserCouponRepository userCouponRepository;
     private final CouponRepository couponRepository;
 
-    public List<CouponResponse.Coupons> getCoupons(Long userId) {
+    public List<CouponResponse.Coupon> getCoupons(Long userId) {
         List<UserCoupon> userCoupons = userCouponRepository.findCouponsByUserId(userId);
         return CouponInfo.toResponse(userCoupons);
     }
@@ -40,5 +39,15 @@ public class CouponService {
         coupon.issue();
 
         return UserCoupon.create(coupon);
+    }
+
+    public CouponResponse.Coupon useCoupon(Long userId, Long couponId) {
+        UserCoupon userCoupon = getUserCoupon(userId, couponId);
+        userCoupon.used();
+        return CouponInfo.toResult(userCoupon);
+    }
+
+    private UserCoupon getUserCoupon(Long userId, Long couponId) {
+        return userCouponRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, UserCouponStatus.UNUSED);
     }
 }

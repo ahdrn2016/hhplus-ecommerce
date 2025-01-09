@@ -41,4 +41,11 @@ public class UserCoupon {
                 .status(UserCouponStatus.UNUSED)
                 .build();
     }
+
+    public void used() {
+        if (status == UserCouponStatus.USED) {
+            throw new CustomException(ErrorCode.ALREADY_USED_COUPON);
+        }
+        this.status = UserCouponStatus.USED;
+    }
 }

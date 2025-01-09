@@ -8,4 +8,9 @@ public class CouponCommand {
         @Builder
         public IssueCoupon {}
     }
+
+    public record OrderCoupon(Long couponId, int amount) {
+        @Builder
+        public OrderCoupon {}
+    }
 }

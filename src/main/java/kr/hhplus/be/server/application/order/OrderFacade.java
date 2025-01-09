@@ -1,8 +1,12 @@
 package kr.hhplus.be.server.application.order;
 
 import kr.hhplus.be.server.domain.coupon.CouponService;
+import kr.hhplus.be.server.domain.order.OrderService;
+import kr.hhplus.be.server.domain.product.ProductCommand;
 import kr.hhplus.be.server.domain.product.ProductService;
+import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.user.UserService;
+import kr.hhplus.be.server.interfaces.api.coupon.CouponResponse;
 import kr.hhplus.be.server.interfaces.api.order.OrderResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,22 +19,26 @@ public class OrderFacade {
 
     private final CouponService couponService;
     private final ProductService productService;
+    private final OrderService orderService;
     private final UserService userService;
 
     public OrderResponse.Order createOrder(OrderParam.CreateOrder param) {
-        Long userId = param.userId();
-        Long couponId = param.couponId();
-        List<OrderParam.OrderProduct> products = param.products();
+        List<ProductCommand.OrderProduct> products = param.products().stream()
+                .map(OrderParam.OrderProduct::toCommand)
+                .toList();
 
-        // 쿠폰 -> 쿠폰 확인
-//        couponService.getCoupon(param.couponId());
+        CouponResponse.Coupon userCoupon = null;
+        // 쿠폰 사용
+        if (param.couponId() != null) {
+            userCoupon = couponService.useCoupon(param.userId(), param.couponId());
+        }
 
-        // 상품 -> 판매 상태, 재고 확인, 재고 차감
+        // 재고 차감
+        productService.deductStock(products);
 
-        // 재고 차감, 결제 금액 계산
+        // 주문 생성
+        OrderResult.Order order = orderService.createOrder(param.userId(), userCoupon.toCommand(), products);
 
-        // 결제 -> 금액 조회, 금액 차감, 결제 기록
-
-        return null;
+        return OrderResult.toResponse(order);
     }
 }

@@ -6,8 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ProductJpaRepository extends JpaRepository<Product, Long> {
 
-    Page<Product> findAllByProductStatus(ProductStatus productStatus, PageRequest pageable);
+    boolean existsByIdInAndStatus(List<Long> productIds, ProductStatus status);
 
+    Page<Product> findAllByStatus(ProductStatus status, PageRequest pageable);
+
+    List<Product> findAllByIdIn(List<Long> productIds);
 }
