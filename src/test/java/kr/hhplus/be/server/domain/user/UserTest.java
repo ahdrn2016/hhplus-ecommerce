@@ -32,4 +32,27 @@ public class UserTest {
         // then
         assertEquals(15000, user.getBalance());
     }
+
+    @Test
+    public void 잔액_사용_시_요청금액이_크면_예외가_발생한다() {
+        // given
+        User user = User.create(1L, 10000);
+
+        // when // then
+        assertThatThrownBy(() -> user.minusBalance(20000))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(ErrorCode.INSUFFICIENT_BALANCE.getMessage());
+    }
+
+    @Test
+    public void 잔액_사용_시_요청금액이_정상이면_보유잔액에서_차감한다() {
+        // given
+        User user = User.create(1L, 10000);
+
+        // when
+        user.minusBalance(5000);
+
+        // then
+        assertEquals(5000, user.getBalance());
+    }
 }
