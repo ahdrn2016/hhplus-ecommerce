@@ -1,10 +1,6 @@
 package kr.hhplus.be.server.interfaces.api.order;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import kr.hhplus.be.server.application.order.OrderFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,6 @@
 package kr.hhplus.be.server.interfaces.api.coupon;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import kr.hhplus.be.server.domain.coupon.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +26,8 @@ public class CouponController {
 
     @PostMapping(path = "/issue", produces = { "application/json" }, consumes = { "application/json" })
     @Operation(summary = "쿠폰 발급", description = "쿠폰을 발급합니다.", tags = { "coupon" })
-    public ResponseEntity<CouponResponse.issueCoupon> issueCoupon(@RequestBody CouponRequest.issueCoupon request) {
-        CouponResponse.issueCoupon response = couponService.issueCoupon(request.toCommand());
+    public ResponseEntity<CouponResponse.IssueCoupon> issueCoupon(@RequestBody CouponRequest.issueCoupon request) {
+        CouponResponse.IssueCoupon response = couponService.issueCoupon(request.toCommand());
         return ResponseEntity.ok(response);
     }
 

@@ -35,9 +35,10 @@ public class UserCoupon {
         this.status = status;
     }
 
-    public static void duplicateCheck(UserCoupon userCoupon) {
-        if (userCoupon != null) {
-            throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
-        }
+    public static UserCoupon create(Coupon coupon) {
+        return UserCoupon.builder()
+                .coupon(coupon)
+                .status(UserCouponStatus.UNUSED)
+                .build();
     }
 }

@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.domain.coupon;
 
 import kr.hhplus.be.server.interfaces.api.coupon.CouponResponse;
+import kr.hhplus.be.server.support.exception.CustomException;
+import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,20 +21,24 @@ public class CouponService {
         return CouponInfo.toResponse(userCoupons);
     }
 
-    public CouponResponse.issueCoupon issueCoupon(CouponCommand.IssueCoupon command) {
+    public CouponResponse.IssueCoupon issueCoupon(CouponCommand.IssueCoupon command) {
         Long userId = command.userId();
         Long couponId = command.couponId();
 
-        // 유저 쿠폰 있는지 조회
-        UserCoupon userCoupon = userCouponRepository.findCouponByUserIdAndCouponId(userId, couponId);
-        userCoupon.duplicateCheck(userCoupon);
+        UserCoupon userCoupon = createUserCoupon(userId, couponId);
+        UserCoupon savedUserCoupon = userCouponRepository.save(userCoupon);
+        return CouponInfo.toResponse(savedUserCoupon);
+    }
 
-        // 쿠폰 선착순 재고
+    private UserCoupon createUserCoupon(Long userId, Long couponId) {
+        UserCoupon userCoupon = userCouponRepository.findCouponByUserIdAndCouponId(userId, couponId);
+        if (userCoupon != null) {
+            throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
+        }
+
         Coupon coupon = couponRepository.findByIdWithLock(couponId);
         coupon.issue();
 
-        UserCoupon result = userCouponRepository.save(userCoupon);
-
-        return null;
+        return UserCoupon.create(coupon);
     }
 }

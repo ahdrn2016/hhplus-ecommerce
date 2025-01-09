@@ -23,9 +23,9 @@ public class CouponResponse {
         }
     }
 
-    public record issueCoupon(Long couponId, String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate) {
+    public record IssueCoupon(Long couponId, String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate) {
         @Builder
-        public issueCoupon {}
+        public IssueCoupon {}
     }
 
 }
