@@ -53,8 +53,9 @@ dependencies {
 	annotationProcessor ("org.projectlombok:lombok")
 
 	// Query DSL
-	implementation ("com.querydsl:querydsl-jpa:5.0.0")
-	annotationProcessor ("com.querydsl:querydsl-apt:5.0.0:jpa")
+	implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+	annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta")
+	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 }
 
 tasks.withType<Test> {
