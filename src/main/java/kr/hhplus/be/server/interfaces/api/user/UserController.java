@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.interfaces.api.user;
 
 import io.swagger.v3.oas.annotations.Operation;
+import kr.hhplus.be.server.application.user.UserFacade;
 import kr.hhplus.be.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserFacade userFacade;
 
     @GetMapping(path = "/balance/{userId}", produces = { "application/json" })
     @Operation(summary = "잔액 조회", description = "유저의 잔액을 조회합니다.", tags = { "user" })
@@ -27,7 +29,7 @@ public class UserController {
     public ResponseEntity<UserResponse.Balance> chargeBalance(
             @RequestBody UserRequest.ChargeBalance request
     ) {
-        UserResponse.Balance response = userService.chargeBalance(request.toCommand());
+        UserResponse.Balance response = userFacade.chargeBalance(request.toParam());
         return ResponseEntity.ok(response);
     }
 

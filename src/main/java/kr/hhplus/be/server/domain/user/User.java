@@ -28,14 +28,16 @@ public class User {
     private List<UserCoupon> userCoupons;
 
     @Builder
-    public User(Long id, int balance) {
+    public User(Long id, String name, int balance) {
         this.id = id;
+        this.name = name;
         this.balance = balance;
     }
 
-    public static User create(long id, int balance) {
+    public static User create(long id, String name, int balance) {
         return User.builder()
                 .id(id)
+                .name(name)
                 .balance(balance)
                 .build();
     }
