@@ -12,7 +12,7 @@ public class UserTest {
     @Test
     public void 잔액_충전_시_요청금액이_0원이면_실패한다() {
         // given
-        User user = User.create(1L, 0);
+        User user = User.create(1L, "유혜원",0);
         int amount = 0;
 
         // when // then
@@ -24,7 +24,7 @@ public class UserTest {
     @Test
     public void 잔액_충전_시_요청금액이_정상이면_보유잔액에_합산한다() {
         // given
-        User user = User.create(1L, 10000);
+        User user = User.create(1L, "유혜원", 10000);
 
         // when
         user.addBalance(5000);
@@ -36,7 +36,7 @@ public class UserTest {
     @Test
     public void 잔액_사용_시_요청금액이_크면_예외가_발생한다() {
         // given
-        User user = User.create(1L, 10000);
+        User user = User.create(1L, "유혜원", 10000);
 
         // when // then
         assertThatThrownBy(() -> user.minusBalance(20000))
@@ -47,7 +47,7 @@ public class UserTest {
     @Test
     public void 잔액_사용_시_요청금액이_정상이면_보유잔액에서_차감한다() {
         // given
-        User user = User.create(1L, 10000);
+        User user = User.create(1L, "유혜원", 10000);
 
         // when
         user.minusBalance(5000);
