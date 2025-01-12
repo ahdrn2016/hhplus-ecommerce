@@ -12,7 +12,7 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public User findBalanceByUserId(Long userId) {
+    public User findById(Long userId) {
 
         return null;
     }

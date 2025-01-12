@@ -11,19 +11,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final BalanceHistoryRepository balanceHistoryRepository;
 
-    public UserResponse.Balance getBalance(Long userId) {
-        User user = userRepository.findBalanceByUserId(userId);
+    public UserResponse.UserDto getUser(Long userId) {
+        User user = userRepository.findById(userId);
         return UserInfo.toResponse(user);
     }
 
-    public UserResponse.Balance chargeBalance(Long userId, int amount) {
-        User user = userRepository.findBalanceByUserId(userId);
+    public UserResponse.UserDto chargeBalance(Long userId, int amount) {
+        User user = userRepository.findById(userId);
         user.addBalance(amount);
         return UserInfo.toResponse(user);
     }
 
-    public UserResponse.Balance useBalance(Long userId, int amount) {
-        User user = userRepository.findBalanceByUserId(userId);
+    public UserResponse.UserDto useBalance(Long userId, int amount) {
+        User user = userRepository.findById(userId);
         user.minusBalance(amount);
         return UserInfo.toResponse(user);
     }

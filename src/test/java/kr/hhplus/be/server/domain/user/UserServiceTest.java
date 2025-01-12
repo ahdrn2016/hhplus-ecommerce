@@ -45,10 +45,10 @@ class UserServiceTest {
 
         User user = User.create(userId, "유혜원", balance);
 
-        given(userRepository.findBalanceByUserId(userId)).willReturn(user);
+        given(userRepository.findById(userId)).willReturn(user);
 
         // when
-        UserResponse.Balance result = userService.chargeBalance(userId, amount);
+        UserResponse.UserDto result = userService.chargeBalance(userId, amount);
 
         // then
         assertEquals(totalAmount, result.balance());
@@ -75,10 +75,10 @@ class UserServiceTest {
 
         User user = User.create(userId, "유혜원", balance);
 
-        given(userRepository.findBalanceByUserId(userId)).willReturn(user);
+        given(userRepository.findById(userId)).willReturn(user);
 
         // when
-        UserResponse.Balance result = userService.useBalance(userId, amount);
+        UserResponse.UserDto result = userService.useBalance(userId, amount);
 
         // then
         assertEquals(totalAmount, result.balance());

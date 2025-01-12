@@ -12,12 +12,15 @@ public class UserFacade {
 
     private final UserService userService;
 
-    public UserResponse.Balance chargeBalance(UserParam.ChargeBalance param) {
+    public UserResponse.UserDto chargeBalance(UserParam.ChargeBalance param) {
         Long userId = param.userId();
         int amount = param.amount();
 
-        userService.chargeBalance(userId, amount);
+        // 잔액 충전
+        UserResponse.UserDto user = userService.chargeBalance(userId, amount);
+        // 잔액 충전 기록
         userService.setBalanceHistory(userId, BalanceHistoryType.CHARGE, amount);
-        return null;
+
+        return user;
     }
 }

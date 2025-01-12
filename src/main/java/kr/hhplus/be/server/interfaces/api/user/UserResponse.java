@@ -4,9 +4,13 @@ import lombok.Builder;
 
 public class UserResponse {
 
-    public record Balance(Long userId, int balance) {
+    public record UserDto(
+            Long userId,
+            String name,
+            int balance
+    ) {
         @Builder
-        public Balance {}
+        public UserDto {}
     }
 
 }
