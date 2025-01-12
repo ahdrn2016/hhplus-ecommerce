@@ -3,13 +3,16 @@ package kr.hhplus.be.server.domain.coupon;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Coupon {
 
     @Id
@@ -26,8 +29,26 @@ public class Coupon {
 
     private int quantity;
 
-    @OneToMany(mappedBy = "coupon")
-    private List<UserCoupon> userCoupons;
+    @Builder
+    public Coupon(Long id, String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.amount = amount;
+        this.validStartDate = validStartDate;
+        this.validEndDate = validEndDate;
+        this.quantity = quantity;
+    }
+
+    public static Coupon create(Long couponId, String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
+        return Coupon.builder()
+                .id(couponId)
+                .name(name)
+                .amount(amount)
+                .validStartDate(validStartDate)
+                .validEndDate(validEndDate)
+                .quantity(quantity)
+                .build();
+    }
 
     public void issue() {
         if (this.quantity <= 0) {

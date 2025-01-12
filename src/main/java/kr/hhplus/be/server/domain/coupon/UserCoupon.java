@@ -1,9 +1,6 @@
 package kr.hhplus.be.server.domain.coupon;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.user.User;
-import kr.hhplus.be.server.support.exception.CustomException;
-import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,34 +15,29 @@ public class UserCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_id")
-    private Coupon coupon;
+    private Long couponId;
 
     @Enumerated(EnumType.STRING)
     private UserCouponStatus status;
 
     @Builder
-    public UserCoupon(Coupon coupon, UserCouponStatus status) {
-        this.coupon = coupon;
+    public UserCoupon(Long userId, Long couponId, UserCouponStatus status) {
+        this.userId = userId;
+        this.couponId = couponId;
         this.status = status;
     }
 
-    public static UserCoupon create(Coupon coupon) {
+    public static UserCoupon create(Long userId, Long couponId, UserCouponStatus status) {
         return UserCoupon.builder()
-                .coupon(coupon)
-                .status(UserCouponStatus.UNUSED)
+                .userId(userId)
+                .couponId(couponId)
+                .status(status)
                 .build();
     }
 
     public void used() {
-        if (status == UserCouponStatus.USED) {
-            throw new CustomException(ErrorCode.ALREADY_USED_COUPON);
-        }
         this.status = UserCouponStatus.USED;
     }
 }

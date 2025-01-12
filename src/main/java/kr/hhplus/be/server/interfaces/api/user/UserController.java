@@ -17,19 +17,19 @@ public class UserController {
 
     @GetMapping(path = "/balance/{userId}", produces = { "application/json" })
     @Operation(summary = "잔액 조회", description = "유저의 잔액을 조회합니다.", tags = { "user" })
-    public ResponseEntity<UserResponse.Balance> getBalance(
+    public ResponseEntity<UserResponse.UserDto> getBalance(
             @PathVariable Long userId
     ) {
-        UserResponse.Balance response = userService.getBalance(userId);
+        UserResponse.UserDto response = userService.getUser(userId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping(path = "/balance/charge", produces = { "application/json" }, consumes = { "application/json" })
     @Operation(summary = "잔액 충전", description = "유저의 잔액을 충전합니다.", tags = { "user" })
-    public ResponseEntity<UserResponse.Balance> chargeBalance(
+    public ResponseEntity<UserResponse.UserDto> chargeBalance(
             @RequestBody UserRequest.ChargeBalance request
     ) {
-        UserResponse.Balance response = userFacade.chargeBalance(request.toParam());
+        UserResponse.UserDto response = userFacade.chargeBalance(request.toParam());
         return ResponseEntity.ok(response);
     }
 

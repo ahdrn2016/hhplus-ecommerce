@@ -6,29 +6,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CouponInfo {
-    public static List<CouponResponse.Coupon> toResponse(List<UserCoupon> userCoupons) {
+    public static List<CouponResponse.UserCouponDto> toResponse(List<UserCoupon> userCoupons) {
         return userCoupons.stream()
-                .map(CouponResponse.Coupon::of)
+                .map(CouponResponse.UserCouponDto::of)
                 .collect(Collectors.toList());
     }
 
-    public static CouponResponse.IssueCoupon toResponse(UserCoupon userCoupon) {
-        return CouponResponse.IssueCoupon.builder()
-                .couponId(userCoupon.getCoupon().getId())
-                .name(userCoupon.getCoupon().getName())
-                .amount(userCoupon.getCoupon().getAmount())
-                .validStartDate(userCoupon.getCoupon().getValidStartDate())
-                .validEndDate(userCoupon.getCoupon().getValidEndDate())
+    public static CouponResponse.UserCouponDto toResponse(UserCoupon userCoupon) {
+        return CouponResponse.UserCouponDto.builder()
+                .userId(userCoupon.getUserId())
+                .couponId(userCoupon.getCouponId())
+                .status(userCoupon.getStatus().name())
                 .build();
     }
 
-    public static CouponResponse.Coupon toResult(UserCoupon userCoupon) {
-        return CouponResponse.Coupon.builder()
-                .couponId(userCoupon.getCoupon().getId())
-                .name(userCoupon.getCoupon().getName())
-                .amount(userCoupon.getCoupon().getAmount())
-                .validStartDate(userCoupon.getCoupon().getValidStartDate())
-                .validEndDate(userCoupon.getCoupon().getValidEndDate())
+    public static CouponResponse.CouponDto toResponse(Coupon coupon) {
+        return CouponResponse.CouponDto.builder()
+                .couponId(coupon.getId())
+                .name(coupon.getName())
+                .amount(coupon.getAmount())
+                .validStartDate(coupon.getValidStartDate())
+                .validEndDate(coupon.getValidEndDate())
+                .quantity(coupon.getQuantity())
                 .build();
     }
 }
