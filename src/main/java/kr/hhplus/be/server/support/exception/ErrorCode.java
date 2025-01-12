@@ -11,7 +11,8 @@ public enum ErrorCode {
 
     DUPLICATE_ISSUE_COUPON(HttpStatus.BAD_REQUEST, "이미 발급된 쿠폰입니다."),
     SOLD_OUT_COUPON(HttpStatus.BAD_REQUEST, "쿠폰이 모두 소진되었습니다."),
-    ALREADY_USED_COUPON(HttpStatus.BAD_REQUEST, "이미 사용된 쿠폰입니다."),
+    NO_AVAILABLE_COUPON(HttpStatus.BAD_REQUEST, "사용 가능한 쿠폰이 없습니다."),
+
 
     HAS_STOPPED_PRODUCT(HttpStatus.BAD_REQUEST, "판매 중단된 상품이 포함되어 있습니다."),
     SOLD_OUT_PRODUCT(HttpStatus.BAD_REQUEST, "상품의 재고가 부족합니다.");
