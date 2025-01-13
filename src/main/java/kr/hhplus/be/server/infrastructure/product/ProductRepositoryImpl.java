@@ -30,7 +30,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<ProductInfo.PopularProduct> findPopularProducts() {
+    public List<ProductInfo.PopularProductDto> findPopularProducts() {
         QOrderProduct qOrderProduct = QOrderProduct.orderProduct;
         QOrder qOrder = QOrder.order;
         QProduct qProduct = QProduct.product;
@@ -39,8 +39,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         JPAQuery<ProductInfo> query = new JPAQuery<>(em);
 
-        List<ProductInfo.PopularProduct> result = query.select(Projections.constructor(
-                        ProductInfo.PopularProduct.class,
+        List<ProductInfo.PopularProductDto> result = query.select(Projections.constructor(
+                        ProductInfo.PopularProductDto.class,
                         qProduct.id,
                         qProduct.name,
                         qProduct.price,

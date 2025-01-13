@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.product;
 
-import kr.hhplus.be.server.interfaces.api.product.ProductResponse;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +17,15 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public Page<ProductResponse.Product> getProducts(int page, int size) {
+    public Page<ProductInfo.ProductDto> getProducts(int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         Page<Product> products = productRepository.findAllByStatus(ProductStatus.SELLING, pageable);
-        return ProductInfo.toResponse(products);
+        return ProductInfo.of(products);
     }
 
-    public List<ProductResponse.Product> getPopularProducts() {
-        List<ProductInfo.PopularProduct> products = productRepository.findPopularProducts();
-        return ProductInfo.toResponse(products);
+    public List<ProductInfo.ProductDto> getPopularProducts() {
+        List<ProductInfo.PopularProductDto> products = productRepository.findPopularProducts();
+        return ProductInfo.of(products);
     }
 
     public void deductStock(List<ProductCommand.OrderProduct> products) {
