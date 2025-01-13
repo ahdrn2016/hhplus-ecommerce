@@ -2,15 +2,15 @@ package kr.hhplus.be.server.application.order;
 
 import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.CouponService;
+import kr.hhplus.be.server.domain.order.OrderInfo;
 import kr.hhplus.be.server.domain.order.OrderService;
+import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.product.ProductCommand;
 import kr.hhplus.be.server.domain.product.ProductService;
-import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.user.UserService;
-import kr.hhplus.be.server.interfaces.api.coupon.CouponResponse;
-import kr.hhplus.be.server.interfaces.api.order.OrderResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,25 +22,32 @@ public class OrderFacade {
     private final ProductService productService;
     private final OrderService orderService;
     private final UserService userService;
+    private final PaymentService paymentService;
 
-    public OrderResponse.Order createOrder(OrderParam.CreateOrder param) {
-        List<ProductCommand.OrderProduct> products = param.products().stream()
-                .map(OrderParam.OrderProduct::toCommand)
+    @Transactional
+    public OrderResult.OrderDto createOrder(OrderCriteria.CreateOrder criteria) {
+        List<ProductCommand.OrderProduct> productDtos = criteria.products().stream()
+                .map(OrderCriteria.OrderProduct::toCommand)
                 .toList();
 
-        CouponInfo.UserCouponDto userCoupon = null;
+        CouponInfo.UserCouponDto userCouponDto = null;
         // 쿠폰 사용
-        if (param.couponId() != null) {
-            userCoupon = couponService.useCoupon(param.userId(), param.couponId());
+        if (criteria.couponId() != null) {
+            userCouponDto = couponService.useCoupon(criteria.userId(), criteria.couponId());
         }
 
-        // 재고 차감
-        productService.deductStock(products);
+        // 재고 차감, 총 금액 계산
+        int totalAmount = productService.deductStockAndCalculateTotal(productDtos);
 
         // 주문 생성
-//        OrderResult.Order order = orderService.createOrder(param.userId(), userCoupon.toCommand(), products);
+        OrderInfo.OrderDto order = orderService.createOrder(criteria.userId(), userCouponDto, totalAmount, productDtos);
 
-//        return OrderResult.toResponse(order);
-        return null;
+        // 잔액 사용
+        userService.useBalance(criteria.userId(), order.paymentAmount());
+
+        // 결제 생성
+        paymentService.payment(order.orderId(), order.paymentAmount());
+
+        return OrderResult.of(order);
     }
 }

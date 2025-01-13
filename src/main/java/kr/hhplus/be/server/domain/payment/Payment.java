@@ -19,25 +19,19 @@ public class Payment extends BaseEntity {
 
     private Long orderId;
 
-    private int totalAmount;
-    private int discountAmount;
     private int paymentAmount;
 
     @Builder
-    public Payment(Long id, Long orderId, int totalAmount, int discountAmount, int paymentAmount) {
+    public Payment(Long id, Long orderId, int paymentAmount) {
         this.id = id;
         this.orderId = orderId;
-        this.totalAmount = totalAmount;
-        this.discountAmount = discountAmount;
         this.paymentAmount = paymentAmount;
     }
 
-    public static Payment create(PaymentCommand.Payment payment) {
+    public static Payment create(Long orderId, int paymentAmount) {
         return Payment.builder()
-                .orderId(payment.orderId())
-                .totalAmount(payment.totalAmount())
-                .discountAmount(payment.discountAmount())
-                .paymentAmount(payment.paymentAmount())
+                .orderId(orderId)
+                .paymentAmount(paymentAmount)
                 .build();
     }
 }

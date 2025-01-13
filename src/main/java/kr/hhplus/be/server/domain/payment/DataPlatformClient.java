@@ -1,11 +1,12 @@
-package kr.hhplus.be.server.domain.order;
+package kr.hhplus.be.server.domain.payment;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataPlatformClient {
 
-    public boolean send(Order savedOrder) {
+    public boolean sendData(Payment payment) {
         return true;
     }
+
 }

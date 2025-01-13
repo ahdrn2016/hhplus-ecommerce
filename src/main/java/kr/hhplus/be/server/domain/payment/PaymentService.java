@@ -8,9 +8,14 @@ import org.springframework.stereotype.Service;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final DataPlatformClient dataPlatformClient;
 
-    public Payment payment(PaymentCommand.Payment paymentCommand) {
-        Payment payment = Payment.create(paymentCommand);
-        return paymentRepository.save(payment);
+    public boolean payment(Long orderId, int paymentAmount) {
+        Payment payment = Payment.create(orderId, paymentAmount);
+        Payment savedPayment = paymentRepository.save(payment);
+
+        boolean response = dataPlatformClient.sendData(savedPayment);
+
+        return response;
     }
 }

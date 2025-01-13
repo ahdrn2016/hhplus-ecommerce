@@ -24,15 +24,11 @@ public class QPayment extends EntityPathBase<Payment> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final NumberPath<Integer> discountAmount = createNumber("discountAmount", Integer.class);
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final NumberPath<Long> orderId = createNumber("orderId", Long.class);
 
     public final NumberPath<Integer> paymentAmount = createNumber("paymentAmount", Integer.class);
-
-    public final NumberPath<Integer> totalAmount = createNumber("totalAmount", Integer.class);
 
     public QPayment(String variable) {
         super(Payment.class, forVariable(variable));

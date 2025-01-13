@@ -6,7 +6,7 @@ import lombok.Builder;
 
 import java.util.List;
 
-public class OrderParam {
+public class OrderCriteria {
 
     public record CreateOrder(
             Long userId,

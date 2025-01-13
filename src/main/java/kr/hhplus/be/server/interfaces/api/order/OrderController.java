@@ -2,6 +2,7 @@ package kr.hhplus.be.server.interfaces.api.order;
 
 import io.swagger.v3.oas.annotations.Operation;
 import kr.hhplus.be.server.application.order.OrderFacade;
+import kr.hhplus.be.server.application.order.OrderResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +19,9 @@ public class OrderController {
 
     @PostMapping(produces = { "application/json" }, consumes = { "application/json" })
     @Operation(summary = "주문", description = "주문을 진행합니다.", tags = { "order" })
-    public ResponseEntity<OrderResponse.Order> createOrder(@RequestBody OrderRequest.CreateOrder request) {
-        OrderResponse.Order response = orderFacade.createOrder(request.toParam());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<OrderResponse.OrderDto> createOrder(@RequestBody OrderRequest.CreateOrder request) {
+        OrderResult.OrderDto response = orderFacade.createOrder(request.toCriteria());
+        return ResponseEntity.ok(OrderResponse.of(response));
     }
 
 }

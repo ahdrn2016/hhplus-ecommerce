@@ -28,22 +28,28 @@ public class ProductService {
         return ProductInfo.of(products);
     }
 
-    public void deductStock(List<ProductCommand.OrderProduct> products) {
-        List<Long> productIds = getProductIds(products);
+    public int deductStockAndCalculateTotal(List<ProductCommand.OrderProduct> productDtos) {
+        int totalAmount = 0;
+
+        List<Long> productIds = getProductIds(productDtos);
 
         // 판매 중단 체크
         stoppedProduct(productIds);
 
-        Map<Long, Integer> orderProductMap = createOrderProductMap(products);
+        Map<Long, Integer> orderProductMap = createOrderProductMap(productDtos);
 
         // 재고 확인 후 차감
-        List<Product> stocks = productRepository.findAllByIdIn(productIds);
-        for(Product product : stocks) {
-            Long id = product.getId();
-            int quantity = orderProductMap.get(id);
+        List<Product> products = productRepository.findAllByIdIn(productIds);
+        for(Product product : products) {
+            int price = product.getPrice();
+            int quantity = orderProductMap.get(product.getId());
+
+            totalAmount += price * quantity;
 
             product.deductStock(quantity);
         }
+
+        return totalAmount;
     }
 
     private static List<Long> getProductIds(List<ProductCommand.OrderProduct> products) {
@@ -66,5 +72,4 @@ public class ProductService {
                         ProductCommand.OrderProduct::quantity
                 ));
     }
-
 }

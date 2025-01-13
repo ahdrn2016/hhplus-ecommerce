@@ -17,7 +17,7 @@ public class CouponInfo {
     public static UserCouponDto of(UserCoupon userCoupon) {
         return UserCouponDto.builder()
                 .userId(userCoupon.getUserId())
-                .couponId(userCoupon.getCouponId())
+                .couponId(userCoupon.getCoupon().getId())
                 .status(userCoupon.getStatus().name())
                 .build();
     }
@@ -36,6 +36,7 @@ public class CouponInfo {
     public record UserCouponDto(
             Long userId,
             Long couponId,
+            int amount,
             String status
     ) {
         @Builder
@@ -44,7 +45,8 @@ public class CouponInfo {
         public static UserCouponDto of(UserCoupon userCoupon) {
             return UserCouponDto.builder()
                     .userId(userCoupon.getUserId())
-                    .couponId(userCoupon.getCouponId())
+                    .couponId(userCoupon.getCoupon().getId())
+                    .amount(userCoupon.getCoupon().getAmount())
                     .status(userCoupon.getStatus().name())
                     .build();
         }

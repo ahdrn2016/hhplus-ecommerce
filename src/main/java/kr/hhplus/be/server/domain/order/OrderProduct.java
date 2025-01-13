@@ -1,8 +1,11 @@
 package kr.hhplus.be.server.domain.order;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.product.Product;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class OrderProduct {
 
@@ -10,16 +13,16 @@ public class OrderProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "order_id")
-    private Order order;
+    private Long orderId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "product_id")
-    private Product product;
+    private Long productId;
 
     private int quantity;
 
-    private int totalAmount;
-
+    @Builder
+    public OrderProduct(Long orderId, Long productId, int quantity) {
+        this.orderId = orderId;
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 }

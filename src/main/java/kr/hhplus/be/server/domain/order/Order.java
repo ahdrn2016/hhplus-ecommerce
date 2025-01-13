@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.order;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.BaseEntity;
 import kr.hhplus.be.server.domain.coupon.CouponCommand;
+import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,21 +31,23 @@ public class Order extends BaseEntity {
     private List<OrderProduct> orderProducts;
 
     @Builder
-    public Order(Long userId, Long couponId, int totalAmount, int discountAmount, int paymentAmount) {
+    public Order(Long userId, Long couponId, int totalAmount, int discountAmount) {
         this.userId = userId;
         this.couponId = couponId;
         this.totalAmount = totalAmount;
         this.discountAmount = discountAmount;
-        this.paymentAmount = paymentAmount;
+        this.paymentAmount = totalAmount - discountAmount;
     }
 
-    public static Order create(Long userId, CouponCommand.OrderCoupon userCoupon, int totalAmount) {
+    public static Order create(Long userId, CouponInfo.UserCouponDto userCouponDto, int totalAmount) {
+        Long couponId = userCouponDto != null ? userCouponDto.couponId() : null;
+        int discountAmount = userCouponDto != null ? userCouponDto.amount() : null;
+
         return Order.builder()
                 .userId(userId)
-                .couponId(userCoupon.couponId())
+                .couponId(couponId)
                 .totalAmount(totalAmount)
-                .discountAmount(userCoupon.amount())
-                .paymentAmount(totalAmount - userCoupon.amount())
+                .discountAmount(discountAmount)
                 .build();
     }
 }

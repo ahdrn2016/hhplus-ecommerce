@@ -19,15 +19,15 @@ public class CouponService {
         return CouponInfo.of(userCoupons);
     }
 
-    public CouponInfo.CouponDto issueCoupon(Long couponId) {
+    public Coupon issueCoupon(Long couponId) {
         Coupon coupon = couponRepository.findByIdWithLock(couponId);
         coupon.issue();
-        return CouponInfo.of(coupon);
+        return coupon;
     }
 
-    public CouponInfo.UserCouponDto createUserCoupon(Long userId, Long couponId) {
-        getUserCoupon(userId, couponId);
-        UserCoupon userCoupon = UserCoupon.create(userId, couponId, UserCouponStatus.UNUSED);
+    public CouponInfo.UserCouponDto createUserCoupon(Long userId, Coupon coupon) {
+        getUserCoupon(userId, coupon.getId());
+        UserCoupon userCoupon = UserCoupon.create(userId, coupon, UserCouponStatus.UNUSED);
         UserCoupon savedUserCoupon = userCouponRepository.save(userCoupon);
         return CouponInfo.of(savedUserCoupon);
     }

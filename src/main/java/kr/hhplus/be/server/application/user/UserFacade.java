@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.user.UserInfo;
 import kr.hhplus.be.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -12,6 +13,7 @@ public class UserFacade {
 
     private final UserService userService;
 
+    @Transactional
     public UserResult.UserDto chargeBalance(UserCriteria.ChargeBalance criteria) {
         Long userId = criteria.userId();
         int amount = criteria.amount();
