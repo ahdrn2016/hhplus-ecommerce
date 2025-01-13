@@ -9,8 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -26,9 +24,6 @@ public class Order extends BaseEntity {
     private int totalAmount;
     private int discountAmount;
     private int paymentAmount;
-
-    @OneToMany(mappedBy = "orders")
-    private List<OrderProduct> orderProducts;
 
     @Builder
     public Order(Long userId, Long couponId, int totalAmount, int discountAmount) {

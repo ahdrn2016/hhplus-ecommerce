@@ -9,8 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -23,9 +21,6 @@ public class User {
     private String name;
 
     private int balance;
-
-    @OneToMany(mappedBy = "user")
-    private List<UserCoupon> userCoupons;
 
     @Builder
     public User(Long id, String name, int balance) {

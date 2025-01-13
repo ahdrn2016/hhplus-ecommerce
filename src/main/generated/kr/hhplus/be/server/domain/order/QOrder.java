@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -30,8 +29,6 @@ public class QOrder extends EntityPathBase<Order> {
     public final NumberPath<Integer> discountAmount = createNumber("discountAmount", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final ListPath<OrderProduct, QOrderProduct> orderProducts = this.<OrderProduct, QOrderProduct>createList("orderProducts", OrderProduct.class, QOrderProduct.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> paymentAmount = createNumber("paymentAmount", Integer.class);
 
