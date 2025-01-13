@@ -55,7 +55,7 @@ class CouponServiceTest {
         given(couponRepository.findByIdWithLock(couponId)).willReturn(coupon);
 
         // when
-        CouponResponse.CouponDto result = couponService.issueCoupon(couponId);
+        CouponInfo.CouponDto result = couponService.issueCoupon(couponId);
 
         // then
         assertEquals(9, result.quantity());
@@ -88,7 +88,7 @@ class CouponServiceTest {
         given(userCouponRepository.save(any(UserCoupon.class))).willReturn(userCoupon);
 
         // when
-        CouponResponse.UserCouponDto result = couponService.createUserCoupon(userId, couponId);
+        CouponInfo.UserCouponDto result = couponService.createUserCoupon(userId, couponId);
 
         // then
         assertThat(result)
@@ -120,7 +120,7 @@ class CouponServiceTest {
         given(userCouponRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, UserCouponStatus.UNUSED)).willReturn(userCoupon);
 
         // when
-        CouponResponse.UserCouponDto result = couponService.useCoupon(userId, couponId);
+        CouponInfo.UserCouponDto result = couponService.useCoupon(userId, couponId);
 
         // then
         assertEquals("USED", result.status());

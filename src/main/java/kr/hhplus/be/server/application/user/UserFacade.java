@@ -12,9 +12,9 @@ public class UserFacade {
 
     private final UserService userService;
 
-    public UserResult.UserDto chargeBalance(UserParam.ChargeBalance param) {
-        Long userId = param.userId();
-        int amount = param.amount();
+    public UserResult.UserDto chargeBalance(UserCriteria.ChargeBalance criteria) {
+        Long userId = criteria.userId();
+        int amount = criteria.amount();
 
         // 잔액 충전
         UserInfo.UserDto user = userService.chargeBalance(userId, amount);

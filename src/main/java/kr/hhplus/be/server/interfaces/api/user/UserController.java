@@ -31,7 +31,7 @@ public class UserController {
     public ResponseEntity<UserResponse.UserDto> chargeBalance(
             @RequestBody UserRequest.ChargeBalance request
     ) {
-        UserResult.UserDto response = userFacade.chargeBalance(request.toParam());
+        UserResult.UserDto response = userFacade.chargeBalance(request.toCriteria());
         return ResponseEntity.ok(UserResponse.of(response));
     }
 

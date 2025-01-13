@@ -5,16 +5,21 @@ import lombok.Builder;
 
 public class UserResult {
 
-    public record UserDto(Long userId, String name, int balance) {
-        @Builder
-        public UserDto {}
-    }
     public static UserDto of(UserInfo.UserDto userInfo) {
         return UserDto.builder()
                 .userId(userInfo.userId())
                 .name(userInfo.name())
                 .balance(userInfo.balance())
                 .build();
+    }
+
+    public record UserDto(
+            Long userId,
+            String name,
+            int balance
+    ) {
+        @Builder
+        public UserDto {}
     }
 
 }

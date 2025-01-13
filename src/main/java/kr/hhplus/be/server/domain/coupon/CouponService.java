@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import kr.hhplus.be.server.interfaces.api.coupon.CouponResponse;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -15,22 +14,22 @@ public class CouponService {
     private final UserCouponRepository userCouponRepository;
     private final CouponRepository couponRepository;
 
-    public List<CouponResponse.UserCouponDto> getCoupons(Long userId) {
+    public List<CouponInfo.UserCouponDto> getCoupons(Long userId) {
         List<UserCoupon> userCoupons = userCouponRepository.findCouponsByUserId(userId);
-        return CouponInfo.toResponse(userCoupons);
+        return CouponInfo.of(userCoupons);
     }
 
-    public CouponResponse.CouponDto issueCoupon(Long couponId) {
+    public CouponInfo.CouponDto issueCoupon(Long couponId) {
         Coupon coupon = couponRepository.findByIdWithLock(couponId);
         coupon.issue();
-        return CouponInfo.toResponse(coupon);
+        return CouponInfo.of(coupon);
     }
 
-    public CouponResponse.UserCouponDto createUserCoupon(Long userId, Long couponId) {
+    public CouponInfo.UserCouponDto createUserCoupon(Long userId, Long couponId) {
         getUserCoupon(userId, couponId);
         UserCoupon userCoupon = UserCoupon.create(userId, couponId, UserCouponStatus.UNUSED);
         UserCoupon savedUserCoupon = userCouponRepository.save(userCoupon);
-        return CouponInfo.toResponse(savedUserCoupon);
+        return CouponInfo.of(savedUserCoupon);
     }
 
     private void getUserCoupon(Long userId, Long couponId) {
@@ -40,13 +39,13 @@ public class CouponService {
         }
     }
 
-    public CouponResponse.UserCouponDto useCoupon(Long userId, Long couponId) {
+    public CouponInfo.UserCouponDto useCoupon(Long userId, Long couponId) {
         UserCoupon userCoupon = getUnusedUserCoupon(userId, couponId);
         if (userCoupon == null) {
             throw new CustomException(ErrorCode.NO_AVAILABLE_COUPON);
         }
         userCoupon.used();
-        return CouponInfo.toResponse(userCoupon);
+        return CouponInfo.of(userCoupon);
     }
 
     private UserCoupon getUnusedUserCoupon(Long userId, Long couponId) {

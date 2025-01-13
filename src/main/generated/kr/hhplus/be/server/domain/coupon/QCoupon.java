@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -27,8 +26,6 @@ public class QCoupon extends EntityPathBase<Coupon> {
     public final StringPath name = createString("name");
 
     public final NumberPath<Integer> quantity = createNumber("quantity", Integer.class);
-
-    public final ListPath<UserCoupon, QUserCoupon> userCoupons = this.<UserCoupon, QUserCoupon>createList("userCoupons", UserCoupon.class, QUserCoupon.class, PathInits.DIRECT2);
 
     public final DateTimePath<java.time.LocalDateTime> validEndDate = createDateTime("validEndDate", java.time.LocalDateTime.class);
 

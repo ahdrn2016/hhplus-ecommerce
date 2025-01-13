@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.order;
 
+import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.CouponService;
 import kr.hhplus.be.server.domain.order.OrderService;
 import kr.hhplus.be.server.domain.product.ProductCommand;
@@ -27,7 +28,7 @@ public class OrderFacade {
                 .map(OrderParam.OrderProduct::toCommand)
                 .toList();
 
-        CouponResponse.Coupon userCoupon = null;
+        CouponInfo.UserCouponDto userCoupon = null;
         // 쿠폰 사용
         if (param.couponId() != null) {
             userCoupon = couponService.useCoupon(param.userId(), param.couponId());
@@ -37,8 +38,9 @@ public class OrderFacade {
         productService.deductStock(products);
 
         // 주문 생성
-        OrderResult.Order order = orderService.createOrder(param.userId(), userCoupon.toCommand(), products);
+//        OrderResult.Order order = orderService.createOrder(param.userId(), userCoupon.toCommand(), products);
 
-        return OrderResult.toResponse(order);
+//        return OrderResult.toResponse(order);
+        return null;
     }
 }

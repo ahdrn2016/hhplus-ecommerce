@@ -2,7 +2,7 @@ package kr.hhplus.be.server.application.user;
 
 import lombok.Builder;
 
-public class UserParam {
+public class UserCriteria {
 
     public record ChargeBalance(
             Long userId,

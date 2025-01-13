@@ -2,6 +2,8 @@ package kr.hhplus.be.server.interfaces.api.coupon;
 
 import io.swagger.v3.oas.annotations.Operation;
 import kr.hhplus.be.server.application.coupon.CouponFacade;
+import kr.hhplus.be.server.application.coupon.CouponResult;
+import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +24,15 @@ public class CouponController {
     public ResponseEntity<List<CouponResponse.UserCouponDto>> getCoupons(
             @PathVariable Long userId
     ) {
-        List<CouponResponse.UserCouponDto> response = couponService.getCoupons(userId);
-        return ResponseEntity.ok(response);
+        List<CouponInfo.UserCouponDto> response = couponService.getCoupons(userId);
+        return ResponseEntity.ok(CouponResponse.of(response));
     }
 
     @PostMapping(path = "/issue", produces = { "application/json" }, consumes = { "application/json" })
     @Operation(summary = "쿠폰 발급", description = "쿠폰을 발급합니다.", tags = { "coupon" })
     public ResponseEntity<CouponResponse.UserCouponDto> CouponDto(@RequestBody CouponRequest.CouponDto request) {
-        CouponResponse.UserCouponDto response = couponFacade.issueCoupon(request.toParam());
-        return ResponseEntity.ok(response);
+        CouponResult.UserCouponDto response = couponFacade.issueCoupon(request.toCriteria());
+        return ResponseEntity.ok(CouponResponse.of(response));
     }
 
 }
