@@ -6,19 +6,19 @@ import lombok.Builder;
 
 public class UserResponse {
 
-    public static UserDto of(UserInfo.UserDto userInfo) {
+    public static UserDto of(UserInfo.UserDto userDto) {
         return UserDto.builder()
-                .userId(userInfo.userId())
-                .name(userInfo.name())
-                .balance(userInfo.balance())
+                .userId(userDto.userId())
+                .name(userDto.name())
+                .balance(userDto.balance())
                 .build();
     }
 
-    public static UserDto of(UserResult.UserDto userResult) {
+    public static UserDto of(UserResult.UserDto userDto) {
         return UserDto.builder()
-                .userId(userResult.userId())
-                .name(userResult.name())
-                .balance(userResult.balance())
+                .userId(userDto.userId())
+                .name(userDto.name())
+                .balance(userDto.balance())
                 .build();
     }
 

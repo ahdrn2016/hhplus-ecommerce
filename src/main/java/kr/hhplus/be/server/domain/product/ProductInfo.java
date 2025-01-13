@@ -27,7 +27,11 @@ public class ProductInfo {
                 .collect(Collectors.toList());
     }
 
-    public record ProductDto(Long productId, String name, int price) {
+    public record ProductDto(
+            Long productId,
+            String name,
+            int price
+    ) {
         @Builder
         public ProductDto {}
 
@@ -40,12 +44,16 @@ public class ProductInfo {
         }
     }
 
-    public record PopularProductDto(Long productId, String name, int price) {
-
-        // TODO
+    public record PopularProductDto(
+            Long productId,
+            String name,
+            int price
+    ) {
         public ProductDto of() {
             return ProductDto.builder()
                     .productId(productId)
+                    .name(name)
+                    .price(price)
                     .build();
         }
     }

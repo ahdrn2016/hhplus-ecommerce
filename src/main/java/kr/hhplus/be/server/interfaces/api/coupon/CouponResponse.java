@@ -2,26 +2,24 @@ package kr.hhplus.be.server.interfaces.api.coupon;
 
 import kr.hhplus.be.server.application.coupon.CouponResult;
 import kr.hhplus.be.server.domain.coupon.CouponInfo;
-import kr.hhplus.be.server.domain.coupon.UserCoupon;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CouponResponse {
 
-    public static List<UserCouponDto> of(List<CouponInfo.UserCouponDto> couponInfo) {
-        return couponInfo.stream()
+    public static List<UserCouponDto> of(List<CouponInfo.UserCouponDto> userCouponDtos) {
+        return userCouponDtos.stream()
                 .map(UserCouponDto::of)
                 .collect(Collectors.toList());
     }
 
-    public static UserCouponDto of(CouponResult.UserCouponDto couponInfo) {
+    public static UserCouponDto of(CouponResult.UserCouponDto userCouponDtos) {
         return UserCouponDto.builder()
-                .userId(couponInfo.userId())
-                .couponId(couponInfo.couponId())
-                .status(couponInfo.status())
+                .userId(userCouponDtos.userId())
+                .couponId(userCouponDtos.couponId())
+                .status(userCouponDtos.status())
                 .build();
     }
 
@@ -36,11 +34,6 @@ public class CouponResponse {
                     .status(userCouponDto.status())
                     .build();
         }
-    }
-
-    public record CouponDto(Long couponId, String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
-        @Builder
-        public CouponDto {}
     }
 
 }

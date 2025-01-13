@@ -34,6 +34,6 @@ public class ProductController {
     @Operation(summary = "인기 상품 목록 조회", description = "인기 상품 목록을 조회합니다.", tags = { "product" })
     public ResponseEntity<List<ProductResponse.ProductDto>> getPopularProducts() {
         List<ProductInfo.ProductDto> response = productService.getPopularProducts();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ProductResponse.of(response));
     }
 }
