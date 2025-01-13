@@ -2,6 +2,8 @@ package kr.hhplus.be.server.interfaces.api.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import kr.hhplus.be.server.application.user.UserFacade;
+import kr.hhplus.be.server.application.user.UserResult;
+import kr.hhplus.be.server.domain.user.UserInfo;
 import kr.hhplus.be.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +22,8 @@ public class UserController {
     public ResponseEntity<UserResponse.UserDto> getBalance(
             @PathVariable Long userId
     ) {
-        UserResponse.UserDto response = userService.getUser(userId);
-        return ResponseEntity.ok(response);
+        UserInfo.UserDto response = userService.getUser(userId);
+        return ResponseEntity.ok(UserResponse.of(response));
     }
 
     @PostMapping(path = "/balance/charge", produces = { "application/json" }, consumes = { "application/json" })
@@ -29,8 +31,8 @@ public class UserController {
     public ResponseEntity<UserResponse.UserDto> chargeBalance(
             @RequestBody UserRequest.ChargeBalance request
     ) {
-        UserResponse.UserDto response = userFacade.chargeBalance(request.toParam());
-        return ResponseEntity.ok(response);
+        UserResult.UserDto response = userFacade.chargeBalance(request.toParam());
+        return ResponseEntity.ok(UserResponse.of(response));
     }
 
 }

@@ -48,7 +48,7 @@ class UserServiceTest {
         given(userRepository.findById(userId)).willReturn(user);
 
         // when
-        UserResponse.UserDto result = userService.chargeBalance(userId, amount);
+        UserInfo.UserDto result = userService.chargeBalance(userId, amount);
 
         // then
         assertEquals(totalAmount, result.balance());
@@ -78,7 +78,7 @@ class UserServiceTest {
         given(userRepository.findById(userId)).willReturn(user);
 
         // when
-        UserResponse.UserDto result = userService.useBalance(userId, amount);
+        UserInfo.UserDto result = userService.useBalance(userId, amount);
 
         // then
         assertEquals(totalAmount, result.balance());

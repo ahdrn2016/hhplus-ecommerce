@@ -1,14 +1,22 @@
 package kr.hhplus.be.server.domain.user;
 
-import kr.hhplus.be.server.interfaces.api.user.UserResponse;
+import lombok.Builder;
 
 public class UserInfo {
 
-    public static UserResponse.UserDto toResponse(
-            User user
+    public record UserDto(
+            Long userId,
+            String name,
+            int balance
     ) {
-        return UserResponse.UserDto.builder()
+        @Builder
+        public UserDto {}
+    }
+
+    public static UserDto of(User user) {
+        return UserDto.builder()
                 .userId(user.getId())
+                .name(user.getName())
                 .balance(user.getBalance())
                 .build();
     }
