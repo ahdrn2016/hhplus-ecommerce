@@ -25,9 +25,9 @@ public class CouponService {
         return coupon;
     }
 
-    public CouponInfo.UserCouponDto createUserCoupon(Long userId, Coupon coupon) {
-        getUserCoupon(userId, coupon.getId());
-        UserCoupon userCoupon = UserCoupon.create(userId, coupon, UserCouponStatus.UNUSED);
+    public CouponInfo.UserCouponDto createUserCoupon(Long userId, Long couponId) {
+        getUserCoupon(userId, couponId);
+        UserCoupon userCoupon = UserCoupon.create(userId, couponId, UserCouponStatus.UNUSED);
         UserCoupon savedUserCoupon = userCouponRepository.save(userCoupon);
         return CouponInfo.of(savedUserCoupon);
     }
@@ -45,7 +45,10 @@ public class CouponService {
             throw new CustomException(ErrorCode.NO_AVAILABLE_COUPON);
         }
         userCoupon.used();
-        return CouponInfo.of(userCoupon);
+
+        Coupon coupon = couponRepository.findByIdWithLock(couponId);
+
+        return CouponInfo.of(userCoupon, coupon.getAmount());
     }
 
     private UserCoupon getUnusedUserCoupon(Long userId, Long couponId) {

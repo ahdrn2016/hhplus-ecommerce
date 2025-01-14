@@ -20,7 +20,7 @@ public class CouponResult {
         public static UserCouponDto of(UserCoupon userCoupon) {
             return UserCouponDto.builder()
                     .userId(userCoupon.getUserId())
-                    .couponId(userCoupon.getCoupon().getId())
+                    .couponId(userCoupon.getCouponId())
                     .status(userCoupon.getStatus().name())
                     .build();
         }

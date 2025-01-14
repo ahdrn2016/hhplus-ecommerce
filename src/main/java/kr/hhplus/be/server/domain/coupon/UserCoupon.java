@@ -17,24 +17,22 @@ public class UserCoupon {
 
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_id")
-    private Coupon coupon;
+    private Long couponId;
 
     @Enumerated(EnumType.STRING)
     private UserCouponStatus status;
 
     @Builder
-    public UserCoupon(Long userId, Coupon coupon, UserCouponStatus status) {
+    public UserCoupon(Long userId, Long couponId, UserCouponStatus status) {
         this.userId = userId;
-        this.coupon = coupon;
+        this.couponId = couponId;
         this.status = status;
     }
 
-    public static UserCoupon create(Long userId, Coupon coupon, UserCouponStatus status) {
+    public static UserCoupon create(Long userId, Long couponId, UserCouponStatus status) {
         return UserCoupon.builder()
                 .userId(userId)
-                .coupon(coupon)
+                .couponId(couponId)
                 .status(status)
                 .build();
     }

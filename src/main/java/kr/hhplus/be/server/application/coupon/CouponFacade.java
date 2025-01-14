@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.coupon;
 
-import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.CouponService;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +18,9 @@ public class CouponFacade {
         Long userId = criteria.userId();
 
         // 쿠폰 수량 차감
-        Coupon coupon = couponService.issueCoupon(couponId);
+        couponService.issueCoupon(couponId);
         // 유저 쿠폰 생성
-        CouponInfo.UserCouponDto userCoupon = couponService.createUserCoupon(userId, coupon);
+        CouponInfo.UserCouponDto userCoupon = couponService.createUserCoupon(userId, couponId);
 
         return CouponResult.of(userCoupon);
     }

@@ -30,17 +30,18 @@ public class OrderFacade {
                 .map(OrderCriteria.OrderProduct::toCommand)
                 .toList();
 
-        CouponInfo.UserCouponDto userCouponDto = null;
         // 쿠폰 사용
+        int discountAmount = 0;
         if (criteria.couponId() != null) {
-            userCouponDto = couponService.useCoupon(criteria.userId(), criteria.couponId());
+            CouponInfo.UserCouponDto userCouponDto = couponService.useCoupon(criteria.userId(), criteria.couponId());
+            discountAmount = userCouponDto.amount();
         }
 
         // 재고 차감, 총 금액 계산
         int totalAmount = productService.deductStockAndCalculateTotal(productDtos);
 
         // 주문 생성
-        OrderInfo.OrderDto order = orderService.createOrder(criteria.userId(), userCouponDto, totalAmount, productDtos);
+        OrderInfo.OrderDto order = orderService.createOrder(criteria.userId(), totalAmount, discountAmount, productDtos);
 
         // 잔액 사용
         userService.useBalance(criteria.userId(), order.paymentAmount());

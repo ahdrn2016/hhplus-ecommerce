@@ -21,8 +21,6 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final kr.hhplus.be.server.domain.QBaseEntity _super = new kr.hhplus.be.server.domain.QBaseEntity(this);
 
-    public final NumberPath<Long> couponId = createNumber("couponId", Long.class);
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

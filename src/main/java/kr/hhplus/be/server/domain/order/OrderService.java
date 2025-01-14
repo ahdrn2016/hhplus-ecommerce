@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.order;
 
-import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import kr.hhplus.be.server.domain.product.ProductCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
 
-    public OrderInfo.OrderDto createOrder(Long userId, CouponInfo.UserCouponDto userCouponDto, int totalAmount, List<ProductCommand.OrderProduct> productDtos) {
-        Order order = Order.create(userId, userCouponDto, totalAmount);
+    public OrderInfo.OrderDto createOrder(Long userId, int totalAmount, int discountAmount, List<ProductCommand.OrderProduct> productDtos) {
+        Order order = Order.create(userId, discountAmount, totalAmount);
         Order savedOrder = orderRepository.save(order);
 
         createOrderProduct(productDtos, savedOrder);
