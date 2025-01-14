@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.interfaces.api.order;
 
-import kr.hhplus.be.server.interfaces.api.order.dto.CreateOrderRequest;
-import kr.hhplus.be.server.interfaces.api.order.dto.OrderResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import kr.hhplus.be.server.application.order.OrderFacade;
+import kr.hhplus.be.server.application.order.OrderResult;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,12 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/order")
+@RequiredArgsConstructor
 public class OrderController {
 
-    @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest request) {
-        OrderResponse response = new OrderResponse();
-        return ResponseEntity.ok(response);
+    private final OrderFacade orderFacade;
+
+    @PostMapping(produces = { "application/json" }, consumes = { "application/json" })
+    @Operation(summary = "주문", description = "주문을 진행합니다.", tags = { "order" })
+    public ResponseEntity<OrderResponse.OrderDto> createOrder(@RequestBody OrderRequest.CreateOrder request) {
+        OrderResult.OrderDto response = orderFacade.createOrder(request.toCriteria());
+        return ResponseEntity.ok(OrderResponse.of(response));
     }
 
 }

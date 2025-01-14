@@ -6,6 +6,7 @@
 - [마일스톤](https://github.com/users/ahdrn2016/projects/1)
 - [시퀀스 다이어그램](docs/SequenceDiagram/SequenceDiagram.md)
 - [ERD](docs/erd/ERD.md)
+- [API 명세서](docs/api/API.md)
 
 ---
 
