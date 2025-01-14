@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.user;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.coupon.UserCoupon;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.AccessLevel;
@@ -47,7 +46,7 @@ public class User {
 
     public void minusBalance(int amount) {
         if (this.balance < amount) {
-            throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE);
+            throw new CustomException(ErrorCode.INSUFFICIENT_POINT);
         }
 
         this.balance -= amount;

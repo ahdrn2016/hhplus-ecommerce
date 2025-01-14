@@ -61,7 +61,7 @@ class UserServiceTest {
         // when // then
         assertThatThrownBy(() -> user.minusBalance(20000))
                 .isInstanceOf(CustomException.class)
-                .hasMessage(ErrorCode.INSUFFICIENT_BALANCE.getMessage());
+                .hasMessage(ErrorCode.INSUFFICIENT_POINT.getMessage());
     }
 
     @Test
