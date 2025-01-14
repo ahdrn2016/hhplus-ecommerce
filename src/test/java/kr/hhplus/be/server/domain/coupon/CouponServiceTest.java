@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import kr.hhplus.be.server.interfaces.api.coupon.CouponResponse;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import org.junit.jupiter.api.Test;
@@ -65,15 +64,13 @@ class CouponServiceTest {
     void 쿠폰_발급_요청_시_유저에게_해당_쿠폰이_있으면_예외가_발생한다() {
         // given
         Long userId = 1L;
-        LocalDateTime validStartDate = LocalDateTime.of(2025, 1, 1, 0, 0);
-        LocalDateTime validEndDate = LocalDateTime.of(2025, 1, 31, 23, 59);
-        Coupon coupon = Coupon.create(1L, "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
-        UserCoupon userCoupon = UserCoupon.create(userId, coupon, UserCouponStatus.UNUSED);
+        Long couponId = 1L;
+        UserCoupon userCoupon = UserCoupon.create(userId, couponId, UserCouponStatus.UNUSED);
 
-        given(userCouponRepository.findCouponByUserIdAndCouponId(userId, coupon.getId())).willReturn(userCoupon);
+        given(userCouponRepository.findCouponByUserIdAndCouponId(userId, couponId)).willReturn(userCoupon);
 
         // when // then
-        assertThatThrownBy(() -> couponService.createUserCoupon(userId, coupon))
+        assertThatThrownBy(() -> couponService.createUserCoupon(userId, couponId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.DUPLICATE_ISSUE_COUPON.getMessage());
     }
@@ -82,21 +79,19 @@ class CouponServiceTest {
     void 쿠폰_발급_요청_시_유저에게_해당_쿠폰이_없으면_쿠폰을_발급한다() {
         // given
         Long userId = 1L;
-        LocalDateTime validStartDate = LocalDateTime.of(2025, 1, 1, 0, 0);
-        LocalDateTime validEndDate = LocalDateTime.of(2025, 1, 31, 23, 59);
-        Coupon coupon = Coupon.create(1L, "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
-        UserCoupon userCoupon = UserCoupon.create(userId, coupon, UserCouponStatus.UNUSED);
+        Long couponId = 1L;
+        UserCoupon userCoupon = UserCoupon.create(userId, couponId, UserCouponStatus.UNUSED);
 
-        given(userCouponRepository.findCouponByUserIdAndCouponId(userId, coupon.getId())).willReturn(null);
+        given(userCouponRepository.findCouponByUserIdAndCouponId(userId, couponId)).willReturn(null);
         given(userCouponRepository.save(any(UserCoupon.class))).willReturn(userCoupon);
 
         // when
-        CouponInfo.UserCouponDto result = couponService.createUserCoupon(userId, coupon);
+        CouponInfo.UserCouponDto result = couponService.createUserCoupon(userId, couponId);
 
         // then
         assertThat(result)
                 .extracting("userId", "couponId", "status")
-                .contains(userId, coupon.getId(), "UNUSED");
+                .contains(userId, couponId, "UNUSED");
     }
 
     @Test
@@ -120,9 +115,10 @@ class CouponServiceTest {
         LocalDateTime validStartDate = LocalDateTime.of(2025, 1, 1, 0, 0);
         LocalDateTime validEndDate = LocalDateTime.of(2025, 1, 31, 23, 59);
         Coupon coupon = Coupon.create(1L, "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
-        UserCoupon userCoupon = UserCoupon.create(userId, coupon, UserCouponStatus.UNUSED);
+        UserCoupon userCoupon = UserCoupon.create(userId, coupon.getId(), UserCouponStatus.UNUSED);
 
         given(userCouponRepository.findByUserIdAndCouponIdAndStatus(userId, coupon.getId(), UserCouponStatus.UNUSED)).willReturn(userCoupon);
+        given(couponRepository.findByIdWithLock(coupon.getId())).willReturn(coupon);
 
         // when
         CouponInfo.UserCouponDto result = couponService.useCoupon(userId, coupon.getId());
