@@ -102,8 +102,8 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor I as 유저
-    participant OrderItem as OrderItem
+    participant OrderDetail as OrderDetail
 
-    I ->> OrderItem : 인기 상품 조회 요청
-    OrderItem -->> I : 인기 상품 목록 반환
+    I ->> OrderDetail : 인기 상품 조회 요청
+    OrderDetail -->> I : 인기 상품 목록 반환
 ```

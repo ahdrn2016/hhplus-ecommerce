@@ -5,22 +5,22 @@ import lombok.Builder;
 
 public class OrderResponse {
 
-    public static OrderDto of(OrderResult.OrderDto orderDto) {
-        return OrderDto.builder()
-                .orderId(orderDto.orderId())
-                .totalAmount(orderDto.totalAmount())
-                .discountAmount(orderDto.discountAmount())
-                .paymentAmount(orderDto.paymentAmount())
+    public static Order of(OrderResult.Order order) {
+        return Order.builder()
+                .orderId(order.orderId())
+                .totalAmount(order.totalAmount())
+                .discountAmount(order.discountAmount())
+                .paymentAmount(order.paymentAmount())
                 .build();
     }
 
-    public record OrderDto(
+    public record Order(
             Long orderId,
             int totalAmount,
             int discountAmount,
             int paymentAmount
     ) {
         @Builder
-        public OrderDto {}
+        public Order {}
     }
 }

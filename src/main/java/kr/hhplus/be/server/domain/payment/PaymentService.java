@@ -10,7 +10,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final DataPlatformClient dataPlatformClient;
 
-    public boolean payment(Long orderId, int paymentAmount) {
+    public boolean payment(Long orderId, int paymentAmount, int discountAmount) {
         Payment payment = Payment.create(orderId, paymentAmount);
         Payment savedPayment = paymentRepository.save(payment);
 

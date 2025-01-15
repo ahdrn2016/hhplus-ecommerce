@@ -1,29 +1,37 @@
 package kr.hhplus.be.server.interfaces.api.order;
 
+
 import kr.hhplus.be.server.application.order.OrderCriteria;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderRequest {
 
-    public record CreateOrder(
+    public record Order(
             Long userId,
             Long couponId,
-            List<OrderProduct> products
+            List<OrderDetail> products
     ) {
-        public OrderCriteria.CreateOrder toCriteria() {
-            return OrderCriteria.CreateOrder.builder()
+        public OrderCriteria.Order toCriteria() {
+            return OrderCriteria.Order.builder()
                     .userId(userId)
                     .couponId(couponId)
-                    .products(
-                            products.stream()
-                                    .map(OrderCriteria.OrderProduct::of)
-                                    .collect(Collectors.toList())
-                    )
+                    .products(products.stream()
+                            .map(OrderDetail::toCriteria)
+                            .toList())
                     .build();
         }
     }
 
-    public record OrderProduct(Long productId, int quantity) {}
+    public record OrderDetail(
+            Long productId, 
+            int quantity
+    ) {
+        public OrderCriteria.OrderDetail toCriteria() {
+            return OrderCriteria.OrderDetail.builder()
+                    .productId(productId)
+                    .quantity(quantity)
+                    .build();
+        }
+    }
 }

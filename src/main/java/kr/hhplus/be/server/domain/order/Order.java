@@ -19,25 +19,21 @@ public class Order extends BaseEntity {
 
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
     private int totalAmount;
 
-    private int discountAmount;
-
-    private int paymentAmount;
-
     @Builder
-    public Order(Long userId, int totalAmount, int discountAmount) {
+    public Order(Long userId, int totalAmount) {
         this.userId = userId;
         this.totalAmount = totalAmount;
-        this.discountAmount = discountAmount;
-        this.paymentAmount = totalAmount - discountAmount;
     }
 
-    public static Order create(Long userId, int discountAmount, int totalAmount) {
+    public static Order create(Long userId, int totalAmount) {
         return Order.builder()
                 .userId(userId)
                 .totalAmount(totalAmount)
-                .discountAmount(discountAmount)
                 .build();
     }
 }

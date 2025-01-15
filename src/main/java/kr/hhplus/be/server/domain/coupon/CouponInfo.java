@@ -22,17 +22,6 @@ public class CouponInfo {
                 .build();
     }
 
-    public static CouponDto of(Coupon coupon) {
-        return CouponDto.builder()
-                .couponId(coupon.getId())
-                .name(coupon.getName())
-                .amount(coupon.getAmount())
-                .validStartDate(coupon.getValidStartDate())
-                .validEndDate(coupon.getValidEndDate())
-                .quantity(coupon.getQuantity())
-                .build();
-    }
-
     public static IssuedCoupon of(kr.hhplus.be.server.domain.coupon.IssuedCoupon userCoupon, int amount) {
         return IssuedCoupon.builder()
                 .userId(userCoupon.getUserId())
@@ -58,18 +47,6 @@ public class CouponInfo {
                     .status(issuedCoupon.getStatus().name())
                     .build();
         }
-    }
-
-    public record CouponDto(
-            Long couponId,
-            String name,
-            int amount,
-            LocalDateTime validStartDate,
-            LocalDateTime validEndDate,
-            int quantity
-    ) {
-        @Builder
-        public CouponDto {}
     }
 
 }

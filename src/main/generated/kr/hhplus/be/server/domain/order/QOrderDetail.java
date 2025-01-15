@@ -10,14 +10,14 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QOrderProduct is a Querydsl query type for OrderProduct
+ * QOrderDetail is a Querydsl query type for OrderDetail
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QOrderProduct extends EntityPathBase<OrderProduct> {
+public class QOrderDetail extends EntityPathBase<OrderDetail> {
 
-    private static final long serialVersionUID = 216773854L;
+    private static final long serialVersionUID = 482866818L;
 
-    public static final QOrderProduct orderProduct = new QOrderProduct("orderProduct");
+    public static final QOrderDetail orderDetail = new QOrderDetail("orderDetail");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -27,16 +27,16 @@ public class QOrderProduct extends EntityPathBase<OrderProduct> {
 
     public final NumberPath<Integer> quantity = createNumber("quantity", Integer.class);
 
-    public QOrderProduct(String variable) {
-        super(OrderProduct.class, forVariable(variable));
+    public QOrderDetail(String variable) {
+        super(OrderDetail.class, forVariable(variable));
     }
 
-    public QOrderProduct(Path<? extends OrderProduct> path) {
+    public QOrderDetail(Path<? extends OrderDetail> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QOrderProduct(PathMetadata metadata) {
-        super(OrderProduct.class, metadata);
+    public QOrderDetail(PathMetadata metadata) {
+        super(OrderDetail.class, metadata);
     }
 
 }

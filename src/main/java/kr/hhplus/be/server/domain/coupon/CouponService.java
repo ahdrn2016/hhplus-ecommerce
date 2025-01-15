@@ -75,4 +75,9 @@ public class CouponService {
     private IssuedCoupon getUnusedUserCoupon(Long userId, Long couponId) {
         return issuedCouponRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, IssuedCouponStatus.UNUSED);
     }
+
+    public CouponInfo.IssuedCoupon getCoupon(CouponCommand.Issue issue) {
+
+        return null;
+    }
 }

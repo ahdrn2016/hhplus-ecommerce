@@ -5,8 +5,8 @@ import lombok.Builder;
 
 public class OrderResult {
 
-    public static OrderDto of(OrderInfo.OrderDto order) {
-        return OrderDto.builder()
+    public static Order of(OrderInfo.Order order) {
+        return Order.builder()
                 .orderId(order.orderId())
                 .totalAmount(order.totalAmount())
                 .discountAmount(order.discountAmount())
@@ -14,14 +14,14 @@ public class OrderResult {
                 .build();
     }
 
-    public record OrderDto(
+    public record Order(
             Long orderId,
             int totalAmount,
             int discountAmount,
             int paymentAmount
     ) {
         @Builder
-        public OrderDto {}
+        public Order {}
     }
 
 }
