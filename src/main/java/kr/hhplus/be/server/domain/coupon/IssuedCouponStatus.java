@@ -1,5 +1,5 @@
 package kr.hhplus.be.server.domain.coupon;
 
-public enum UserCouponStatus {
+public enum IssuedCouponStatus {
     UNUSED, USED
 }

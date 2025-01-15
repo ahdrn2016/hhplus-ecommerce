@@ -8,8 +8,8 @@ import java.util.List;
 
 public class ProductResponse {
 
-    public static List<Product> of(List<ProductInfo.Product> info) {
-        return info.stream()
+    public static List<Product> of(List<ProductInfo.Product> products) {
+        return products.stream()
                 .map(product -> Product.builder()
                         .productId(product.productId())
                         .name(product.name())
@@ -18,8 +18,8 @@ public class ProductResponse {
                 .toList();
     }
 
-    public static Page<Product> of(Page<ProductInfo.Product> info) {
-        return info.map(product -> Product.builder()
+    public static Page<Product> of(Page<ProductInfo.Product> products) {
+        return products.map(product -> Product.builder()
                         .productId(product.productId())
                         .name(product.name())
                         .price(product.price())

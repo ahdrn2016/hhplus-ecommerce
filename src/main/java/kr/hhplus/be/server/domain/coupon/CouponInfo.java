@@ -8,17 +8,17 @@ import java.util.stream.Collectors;
 
 public class CouponInfo {
 
-    public static List<UserCouponDto> of(List<UserCoupon> userCoupons) {
-        return userCoupons.stream()
-                .map(UserCouponDto::of)
+    public static List<IssuedCoupon> of(List<kr.hhplus.be.server.domain.coupon.IssuedCoupon> issuedCoupons) {
+        return issuedCoupons.stream()
+                .map(IssuedCoupon::of)
                 .collect(Collectors.toList());
     }
 
-    public static UserCouponDto of(UserCoupon userCoupon) {
-        return UserCouponDto.builder()
-                .userId(userCoupon.getUserId())
-                .couponId(userCoupon.getCouponId())
-                .status(userCoupon.getStatus().name())
+    public static IssuedCoupon of(kr.hhplus.be.server.domain.coupon.IssuedCoupon issuedCoupon) {
+        return IssuedCoupon.builder()
+                .userId(issuedCoupon.getUserId())
+                .couponId(issuedCoupon.getCouponId())
+                .status(issuedCoupon.getStatus().name())
                 .build();
     }
 
@@ -33,8 +33,8 @@ public class CouponInfo {
                 .build();
     }
 
-    public static UserCouponDto of(UserCoupon userCoupon, int amount) {
-        return UserCouponDto.builder()
+    public static IssuedCoupon of(kr.hhplus.be.server.domain.coupon.IssuedCoupon userCoupon, int amount) {
+        return IssuedCoupon.builder()
                 .userId(userCoupon.getUserId())
                 .couponId(userCoupon.getCouponId())
                 .status(userCoupon.getStatus().name())
@@ -42,20 +42,20 @@ public class CouponInfo {
                 .build();
     }
 
-    public record UserCouponDto(
+    public record IssuedCoupon(
             Long userId,
             Long couponId,
             int amount,
             String status
     ) {
         @Builder
-        public UserCouponDto {}
+        public IssuedCoupon {}
 
-        public static UserCouponDto of(UserCoupon userCoupon) {
-            return UserCouponDto.builder()
-                    .userId(userCoupon.getUserId())
-                    .couponId(userCoupon.getCouponId())
-                    .status(userCoupon.getStatus().name())
+        public static IssuedCoupon of(kr.hhplus.be.server.domain.coupon.IssuedCoupon issuedCoupon) {
+            return IssuedCoupon.builder()
+                    .userId(issuedCoupon.getUserId())
+                    .couponId(issuedCoupon.getCouponId())
+                    .status(issuedCoupon.getStatus().name())
                     .build();
         }
     }

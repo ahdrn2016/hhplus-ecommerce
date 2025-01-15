@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class UserCoupon {
+public class IssuedCoupon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,17 +20,17 @@ public class UserCoupon {
     private Long couponId;
 
     @Enumerated(EnumType.STRING)
-    private UserCouponStatus status;
+    private IssuedCouponStatus status;
 
     @Builder
-    public UserCoupon(Long userId, Long couponId, UserCouponStatus status) {
+    public IssuedCoupon(Long userId, Long couponId, IssuedCouponStatus status) {
         this.userId = userId;
         this.couponId = couponId;
         this.status = status;
     }
 
-    public static UserCoupon create(Long userId, Long couponId, UserCouponStatus status) {
-        return UserCoupon.builder()
+    public static IssuedCoupon create(Long userId, Long couponId, IssuedCouponStatus status) {
+        return IssuedCoupon.builder()
                 .userId(userId)
                 .couponId(couponId)
                 .status(status)
@@ -38,6 +38,6 @@ public class UserCoupon {
     }
 
     public void used() {
-        this.status = UserCouponStatus.USED;
+        this.status = IssuedCouponStatus.USED;
     }
 }
