@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 public class ProductInfo {
 
-    public static Page<ProductDto> of(Page<Product> products) {
-        List<ProductDto> productInfo = products.stream()
-                .map(ProductDto::of)
+    public static Page<Product> of(Page<kr.hhplus.be.server.domain.product.Product> products) {
+        List<Product> productInfo = products.stream()
+                .map(Product::of)
                 .collect(Collectors.toList());
 
         Pageable pageable = products.getPageable();
@@ -21,22 +21,22 @@ public class ProductInfo {
         return new PageImpl<>(productInfo, pageable, totalElements);
     }
 
-    public static List<ProductDto> of(List<PopularProductDto> products) {
+    public static List<Product> of(List<PopularProduct> products) {
         return products.stream()
-                .map(PopularProductDto::of)
+                .map(PopularProduct::of)
                 .collect(Collectors.toList());
     }
 
-    public record ProductDto(
+    public record Product(
             Long productId,
             String name,
             int price
     ) {
         @Builder
-        public ProductDto {}
+        public Product {}
 
-        public static ProductDto of(Product product) {
-            return ProductDto.builder()
+        public static Product of(kr.hhplus.be.server.domain.product.Product product) {
+            return Product.builder()
                     .productId(product.getId())
                     .name(product.getName())
                     .price(product.getPrice())
@@ -44,13 +44,13 @@ public class ProductInfo {
         }
     }
 
-    public record PopularProductDto(
+    public record PopularProduct(
             Long productId,
             String name,
             int price
     ) {
-        public ProductDto of() {
-            return ProductDto.builder()
+        public Product of() {
+            return Product.builder()
                     .productId(productId)
                     .name(name)
                     .price(price)

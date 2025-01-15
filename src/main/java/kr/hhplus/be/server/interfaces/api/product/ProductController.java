@@ -22,18 +22,18 @@ public class ProductController {
 
     @GetMapping(produces = { "application/json" })
     @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다.", tags = { "product" })
-    public ResponseEntity<Page<ProductResponse.ProductDto>> getProducts(
+    public ResponseEntity<Page<ProductResponse.Product>> products(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<ProductInfo.ProductDto> response = productService.getProducts(page, size);
+        Page<ProductInfo.Product> response = productService.products(page, size);
         return ResponseEntity.ok(ProductResponse.of(response));
     }
 
     @GetMapping(path = "/popular", produces = { "application/json" })
     @Operation(summary = "인기 상품 목록 조회", description = "인기 상품 목록을 조회합니다.", tags = { "product" })
-    public ResponseEntity<List<ProductResponse.ProductDto>> getPopularProducts() {
-        List<ProductInfo.ProductDto> response = productService.getPopularProducts();
+    public ResponseEntity<List<ProductResponse.Product>> popularProducts() {
+        List<ProductInfo.Product> response = productService.popularProducts();
         return ResponseEntity.ok(ProductResponse.of(response));
     }
 }

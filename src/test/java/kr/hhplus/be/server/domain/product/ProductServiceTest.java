@@ -42,7 +42,7 @@ class ProductServiceTest {
         given(productRepository.findAllByStatus(any(), eq(pageable))).willReturn(productPage);
 
         // when
-        Page<ProductInfo.ProductDto> result = productService.getProducts(page, size);
+        Page<ProductInfo.Product> result = productService.products(page, size);
 
         // then
         assertNotNull(result);

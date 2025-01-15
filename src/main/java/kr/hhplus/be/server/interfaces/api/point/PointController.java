@@ -26,7 +26,7 @@ public class PointController {
     @PostMapping(path = "/charge", produces = { "application/json" }, consumes = { "application/json" })
     @Operation(summary = "포인트 충전", description = "포인트를 충전합니다.", tags = { "point" })
     public ResponseEntity<PointResponse.Point> charge(
-            @RequestBody PointRequest.Point request
+            @RequestBody PointRequest.Charge request
     ) {
         PointInfo.Point point = pointService.charge(request.toCommand());
         return ResponseEntity.ok(PointResponse.of(point));

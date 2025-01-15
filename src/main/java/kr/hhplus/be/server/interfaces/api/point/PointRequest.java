@@ -3,7 +3,7 @@ package kr.hhplus.be.server.interfaces.api.point;
 import kr.hhplus.be.server.domain.point.PointCommand;
 
 public class PointRequest {
-    public record Point(
+    public record Charge(
             Long userId,
             int amount
     ) {

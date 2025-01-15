@@ -17,14 +17,14 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public Page<ProductInfo.ProductDto> getProducts(int page, int size) {
+    public Page<ProductInfo.Product> products(int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         Page<Product> products = productRepository.findAllByStatus(ProductStatus.SELLING, pageable);
         return ProductInfo.of(products);
     }
 
-    public List<ProductInfo.ProductDto> getPopularProducts() {
-        List<ProductInfo.PopularProductDto> products = productRepository.findPopularProducts();
+    public List<ProductInfo.Product> popularProducts() {
+        List<ProductInfo.PopularProduct> products = productRepository.findPopularProducts();
         return ProductInfo.of(products);
     }
 

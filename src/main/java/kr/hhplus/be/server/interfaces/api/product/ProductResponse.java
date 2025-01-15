@@ -8,31 +8,31 @@ import java.util.List;
 
 public class ProductResponse {
 
-    public static List<ProductDto> of(List<ProductInfo.ProductDto> productDtos) {
-        return productDtos.stream()
-                .map(productDto -> ProductDto.builder()
-                        .productId(productDto.productId())
-                        .name(productDto.name())
-                        .price(productDto.price())
+    public static List<Product> of(List<ProductInfo.Product> info) {
+        return info.stream()
+                .map(product -> Product.builder()
+                        .productId(product.productId())
+                        .name(product.name())
+                        .price(product.price())
                         .build())
                 .toList();
     }
 
-    public static Page<ProductDto> of(Page<ProductInfo.ProductDto> productDtos) {
-        return productDtos.map(productDto -> ProductDto.builder()
-                .productId(productDto.productId())
-                .name(productDto.name())
-                .price(productDto.price())
-                .build());
+    public static Page<Product> of(Page<ProductInfo.Product> info) {
+        return info.map(product -> Product.builder()
+                        .productId(product.productId())
+                        .name(product.name())
+                        .price(product.price())
+                        .build());
     }
 
-    public record ProductDto(
+    public record Product(
             Long productId,
             String name,
             int price
     ) {
         @Builder
-        public ProductDto {}
+        public Product {}
     }
 
 }
