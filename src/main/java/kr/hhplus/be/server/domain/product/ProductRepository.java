@@ -14,4 +14,5 @@ public interface ProductRepository {
     boolean existsByIdInAndStatus(List<Long> productIds, ProductStatus status);
 
     List<Product> findAllByIdIn(List<Long> productIds);
+
 }

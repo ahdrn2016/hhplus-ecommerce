@@ -5,7 +5,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.hhplus.be.server.domain.order.QOrder;
-import kr.hhplus.be.server.domain.order.QOrderDetail;
+import kr.hhplus.be.server.domain.order.QOrderProduct;
 import kr.hhplus.be.server.domain.product.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,7 +31,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<ProductInfo.PopularProduct> findPopularProducts() {
-        QOrderDetail qOrderDetail = QOrderDetail.orderDetail;
+        QOrderProduct qOrderProduct = QOrderProduct.orderProduct;
         QOrder qOrder = QOrder.order;
         QProduct qProduct = QProduct.product;
 
@@ -44,14 +44,14 @@ public class ProductRepositoryImpl implements ProductRepository {
                         qProduct.id,
                         qProduct.name,
                         qProduct.price,
-                        qOrderDetail.quantity.sum().as("totalQuantity")
+                        qOrderProduct.quantity.sum().as("totalQuantity")
                 ))
-                .from(qOrderDetail)
-                .join(qOrder).on(qOrderDetail.orderId.eq(qOrder.id))
-                .join(qProduct).on(qOrderDetail.productId.eq(qProduct.id))
+                .from(qOrderProduct)
+                .join(qOrder).on(qOrderProduct.order.id.eq(qOrder.id))
+                .join(qProduct).on(qOrderProduct.productId.eq(qProduct.id))
                 .where(qOrder.createdAt.goe(threeDaysAgo))
                 .groupBy(qProduct.id, qProduct.name, qProduct.price)
-                .orderBy(qOrderDetail.quantity.sum().desc())
+                .orderBy(qOrderProduct.quantity.sum().desc())
                 .limit(5)
                 .fetch();
 

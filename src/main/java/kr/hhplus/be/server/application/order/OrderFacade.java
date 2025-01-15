@@ -9,13 +9,15 @@ import kr.hhplus.be.server.domain.order.OrderService;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.point.PointCommand;
 import kr.hhplus.be.server.domain.point.PointService;
-import kr.hhplus.be.server.domain.product.ProductCommand;
+import kr.hhplus.be.server.domain.product.ProductInfo;
 import kr.hhplus.be.server.domain.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -29,33 +31,33 @@ public class OrderFacade {
 
     @Transactional
     public OrderResult.Order order(OrderCriteria.Order criteria) {
-//        List<ProductCommand.OrderDetail> productDtos = criteria.products().stream()
-//                .map(OrderCriteria.OrderDetail::toCommand)
-//                .toList();
+        List<ProductInfo.Product> products = productService.orderProducts(criteria.toProductCommand());
+        List<OrderCommand.OrderProduct> orderProducts = createOrderCommand(criteria, products);
+        OrderInfo.Order order = orderService.order(new OrderCommand.Order(criteria.userId(), orderProducts));
+        CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.couponId())
+                                        .map(couponId -> couponService.use(new CouponCommand.Issue(criteria.userId(), couponId)))
+                                        .orElse(null);
+        paymentService.payment(order.orderId(), order.totalAmount(),
+                                Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(0));
+        pointService.use(new PointCommand.Use(order.orderId(), order.totalAmount()));
+        productService.deductStock(criteria.toProductCommand());
+        orderService.complete(order.orderId());
 
-        /**
-         * List<Products> products = productService.getProducts(new ProductCommand.GetProducts(...));
-         *            OrderInfo.Order order = orderService.order(new OrderCommand.Order(...));
-         *
-         * 				   Coupon? coupon = criteria?.couponId?.let { couponService::getCoupon}
-         *
-         * //         CouponInfo.Coupon coupon = couponService.getCoupon(criteria.userId(), criteria.couponId());
-         * 	         paymentService.payment(order.orderId(), order.paymentAmount(), coupon?.할인가);
-         *            CouponInfo.Coupon coupon = couponService.useCoupon(criteria.userId(), criteria.couponId());
-         *  	         userService.useBalance(new UserCommand.UseBalance(cri.userId, order.totalAmount));
-         * 		       productService.deductStock(new ProductCommand.deductStock(...));
-         * 		       orderService.complte(new OrderCommand.Compelete(...));
-         */
+        return OrderResult.of(order);
+    }
 
-        int totalAmount = 0;
-
-        OrderInfo.Order order = orderService.order(new OrderCommand.Order(criteria.userId(), totalAmount));
-        CouponInfo.IssuedCoupon coupon = criteria.couponId() != null ?
-                couponService.getCoupon(new CouponCommand.Issue(criteria.userId(), criteria.couponId())) : null;
-        paymentService.payment(order.orderId(), order.paymentAmount(), coupon != null ? coupon.amount() : 0);
-        pointService.use(new PointCommand.Use(order.orderId(), order.paymentAmount()));
-
-
-        return null;
+    private static List<OrderCommand.OrderProduct> createOrderCommand(OrderCriteria.Order criteria, List<ProductInfo.Product> products) {
+        return products.stream()
+                .map(product -> {
+                    Long productId = product.productId();
+                    int price = product.price();
+                    int quantity = criteria.products().stream()
+                            .filter(p -> p.productId().equals(productId))
+                            .findFirst()
+                            .map(OrderCriteria.OrderProduct::quantity)
+                            .orElse(0);
+                    return new OrderCommand.OrderProduct(productId, price, quantity);
+                })
+                .collect(Collectors.toList());
     }
 }

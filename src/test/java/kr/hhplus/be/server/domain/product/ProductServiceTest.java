@@ -53,9 +53,9 @@ class ProductServiceTest {
 //    @Test
 //    void 주문_시_판매_중단된_상품이_있으면_예외가_발생한다() {
 //        // given
-//        List<ProductCommand.OrderDetail> productDtos = List.of(
-//                new ProductCommand.OrderDetail(1L, 2),
-//                new ProductCommand.OrderDetail(2L, 3)
+//        List<ProductCommand.OrderProduct> productDtos = List.of(
+//                new ProductCommand.OrderProduct(1L, 2),
+//                new ProductCommand.OrderProduct(2L, 3)
 //        );
 //
 //        List<Long> productIds = List.of(1L, 2L);
@@ -71,9 +71,9 @@ class ProductServiceTest {
 //    @Test
 //    void 주문_시_재고가_부족한_상품이_있으면_예외가_발생한다() {
 //        // given
-//        List<ProductCommand.OrderDetail> productDtos = List.of(
-//                new ProductCommand.OrderDetail(1L, 2),
-//                new ProductCommand.OrderDetail(2L, 3)
+//        List<ProductCommand.OrderProduct> productDtos = List.of(
+//                new ProductCommand.OrderProduct(1L, 2),
+//                new ProductCommand.OrderProduct(2L, 3)
 //        );
 //
 //        List<Long> productIds = List.of(1L, 2L);
@@ -94,9 +94,9 @@ class ProductServiceTest {
 //    @Test
 //    void 주문_시_주문_상품의_합계를_계산한다() {
 //        // given
-//        List<ProductCommand.OrderDetail> productDtos = List.of(
-//                new ProductCommand.OrderDetail(1L, 2), // 2 * 1000 = 2000
-//                new ProductCommand.OrderDetail(2L, 3)  // 3 * 2000 = 6000
+//        List<ProductCommand.OrderProduct> productDtos = List.of(
+//                new ProductCommand.OrderProduct(1L, 2), // 2 * 1000 = 2000
+//                new ProductCommand.OrderProduct(2L, 3)  // 3 * 2000 = 6000
 //        );
 //
 //        List<Long> productIds = List.of(1L, 2L);

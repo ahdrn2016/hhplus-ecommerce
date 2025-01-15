@@ -30,54 +30,24 @@ public class CouponService {
         return CouponInfo.of(savedIssuedCoupon);
     }
 
-    private IssuedCoupon createIssuedCoupon(Long userId, Long couponId) {
-        IssuedCoupon issuedCoupon = IssuedCoupon.create(userId, couponId, IssuedCouponStatus.UNUSED);
-        return issuedCouponRepository.save(issuedCoupon);
-    }
-
-
-
-
-
-
-    public Coupon issueCoupon(Long couponId) {
-        Coupon coupon = couponRepository.findByIdWithLock(couponId);
-        coupon.issue();
-        return coupon;
-    }
-
-    public CouponInfo.IssuedCoupon createUserCoupon(Long userId, Long couponId) {
-        getUserCoupon(userId, couponId);
-        IssuedCoupon userCoupon = IssuedCoupon.create(userId, couponId, IssuedCouponStatus.UNUSED);
-        IssuedCoupon savedUserCoupon = issuedCouponRepository.save(userCoupon);
-        return CouponInfo.of(savedUserCoupon);
-    }
-
-    private void getUserCoupon(Long userId, Long couponId) {
-        IssuedCoupon userCoupon = issuedCouponRepository.findCouponByUserIdAndCouponId(userId, couponId);
-        if (userCoupon != null) {
-            throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
-        }
-    }
-
-    public CouponInfo.IssuedCoupon useCoupon(Long userId, Long couponId) {
-        IssuedCoupon userCoupon = getUnusedUserCoupon(userId, couponId);
+    public CouponInfo.IssuedCoupon use(CouponCommand.Issue command) {
+        IssuedCoupon userCoupon = getUnusedUserCoupon(command.userId(), command.couponId());
         if (userCoupon == null) {
             throw new CustomException(ErrorCode.NO_AVAILABLE_COUPON);
         }
         userCoupon.used();
 
-        Coupon coupon = couponRepository.findByIdWithLock(couponId);
+        Coupon coupon = couponRepository.findByIdWithLock(command.couponId());
 
         return CouponInfo.of(userCoupon, coupon.getAmount());
     }
 
-    private IssuedCoupon getUnusedUserCoupon(Long userId, Long couponId) {
-        return issuedCouponRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, IssuedCouponStatus.UNUSED);
+    private IssuedCoupon createIssuedCoupon(Long userId, Long couponId) {
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(userId, couponId, IssuedCouponStatus.UNUSED);
+        return issuedCouponRepository.save(issuedCoupon);
     }
 
-    public CouponInfo.IssuedCoupon getCoupon(CouponCommand.Issue issue) {
-
-        return null;
+    private IssuedCoupon getUnusedUserCoupon(Long userId, Long couponId) {
+        return issuedCouponRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, IssuedCouponStatus.UNUSED);
     }
 }

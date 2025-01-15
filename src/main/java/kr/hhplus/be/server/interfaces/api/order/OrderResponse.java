@@ -9,8 +9,6 @@ public class OrderResponse {
         return Order.builder()
                 .orderId(order.orderId())
                 .totalAmount(order.totalAmount())
-                .discountAmount(order.discountAmount())
-                .paymentAmount(order.paymentAmount())
                 .build();
     }
 

@@ -9,16 +9,12 @@ public class OrderInfo {
         return Order.builder()
                 .orderId(order.getId())
                 .totalAmount(order.getTotalAmount())
-                .discountAmount(order.getDiscountAmount())
-                .paymentAmount(order.getPaymentAmount())
                 .build();
     }
 
     public record Order(
             Long orderId,
-            int totalAmount,
-            int discountAmount,
-            int paymentAmount
+            int totalAmount
     ) {
         @Builder
         public Order {}

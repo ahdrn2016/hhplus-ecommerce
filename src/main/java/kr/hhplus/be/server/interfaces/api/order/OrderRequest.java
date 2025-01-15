@@ -10,25 +10,25 @@ public class OrderRequest {
     public record Order(
             Long userId,
             Long couponId,
-            List<OrderDetail> products
+            List<OrderProduct> products
     ) {
         public OrderCriteria.Order toCriteria() {
             return OrderCriteria.Order.builder()
                     .userId(userId)
                     .couponId(couponId)
                     .products(products.stream()
-                            .map(OrderDetail::toCriteria)
+                            .map(OrderProduct::toCriteria)
                             .toList())
                     .build();
         }
     }
 
-    public record OrderDetail(
+    public record OrderProduct(
             Long productId, 
             int quantity
     ) {
-        public OrderCriteria.OrderDetail toCriteria() {
-            return OrderCriteria.OrderDetail.builder()
+        public OrderCriteria.OrderProduct toCriteria() {
+            return OrderCriteria.OrderProduct.builder()
                     .productId(productId)
                     .quantity(quantity)
                     .build();

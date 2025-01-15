@@ -21,16 +21,11 @@ public class ProductInfo {
         return new PageImpl<>(productInfo, pageable, totalElements);
     }
 
-    public static List<Product> of(List<PopularProduct> products) {
-        return products.stream()
-                .map(PopularProduct::of)
-                .collect(Collectors.toList());
-    }
-
     public record Product(
             Long productId,
             String name,
-            int price
+            int price,
+            ProductStatus status
     ) {
         @Builder
         public Product {}
@@ -40,6 +35,7 @@ public class ProductInfo {
                     .productId(product.getId())
                     .name(product.getName())
                     .price(product.getPrice())
+                    .status(product.getStatus())
                     .build();
         }
     }

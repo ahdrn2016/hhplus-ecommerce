@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -24,16 +26,27 @@ public class Order extends BaseEntity {
 
     private int totalAmount;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProducts;
+
     @Builder
-    public Order(Long userId, int totalAmount) {
+    public Order(Long userId, OrderStatus status, int totalAmount, List<OrderProduct> orderProducts) {
         this.userId = userId;
+        this.status = status;
         this.totalAmount = totalAmount;
+        this.orderProducts = orderProducts;
     }
 
-    public static Order create(Long userId, int totalAmount) {
+    public static Order create(Long userId, List<OrderProduct> orderProducts) {
         return Order.builder()
                 .userId(userId)
-                .totalAmount(totalAmount)
+                .status(OrderStatus.WAITING)
+                .totalAmount(orderProducts.stream()
+                        .mapToInt(op -> op.getPrice() * op.getQuantity()).sum())
                 .build();
+    }
+
+    public void complete() {
+        this.status = OrderStatus.COMPLETE;
     }
 }

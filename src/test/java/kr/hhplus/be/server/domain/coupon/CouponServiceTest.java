@@ -86,13 +86,12 @@ class CouponServiceTest {
     @Test
     void 쿠폰_사용_요청_시_유저에게_사용_가능한_쿠폰이_없으면_예외가_발생한다() {
         // given
-        Long userId = 1L;
-        Long couponId = 1L;
+        CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
 
-        given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, IssuedCouponStatus.UNUSED)).willReturn(null);
+        given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(null);
 
         // when // then
-        assertThatThrownBy(() -> couponService.useCoupon(userId, couponId))
+        assertThatThrownBy(() -> couponService.use(command))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.NO_AVAILABLE_COUPON.getMessage());
     }
@@ -100,15 +99,16 @@ class CouponServiceTest {
     @Test
     void 쿠폰_사용_요청_시_유저에게_사용_가능한_쿠폰이_있으면_쿠폰을_사용한다() {
         // given
-        Long userId = 1L;
-        Coupon coupon = Coupon.create(1L, "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
-        IssuedCoupon userCoupon = IssuedCoupon.create(userId, coupon.getId(), IssuedCouponStatus.UNUSED);
+        CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
 
-        given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(userId, coupon.getId(), IssuedCouponStatus.UNUSED)).willReturn(userCoupon);
+        Coupon coupon = Coupon.create(1L, "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
+        IssuedCoupon userCoupon = IssuedCoupon.create(1L, 1L, IssuedCouponStatus.UNUSED);
+
+        given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(userCoupon);
         given(couponRepository.findByIdWithLock(coupon.getId())).willReturn(coupon);
 
         // when
-        CouponInfo.IssuedCoupon result = couponService.useCoupon(userId, coupon.getId());
+        CouponInfo.IssuedCoupon result = couponService.use(command);
 
         // then
         assertEquals("USED", result.status());

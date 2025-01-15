@@ -25,55 +25,51 @@ public class ProductService {
 
     public List<ProductInfo.Product> popularProducts() {
         List<ProductInfo.PopularProduct> products = productRepository.findPopularProducts();
-        return ProductInfo.of(products);
+        return products.stream()
+                .map(ProductInfo.PopularProduct::of)
+                .collect(Collectors.toList());
     }
 
-    public void getProducts(List<ProductCommand.Product> command) {
+    public List<ProductInfo.Product> orderProducts(List<ProductCommand.Product> command) {
+        List<Long> productIds = getProductIds(command);
+        stoppedProduct(productIds);
 
+        List<Product> products = productRepository.findAllByIdIn(productIds);
+        return products.stream()
+                .map(ProductInfo.Product::of)
+                .collect(Collectors.toList());
     }
 
-//    public int deductStockAndCalculateTotal(List<ProductCommand.OrderDetail> productDtos) {
-//        int totalAmount = 0;
-//
-//        List<Long> productIds = getProductIds(productDtos);
-//
-//        // 판매 중단 체크
-//        stoppedProduct(productIds);
-//
-//        Map<Long, Integer> OrderDetailMap = createOrderDetailMap(productDtos);
-//
-//        // 재고 확인 후 차감
-//        List<Product> products = productRepository.findAllByIdIn(productIds);
-//        for(Product product : products) {
-//            int price = product.getPrice();
-//            int quantity = OrderDetailMap.get(product.getId());
-//
-//            totalAmount += price * quantity;
-//
-//            product.deductStock(quantity);
-//        }
-//
-//        return totalAmount;
-//    }
-//
-//    private static List<Long> getProductIds(List<ProductCommand.OrderDetail> products) {
-//        return products.stream()
-//                .map(ProductCommand.OrderDetail::productId)
-//                .collect(Collectors.toList());
-//    }
-//
-//    private void stoppedProduct(List<Long> productIds) {
-//        boolean stoppedProduct = productRepository.existsByIdInAndStatus(productIds, ProductStatus.STOP);
-//        if (stoppedProduct) {
-//            throw new CustomException(ErrorCode.HAS_STOPPED_PRODUCT);
-//        }
-//    }
-//
-//    private static Map<Long, Integer> createOrderDetailMap(List<ProductCommand.OrderDetail> products) {
-//        return products.stream()
-//                .collect(Collectors.toMap(
-//                        ProductCommand.OrderDetail::productId,
-//                        ProductCommand.OrderDetail::quantity
-//                ));
-//    }
+    public void deductStock(List<ProductCommand.Product> command) {
+        List<Long> productIds = getProductIds(command);
+        List<Product> products = productRepository.findAllByIdIn(productIds);
+
+        Map<Long, Integer> OrderProductMap = createOrderProductMap(command);
+
+        for(Product product : products) {
+            int quantity = OrderProductMap.get(product.getId());
+            product.deductStock(quantity);
+        }
+    }
+
+    private static List<Long> getProductIds(List<ProductCommand.Product> products) {
+        return products.stream()
+                .map(ProductCommand.Product::productId)
+                .collect(Collectors.toList());
+    }
+
+    private void stoppedProduct(List<Long> productIds) {
+        boolean stoppedProduct = productRepository.existsByIdInAndStatus(productIds, ProductStatus.STOP);
+        if (stoppedProduct) {
+            throw new CustomException(ErrorCode.HAS_STOPPED_PRODUCT);
+        }
+    }
+
+    private static Map<Long, Integer> createOrderProductMap(List<ProductCommand.Product> products) {
+        return products.stream()
+                .collect(Collectors.toMap(
+                        ProductCommand.Product::productId,
+                        ProductCommand.Product::quantity
+                ));
+    }
 }
