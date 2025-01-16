@@ -3,7 +3,6 @@ package kr.hhplus.be.server.domain.coupon;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
@@ -12,7 +11,6 @@ import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Testcontainers
 @SpringBootTest
 class CouponServiceConcurrencyTest {
 
@@ -27,8 +25,8 @@ class CouponServiceConcurrencyTest {
         // given
         LocalDateTime validStartDate = LocalDateTime.of(2025, 1, 1, 0, 0);
         LocalDateTime validEndDate = LocalDateTime.of(2025, 1, 31, 23, 59);
-        Coupon saveCoupon = Coupon.create(1L, "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 5);
-        couponRepository.save(saveCoupon);
+        Coupon coupon = Coupon.create("5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 5);
+        Coupon savedCoupon = couponRepository.save(coupon);
 
         int threads = 10;
         ExecutorService executorService = Executors.newFixedThreadPool(threads);
@@ -36,9 +34,10 @@ class CouponServiceConcurrencyTest {
 
         // when
         for(int i = 1; i <= threads; i++) {
+            long userId = i;
             executorService.submit(() -> {
                 try {
-                    CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
+                    CouponCommand.Issue command = CouponCommand.Issue.builder().userId(userId).couponId(1L).build();
                     couponService.issue(command);
                 } finally {
                     latch.countDown();
@@ -49,8 +48,8 @@ class CouponServiceConcurrencyTest {
         executorService.shutdown();
 
         //then
-        Coupon coupon = couponRepository.findByIdWithLock(1L);
-        assertEquals(0, coupon.getQuantity());
+        Coupon result = couponRepository.findById(savedCoupon.getId());
+        assertEquals(0, result.getQuantity());
     }
 
 }
