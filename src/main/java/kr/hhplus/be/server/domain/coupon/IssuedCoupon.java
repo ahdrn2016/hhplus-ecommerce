@@ -19,20 +19,24 @@ public class IssuedCoupon {
 
     private Long couponId;
 
+    private int amount;
+
     @Enumerated(EnumType.STRING)
     private IssuedCouponStatus status;
 
     @Builder
-    public IssuedCoupon(Long userId, Long couponId, IssuedCouponStatus status) {
+    public IssuedCoupon(Long userId, Long couponId, int amount, IssuedCouponStatus status) {
         this.userId = userId;
         this.couponId = couponId;
+        this.amount = amount;
         this.status = status;
     }
 
-    public static IssuedCoupon create(Long userId, Long couponId, IssuedCouponStatus status) {
+    public static IssuedCoupon create(Long userId, Long couponId, int amount, IssuedCouponStatus status) {
         return IssuedCoupon.builder()
                 .userId(userId)
                 .couponId(couponId)
+                .amount(amount)
                 .status(status)
                 .build();
     }

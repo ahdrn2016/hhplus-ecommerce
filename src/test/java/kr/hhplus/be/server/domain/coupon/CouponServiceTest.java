@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.coupon;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+@Transactional
 @ExtendWith(MockitoExtension.class)
 class CouponServiceTest {
 
@@ -39,7 +41,7 @@ class CouponServiceTest {
     void 쿠폰_발급_요청_시_유저에게_해당_쿠폰이_있으면_예외가_발생한다() {
         // given
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
-        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, IssuedCouponStatus.UNUSED);
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, 5000, IssuedCouponStatus.UNUSED);
 
         given(issuedCouponRepository.findCouponByUserIdAndCouponId(1L, 1L)).willReturn(issuedCoupon);
 
@@ -68,7 +70,7 @@ class CouponServiceTest {
         // given
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
         Coupon coupon = Coupon.create(1L, "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
-        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, IssuedCouponStatus.UNUSED);
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, 5000, IssuedCouponStatus.UNUSED);
 
         given(couponRepository.findByIdWithLock(1L)).willReturn(coupon);
         given(issuedCouponRepository.save(any(IssuedCoupon.class))).willReturn(issuedCoupon);
@@ -102,10 +104,9 @@ class CouponServiceTest {
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
 
         Coupon coupon = Coupon.create(1L, "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
-        IssuedCoupon userCoupon = IssuedCoupon.create(1L, 1L, IssuedCouponStatus.UNUSED);
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, 5000,IssuedCouponStatus.UNUSED);
 
-        given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(userCoupon);
-        given(couponRepository.findByIdWithLock(coupon.getId())).willReturn(coupon);
+        given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(issuedCoupon);
 
         // when
         CouponInfo.IssuedCoupon result = couponService.use(command);

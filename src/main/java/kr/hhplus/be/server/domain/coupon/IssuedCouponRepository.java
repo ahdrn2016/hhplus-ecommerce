@@ -8,7 +8,7 @@ public interface IssuedCouponRepository {
 
     IssuedCoupon findCouponByUserIdAndCouponId(Long userId, Long couponId);
 
-    IssuedCoupon save(IssuedCoupon userCoupon);
+    IssuedCoupon save(IssuedCoupon issuedCoupon);
 
     IssuedCoupon findByUserIdAndCouponIdAndStatus(Long userId, Long couponId, IssuedCouponStatus status);
 }

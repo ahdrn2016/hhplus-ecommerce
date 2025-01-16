@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.point;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+@Transactional
 @ExtendWith(MockitoExtension.class)
 class PointServiceTest {
 

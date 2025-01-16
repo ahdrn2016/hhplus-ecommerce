@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.order;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,9 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderProductRepository orderProductRepository;
     private final DataPlatformClient dataPlatformClient;
 
+    @Transactional
     public OrderInfo.Order order(OrderCommand.Order command) {
         List<OrderProduct> orderProducts = command.products().stream()
                 .map(orderProduct -> OrderProduct.builder()
@@ -24,23 +25,7 @@ public class OrderService {
 
         Order order = Order.create(command.userId(), orderProducts);
         Order savedOrder = orderRepository.save(order);
-
-        createOrderProducts(orderProducts, savedOrder);
-
         return OrderInfo.of(savedOrder);
-    }
-
-    private void createOrderProducts(List<OrderProduct> orderProducts, Order savedOrder) {
-        List<OrderProduct> savedOrderProducts = orderProducts.stream()
-                .map(product -> OrderProduct.builder()
-                        .order(savedOrder)
-                        .productId(product.getProductId())
-                        .price(product.getPrice())
-                        .quantity(product.getQuantity())
-                        .build()
-                )
-                .toList();
-        orderProductRepository.saveAll(savedOrderProducts);
     }
 
     public void complete(Long orderId) {

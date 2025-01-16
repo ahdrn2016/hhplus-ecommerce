@@ -17,15 +17,16 @@ public class CouponInfo {
         return IssuedCoupon.builder()
                 .userId(issuedCoupon.getUserId())
                 .couponId(issuedCoupon.getCouponId())
+                .amount(issuedCoupon.getAmount())
                 .status(issuedCoupon.getStatus().name())
                 .build();
     }
 
-    public static IssuedCoupon of(kr.hhplus.be.server.domain.coupon.IssuedCoupon userCoupon, int amount) {
+    public static IssuedCoupon of(kr.hhplus.be.server.domain.coupon.IssuedCoupon issuedCoupon, int amount) {
         return IssuedCoupon.builder()
-                .userId(userCoupon.getUserId())
-                .couponId(userCoupon.getCouponId())
-                .status(userCoupon.getStatus().name())
+                .userId(issuedCoupon.getUserId())
+                .couponId(issuedCoupon.getCouponId())
+                .status(issuedCoupon.getStatus().name())
                 .amount(amount)
                 .build();
     }

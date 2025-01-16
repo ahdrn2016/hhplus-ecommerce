@@ -43,6 +43,7 @@ public class Order extends BaseEntity {
                 .status(OrderStatus.WAITING)
                 .totalAmount(orderProducts.stream()
                         .mapToInt(op -> op.getPrice() * op.getQuantity()).sum())
+                .orderProducts(orderProducts)
                 .build();
     }
 

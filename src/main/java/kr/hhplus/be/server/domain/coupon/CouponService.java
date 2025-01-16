@@ -15,8 +15,8 @@ public class CouponService {
     private final CouponRepository couponRepository;
 
     public List<CouponInfo.IssuedCoupon> coupons(Long userId) {
-        List<IssuedCoupon> userCoupons = issuedCouponRepository.findCouponsByUserId(userId);
-        return CouponInfo.of(userCoupons);
+        List<IssuedCoupon> issuedCoupons = issuedCouponRepository.findCouponsByUserId(userId);
+        return CouponInfo.of(issuedCoupons);
     }
 
     public CouponInfo.IssuedCoupon issue(CouponCommand.Issue command) {
@@ -26,28 +26,22 @@ public class CouponService {
         Coupon coupon = couponRepository.findByIdWithLock(command.couponId());
         coupon.issue();
 
-        IssuedCoupon savedIssuedCoupon = createIssuedCoupon(command.userId(), command.couponId());
+        IssuedCoupon savedIssuedCoupon = createIssuedCoupon(command.userId(), coupon);
         return CouponInfo.of(savedIssuedCoupon);
     }
 
     public CouponInfo.IssuedCoupon use(CouponCommand.Issue command) {
-        IssuedCoupon userCoupon = getUnusedUserCoupon(command.userId(), command.couponId());
-        if (userCoupon == null) {
+        IssuedCoupon issuedCoupon = issuedCouponRepository.findByUserIdAndCouponIdAndStatus(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);
+        if (issuedCoupon == null) {
             throw new CustomException(ErrorCode.NO_AVAILABLE_COUPON);
         }
-        userCoupon.used();
-
-        Coupon coupon = couponRepository.findByIdWithLock(command.couponId());
-
-        return CouponInfo.of(userCoupon, coupon.getAmount());
+        issuedCoupon.used();
+        return CouponInfo.of(issuedCoupon);
     }
 
-    private IssuedCoupon createIssuedCoupon(Long userId, Long couponId) {
-        IssuedCoupon issuedCoupon = IssuedCoupon.create(userId, couponId, IssuedCouponStatus.UNUSED);
+    private IssuedCoupon createIssuedCoupon(Long userId, Coupon coupon) {
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(userId, coupon.getId(), coupon.getAmount(), IssuedCouponStatus.UNUSED);
         return issuedCouponRepository.save(issuedCoupon);
     }
 
-    private IssuedCoupon getUnusedUserCoupon(Long userId, Long couponId) {
-        return issuedCouponRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, IssuedCouponStatus.UNUSED);
-    }
 }
