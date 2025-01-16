@@ -30,8 +30,7 @@ public class Coupon {
     private int quantity;
 
     @Builder
-    public Coupon(Long id, String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
-        this.id = id;
+    public Coupon(String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
         this.name = name;
         this.amount = amount;
         this.validStartDate = validStartDate;
@@ -39,9 +38,8 @@ public class Coupon {
         this.quantity = quantity;
     }
 
-    public static Coupon create(Long couponId, String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
+    public static Coupon create(String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
         return Coupon.builder()
-                .id(couponId)
                 .name(name)
                 .amount(amount)
                 .validStartDate(validStartDate)

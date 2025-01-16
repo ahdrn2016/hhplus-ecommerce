@@ -7,10 +7,12 @@ import jakarta.persistence.Id;
 import kr.hhplus.be.server.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
 public class Payment extends BaseEntity {
 
     @Id

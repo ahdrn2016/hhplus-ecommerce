@@ -20,4 +20,9 @@ public class CouponRepositoryImpl implements CouponRepository {
     public Coupon save(Coupon coupon) {
         return couponJpaRepository.save(coupon);
     }
+
+    @Override
+    public Coupon findById(Long couponId) {
+        return couponJpaRepository.findById(couponId).orElse(null);
+    }
 }

@@ -6,6 +6,7 @@ import kr.hhplus.be.server.domain.coupon.CouponService;
 import kr.hhplus.be.server.domain.order.OrderCommand;
 import kr.hhplus.be.server.domain.order.OrderInfo;
 import kr.hhplus.be.server.domain.order.OrderService;
+import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.point.PointCommand;
 import kr.hhplus.be.server.domain.point.PointService;
@@ -30,20 +31,20 @@ public class OrderFacade {
     private final PointService pointService;
 
     @Transactional
-    public OrderResult.Order order(OrderCriteria.Order criteria) {
+    public OrderResult.Payment order(OrderCriteria.Order criteria) {
         List<ProductInfo.Product> products = productService.orderProducts(criteria.toProductCommand());
         List<OrderCommand.OrderProduct> orderProducts = createOrderCommand(criteria, products);
         OrderInfo.Order order = orderService.order(new OrderCommand.Order(criteria.userId(), orderProducts));
         CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.couponId())
                                         .map(couponId -> couponService.use(new CouponCommand.Issue(criteria.userId(), couponId)))
                                         .orElse(null);
-        paymentService.payment(order.orderId(), order.totalAmount(),
-                                Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(0));
-        pointService.use(new PointCommand.Use(order.orderId(), order.totalAmount()));
+        PaymentInfo.Payment payment = paymentService.payment(order.orderId(), order.totalAmount(),
+                Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(0));
+        pointService.use(new PointCommand.Use(criteria.userId(), payment.paymentAmount()));
         productService.deductStock(criteria.toProductCommand());
         orderService.complete(order.orderId());
 
-        return OrderResult.of(order);
+        return OrderResult.of(payment);
     }
 
     private static List<OrderCommand.OrderProduct> createOrderCommand(OrderCriteria.Order criteria, List<ProductInfo.Product> products) {

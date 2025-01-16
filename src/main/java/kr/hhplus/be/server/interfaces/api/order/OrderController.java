@@ -19,10 +19,10 @@ public class OrderController {
 
     @PostMapping(produces = { "application/json" }, consumes = { "application/json" })
     @Operation(summary = "주문", description = "주문을 진행합니다.", tags = { "order" })
-    public ResponseEntity<OrderResponse.Order> order(
+    public ResponseEntity<OrderResponse.Payment> order(
             @RequestBody OrderRequest.Order request
     ) {
-        OrderResult.Order response = orderFacade.order(request.toCriteria());
+        OrderResult.Payment response = orderFacade.order(request.toCriteria());
         return ResponseEntity.ok(OrderResponse.of(response));
     }
 

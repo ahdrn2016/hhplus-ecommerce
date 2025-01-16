@@ -9,8 +9,9 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    public void payment(Long orderId, int totalAmount, int discountAmount) {
+    public PaymentInfo.Payment payment(Long orderId, int totalAmount, int discountAmount) {
         Payment payment = Payment.create(orderId, totalAmount, discountAmount);
-        paymentRepository.save(payment);
+        Payment savedPayment = paymentRepository.save(payment);
+        return PaymentInfo.of(savedPayment);
     }
 }
