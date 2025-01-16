@@ -37,7 +37,7 @@ class CouponServiceConcurrencyTest {
             long userId = i;
             executorService.submit(() -> {
                 try {
-                    CouponCommand.Issue command = CouponCommand.Issue.builder().userId(userId).couponId(1L).build();
+                    CouponCommand.Issue command = CouponCommand.Issue.builder().userId(userId).couponId(coupon.getId()).build();
                     couponService.issue(command);
                 } finally {
                     latch.countDown();

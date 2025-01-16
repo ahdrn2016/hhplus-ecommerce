@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-@Transactional
 @ExtendWith(MockitoExtension.class)
 class CouponServiceTest {
 

@@ -116,6 +116,7 @@ class OrderFacadeIntegrationTest {
 
         // then
         assertEquals(27000, payment.paymentAmount());
+
     }
 
 }
