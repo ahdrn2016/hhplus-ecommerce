@@ -10,4 +10,5 @@ values (1, 1, 3000, 'USED'),
 
 insert into point(user_id, point)
 values (1, 10000),
-       (2, 60000);
+       (2, 60000),
+       (3, 0);

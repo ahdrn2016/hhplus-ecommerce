@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.point;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,15 +16,17 @@ public class PointService {
         return PointInfo.of(point);
     }
 
+    @Transactional
     public PointInfo.Point charge(PointCommand.Charge command) {
-        Point point = pointRepository.findByUserId(command.userId());
+        Point point = pointRepository.findByUserIdWithLock(command.userId());
         point.add(command.amount());
         createPointHistory(point.getId(), command.amount(), PointHistoryType.CHARGE);
         return PointInfo.of(point);
     }
 
+    @Transactional
     public PointInfo.Point use(PointCommand.Use command) {
-        Point point = pointRepository.findByUserId(command.userId());
+        Point point = pointRepository.findByUserIdWithLock(command.userId());
         point.minus(command.amount());
         createPointHistory(point.getId(), command.amount(), PointHistoryType.USE);
         return PointInfo.of(point);
