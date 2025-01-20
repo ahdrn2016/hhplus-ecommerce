@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class OrderFacade {
     @Transactional
     public OrderResult.Payment order(OrderCriteria.Order criteria) {
         List<ProductInfo.Product> products = productService.orderProducts(criteria.toProductCommand());
-        List<OrderCommand.OrderProduct> orderProducts = createOrderCommand(criteria, products);
+        List<OrderCommand.OrderProduct> orderProducts = OrderCommand.createOrderProducts(criteria, products);
         OrderInfo.Order order = orderService.order(new OrderCommand.Order(criteria.userId(), orderProducts));
         CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.couponId())
                                         .map(couponId -> couponService.use(new CouponCommand.Issue(criteria.userId(), couponId)))
@@ -47,18 +46,4 @@ public class OrderFacade {
         return OrderResult.of(payment);
     }
 
-    private static List<OrderCommand.OrderProduct> createOrderCommand(OrderCriteria.Order criteria, List<ProductInfo.Product> products) {
-        return products.stream()
-                .map(product -> {
-                    Long productId = product.productId();
-                    int price = product.price();
-                    int quantity = criteria.products().stream()
-                            .filter(p -> p.productId().equals(productId))
-                            .findFirst()
-                            .map(OrderCriteria.OrderProduct::quantity)
-                            .orElse(0);
-                    return new OrderCommand.OrderProduct(productId, price, quantity);
-                })
-                .collect(Collectors.toList());
-    }
 }
