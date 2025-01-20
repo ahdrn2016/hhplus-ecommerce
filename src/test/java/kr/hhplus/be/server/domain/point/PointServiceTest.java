@@ -30,7 +30,7 @@ class PointServiceTest {
         PointCommand.Charge command = PointCommand.Charge.builder().userId(1L).amount(0).build();
         Point point = new Point(1L, 1L, 50000);
 
-        given(pointRepository.findByUserId(1L)).willReturn(point);
+        given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
 
         // when // then
         assertThatThrownBy(() -> pointService.charge(command))
@@ -45,7 +45,7 @@ class PointServiceTest {
         Point point = new Point(1L, 1L, 50000);
         PointHistory pointHistory = PointHistory.create(1L, 10000, PointHistoryType.CHARGE);
 
-        given(pointRepository.findByUserId(1L)).willReturn(point);
+        given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
         given(pointHistoryRepository.save(any(PointHistory.class))).willReturn(pointHistory);
 
         // when
@@ -61,7 +61,7 @@ class PointServiceTest {
         PointCommand.Use command = PointCommand.Use.builder().userId(1L).amount(60000).build();
         Point point = new Point(1L, 1L, 50000);
 
-        given(pointRepository.findByUserId(1L)).willReturn(point);
+        given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
 
         // when // then
         assertThatThrownBy(() -> pointService.use(command))
@@ -76,7 +76,7 @@ class PointServiceTest {
         Point point = new Point(1L, 1L, 50000);
         PointHistory pointHistory = PointHistory.create(1L, 10000, PointHistoryType.USE);
 
-        given(pointRepository.findByUserId(1L)).willReturn(point);
+        given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
         given(pointHistoryRepository.save(any(PointHistory.class))).willReturn(pointHistory);
 
         // when

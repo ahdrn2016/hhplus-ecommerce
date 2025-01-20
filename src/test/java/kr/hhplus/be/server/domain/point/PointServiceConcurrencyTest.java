@@ -53,7 +53,7 @@ class PointServiceConcurrencyTest {
         for(int i = 1; i <= threads; i++) {
             executorService.submit(() -> {
                 try {
-                    PointCommand.Use command = PointCommand.Use.builder().userId(2L).amount(10000).build();
+                    PointCommand.Use command = PointCommand.Use.builder().userId(4L).amount(10000).build();
                     pointService.use(command);
                 } finally {
                     latch.countDown();
@@ -64,8 +64,8 @@ class PointServiceConcurrencyTest {
         executorService.shutdown();
 
         // then
-        PointInfo.Point result = pointService.point(2L);
-        assertEquals(40000, result.point());
+        PointInfo.Point result = pointService.point(4L);
+        assertEquals(0, result.point());
     }
 
 }

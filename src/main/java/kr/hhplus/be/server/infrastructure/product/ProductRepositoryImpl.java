@@ -68,4 +68,9 @@ public class ProductRepositoryImpl implements ProductRepository {
         return productJpaRepository.findAllByIdIn(productIds);
     }
 
+    @Override
+    public Product findById(long id) {
+        return productJpaRepository.findById(id).orElse(null);
+    }
+
 }
