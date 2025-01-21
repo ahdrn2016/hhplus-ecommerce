@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.product;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deductStock(List<ProductCommand.Product> command) {
         List<Long> productIds = getProductIds(command);
         List<Product> products = productRepository.findAllByIdIn(productIds);

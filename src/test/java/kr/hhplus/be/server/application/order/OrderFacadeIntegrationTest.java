@@ -101,8 +101,8 @@ class OrderFacadeIntegrationTest {
     void 주문_시_주문_성공한다() {
         // given
         List<OrderCriteria.OrderProduct> products = List.of(
-                OrderCriteria.OrderProduct.builder().productId(1L).quantity(1).build(),
-                OrderCriteria.OrderProduct.builder().productId(2L).quantity(2).build()
+                OrderCriteria.OrderProduct.builder().productId(4L).quantity(1).build(),
+                OrderCriteria.OrderProduct.builder().productId(5L).quantity(2).build()
         );
 
         OrderCriteria.Order criteria = OrderCriteria.Order.builder()
@@ -115,7 +115,7 @@ class OrderFacadeIntegrationTest {
         OrderResult.Payment payment = orderFacade.order(criteria);
 
         // then
-        assertEquals(27000, payment.paymentAmount());
+        assertEquals(30000, payment.paymentAmount());
 
     }
 
