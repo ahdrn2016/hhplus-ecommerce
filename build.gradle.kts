@@ -32,6 +32,7 @@ dependencyManagement {
 dependencies {
     // Spring
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 
@@ -46,6 +47,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
+	testImplementation ("com.redis.testcontainers:testcontainers-redis:1.6.4")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	// Lombok
