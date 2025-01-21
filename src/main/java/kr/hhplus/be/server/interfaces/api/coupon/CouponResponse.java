@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.interfaces.api.coupon;
 
-import kr.hhplus.be.server.application.coupon.CouponResult;
 import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import lombok.Builder;
 
@@ -9,29 +8,29 @@ import java.util.stream.Collectors;
 
 public class CouponResponse {
 
-    public static List<UserCouponDto> of(List<CouponInfo.UserCouponDto> userCouponDtos) {
-        return userCouponDtos.stream()
-                .map(UserCouponDto::of)
+    public static List<IssuedCoupon> of(List<CouponInfo.IssuedCoupon> issuedCoupons) {
+        return issuedCoupons.stream()
+                .map(IssuedCoupon::of)
                 .collect(Collectors.toList());
     }
 
-    public static UserCouponDto of(CouponResult.UserCouponDto userCouponDtos) {
-        return UserCouponDto.builder()
-                .userId(userCouponDtos.userId())
-                .couponId(userCouponDtos.couponId())
-                .status(userCouponDtos.status())
+    public static IssuedCoupon of(CouponInfo.IssuedCoupon issuedCoupon) {
+        return IssuedCoupon.builder()
+                .userId(issuedCoupon.userId())
+                .couponId(issuedCoupon.couponId())
+                .status(issuedCoupon.status())
                 .build();
     }
 
-    public record UserCouponDto(Long userId, Long couponId, String status) {
+    public record IssuedCoupon(Long userId, Long couponId, String status) {
         @Builder
-        public UserCouponDto {}
+        public IssuedCoupon {}
 
-        public static UserCouponDto of(CouponInfo.UserCouponDto userCouponDto) {
-            return UserCouponDto.builder()
-                    .userId(userCouponDto.userId())
-                    .couponId(userCouponDto.couponId())
-                    .status(userCouponDto.status())
+        public static IssuedCoupon of(CouponInfo.IssuedCoupon issuedCoupon) {
+            return IssuedCoupon.builder()
+                    .userId(issuedCoupon.userId())
+                    .couponId(issuedCoupon.couponId())
+                    .status(issuedCoupon.status())
                     .build();
         }
     }

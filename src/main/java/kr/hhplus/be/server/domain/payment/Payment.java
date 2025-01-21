@@ -7,10 +7,12 @@ import jakarta.persistence.Id;
 import kr.hhplus.be.server.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
 public class Payment extends BaseEntity {
 
     @Id
@@ -19,19 +21,26 @@ public class Payment extends BaseEntity {
 
     private Long orderId;
 
+    private int totalAmount;
+
+    private int discountAmount;
+
     private int paymentAmount;
 
     @Builder
-    public Payment(Long id, Long orderId, int paymentAmount) {
+    public Payment(Long id, Long orderId, int totalAmount, int discountAmount) {
         this.id = id;
         this.orderId = orderId;
-        this.paymentAmount = paymentAmount;
+        this.totalAmount = totalAmount;
+        this.discountAmount = discountAmount;
+        this.paymentAmount = totalAmount - discountAmount;
     }
 
-    public static Payment create(Long orderId, int paymentAmount) {
+    public static Payment create(Long orderId, int totalAmount, int discountAmount) {
         return Payment.builder()
                 .orderId(orderId)
-                .paymentAmount(paymentAmount)
+                .totalAmount(totalAmount)
+                .discountAmount(discountAmount)
                 .build();
     }
 }

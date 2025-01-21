@@ -4,8 +4,11 @@ import lombok.Builder;
 
 public class ProductCommand {
 
-    public record OrderProduct(Long productId, int quantity) {
+    public record Product(
+            Long productId,
+            int quantity
+    ) {
         @Builder
-        public OrderProduct {}
+        public Product {}
     }
 }

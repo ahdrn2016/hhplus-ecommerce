@@ -30,7 +30,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<ProductInfo.PopularProductDto> findPopularProducts() {
+    public List<ProductInfo.PopularProduct> findPopularProducts() {
         QOrderProduct qOrderProduct = QOrderProduct.orderProduct;
         QOrder qOrder = QOrder.order;
         QProduct qProduct = QProduct.product;
@@ -39,15 +39,15 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         JPAQuery<ProductInfo> query = new JPAQuery<>(em);
 
-        List<ProductInfo.PopularProductDto> result = query.select(Projections.constructor(
-                        ProductInfo.PopularProductDto.class,
+        List<ProductInfo.PopularProduct> result = query.select(Projections.constructor(
+                        ProductInfo.PopularProduct.class,
                         qProduct.id,
                         qProduct.name,
                         qProduct.price,
                         qOrderProduct.quantity.sum().as("totalQuantity")
                 ))
                 .from(qOrderProduct)
-                .join(qOrder).on(qOrderProduct.orderId.eq(qOrder.id))
+                .join(qOrder).on(qOrderProduct.order.id.eq(qOrder.id))
                 .join(qProduct).on(qOrderProduct.productId.eq(qProduct.id))
                 .where(qOrder.createdAt.goe(threeDaysAgo))
                 .groupBy(qProduct.id, qProduct.name, qProduct.price)
@@ -66,6 +66,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public List<Product> findAllByIdIn(List<Long> productIds) {
         return productJpaRepository.findAllByIdIn(productIds);
+    }
+
+    @Override
+    public Product findById(long id) {
+        return productJpaRepository.findById(id).orElse(null);
     }
 
 }

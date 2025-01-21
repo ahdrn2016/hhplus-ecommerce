@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.product;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -17,44 +18,45 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public Page<ProductInfo.ProductDto> getProducts(int page, int size) {
+    public Page<ProductInfo.Product> products(int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         Page<Product> products = productRepository.findAllByStatus(ProductStatus.SELLING, pageable);
         return ProductInfo.of(products);
     }
 
-    public List<ProductInfo.ProductDto> getPopularProducts() {
-        List<ProductInfo.PopularProductDto> products = productRepository.findPopularProducts();
-        return ProductInfo.of(products);
+    public List<ProductInfo.Product> popularProducts() {
+        List<ProductInfo.PopularProduct> products = productRepository.findPopularProducts();
+        return products.stream()
+                .map(ProductInfo.PopularProduct::of)
+                .collect(Collectors.toList());
     }
 
-    public int deductStockAndCalculateTotal(List<ProductCommand.OrderProduct> productDtos) {
-        int totalAmount = 0;
-
-        List<Long> productIds = getProductIds(productDtos);
-
-        // 판매 중단 체크
+    public List<ProductInfo.Product> orderProducts(List<ProductCommand.Product> command) {
+        List<Long> productIds = getProductIds(command);
         stoppedProduct(productIds);
 
-        Map<Long, Integer> orderProductMap = createOrderProductMap(productDtos);
-
-        // 재고 확인 후 차감
         List<Product> products = productRepository.findAllByIdIn(productIds);
-        for(Product product : products) {
-            int price = product.getPrice();
-            int quantity = orderProductMap.get(product.getId());
-
-            totalAmount += price * quantity;
-
-            product.deductStock(quantity);
-        }
-
-        return totalAmount;
+        return products.stream()
+                .map(ProductInfo.Product::of)
+                .collect(Collectors.toList());
     }
 
-    private static List<Long> getProductIds(List<ProductCommand.OrderProduct> products) {
+    @Transactional
+    public void deductStock(List<ProductCommand.Product> command) {
+        List<Long> productIds = getProductIds(command);
+        List<Product> products = productRepository.findAllByIdIn(productIds);
+
+        Map<Long, Integer> OrderProductMap = createOrderProductMap(command);
+
+        for(Product product : products) {
+            int quantity = OrderProductMap.get(product.getId());
+            product.deductStock(quantity);
+        }
+    }
+
+    private static List<Long> getProductIds(List<ProductCommand.Product> products) {
         return products.stream()
-                .map(ProductCommand.OrderProduct::productId)
+                .map(ProductCommand.Product::productId)
                 .collect(Collectors.toList());
     }
 
@@ -65,11 +67,11 @@ public class ProductService {
         }
     }
 
-    private static Map<Long, Integer> createOrderProductMap(List<ProductCommand.OrderProduct> products) {
+    private static Map<Long, Integer> createOrderProductMap(List<ProductCommand.Product> products) {
         return products.stream()
                 .collect(Collectors.toMap(
-                        ProductCommand.OrderProduct::productId,
-                        ProductCommand.OrderProduct::quantity
+                        ProductCommand.Product::productId,
+                        ProductCommand.Product::quantity
                 ));
     }
 }

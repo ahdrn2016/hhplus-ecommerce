@@ -1,27 +1,25 @@
 package kr.hhplus.be.server.application.order;
 
 import kr.hhplus.be.server.domain.order.OrderInfo;
+import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import lombok.Builder;
 
 public class OrderResult {
 
-    public static OrderDto of(OrderInfo.OrderDto order) {
-        return OrderDto.builder()
-                .orderId(order.orderId())
-                .totalAmount(order.totalAmount())
-                .discountAmount(order.discountAmount())
-                .paymentAmount(order.paymentAmount())
+    public static Payment of(PaymentInfo.Payment payment) {
+        return Payment.builder()
+                .orderId(payment.orderId())
+                .paymentAmount(payment.paymentAmount())
                 .build();
     }
 
-    public record OrderDto(
+    public record Payment(
             Long orderId,
-            int totalAmount,
-            int discountAmount,
+            Long userId,
             int paymentAmount
     ) {
         @Builder
-        public OrderDto {}
+        public Payment {}
     }
 
 }

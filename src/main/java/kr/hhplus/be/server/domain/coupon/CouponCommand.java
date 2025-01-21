@@ -4,11 +4,12 @@ import lombok.Builder;
 
 public class CouponCommand {
 
-    public record UserCouponDto(
-            Long couponId,
-            int amount
+    public record Issue(
+            Long userId,
+            Long couponId
     ) {
         @Builder
-        public UserCouponDto {}
+        public Issue {}
     }
+
 }

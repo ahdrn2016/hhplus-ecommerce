@@ -4,6 +4,7 @@ import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,47 +12,38 @@ import java.util.List;
 @Service
 public class CouponService {
 
-    private final UserCouponRepository userCouponRepository;
+    private final IssuedCouponRepository issuedCouponRepository;
     private final CouponRepository couponRepository;
 
-    public List<CouponInfo.UserCouponDto> getCoupons(Long userId) {
-        List<UserCoupon> userCoupons = userCouponRepository.findCouponsByUserId(userId);
-        return CouponInfo.of(userCoupons);
+    public List<CouponInfo.IssuedCoupon> coupons(Long userId) {
+        List<IssuedCoupon> issuedCoupons = issuedCouponRepository.findCouponsByUserId(userId);
+        return CouponInfo.of(issuedCoupons);
     }
 
-    public Coupon issueCoupon(Long couponId) {
-        Coupon coupon = couponRepository.findByIdWithLock(couponId);
+    @Transactional
+    public CouponInfo.IssuedCoupon issue(CouponCommand.Issue command) {
+        IssuedCoupon issuedCoupon = issuedCouponRepository.findCouponByUserIdAndCouponId(command.userId(), command.couponId());
+        if (issuedCoupon != null) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
+
+        Coupon coupon = couponRepository.findByIdWithLock(command.couponId());
         coupon.issue();
-        return coupon;
+
+        IssuedCoupon savedIssuedCoupon = createIssuedCoupon(command.userId(), coupon);
+        return CouponInfo.of(savedIssuedCoupon);
     }
 
-    public CouponInfo.UserCouponDto createUserCoupon(Long userId, Long couponId) {
-        getUserCoupon(userId, couponId);
-        UserCoupon userCoupon = UserCoupon.create(userId, couponId, UserCouponStatus.UNUSED);
-        UserCoupon savedUserCoupon = userCouponRepository.save(userCoupon);
-        return CouponInfo.of(savedUserCoupon);
-    }
-
-    private void getUserCoupon(Long userId, Long couponId) {
-        UserCoupon userCoupon = userCouponRepository.findCouponByUserIdAndCouponId(userId, couponId);
-        if (userCoupon != null) {
-            throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
-        }
-    }
-
-    public CouponInfo.UserCouponDto useCoupon(Long userId, Long couponId) {
-        UserCoupon userCoupon = getUnusedUserCoupon(userId, couponId);
-        if (userCoupon == null) {
+    public CouponInfo.IssuedCoupon use(CouponCommand.Issue command) {
+        IssuedCoupon issuedCoupon = issuedCouponRepository.findByUserIdAndCouponIdAndStatus(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);
+        if (issuedCoupon == null) {
             throw new CustomException(ErrorCode.NO_AVAILABLE_COUPON);
         }
-        userCoupon.used();
-
-        Coupon coupon = couponRepository.findByIdWithLock(couponId);
-
-        return CouponInfo.of(userCoupon, coupon.getAmount());
+        issuedCoupon.used();
+        return CouponInfo.of(issuedCoupon);
     }
 
-    private UserCoupon getUnusedUserCoupon(Long userId, Long couponId) {
-        return userCouponRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, UserCouponStatus.UNUSED);
+    private IssuedCoupon createIssuedCoupon(Long userId, Coupon coupon) {
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(userId, coupon.getId(), coupon.getAmount(), IssuedCouponStatus.UNUSED);
+        return issuedCouponRepository.save(issuedCoupon);
     }
+
 }

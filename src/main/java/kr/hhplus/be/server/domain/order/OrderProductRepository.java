@@ -1,6 +1,9 @@
 package kr.hhplus.be.server.domain.order;
 
+import java.util.List;
+
 public interface OrderProductRepository {
 
-    OrderProduct save(OrderProduct orderProduct);
+    void saveAll(List<OrderProduct> orderProducts);
+
 }

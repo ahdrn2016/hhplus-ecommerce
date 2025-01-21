@@ -1,54 +1,49 @@
 package kr.hhplus.be.server.application.order;
 
+import kr.hhplus.be.server.domain.coupon.CouponCommand;
 import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.CouponService;
+import kr.hhplus.be.server.domain.order.OrderCommand;
 import kr.hhplus.be.server.domain.order.OrderInfo;
 import kr.hhplus.be.server.domain.order.OrderService;
+import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentService;
-import kr.hhplus.be.server.domain.product.ProductCommand;
+import kr.hhplus.be.server.domain.point.PointCommand;
+import kr.hhplus.be.server.domain.point.PointService;
+import kr.hhplus.be.server.domain.product.ProductInfo;
 import kr.hhplus.be.server.domain.product.ProductService;
-import kr.hhplus.be.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class OrderFacade {
 
-    private final CouponService couponService;
     private final ProductService productService;
     private final OrderService orderService;
-    private final UserService userService;
+    private final CouponService couponService;
     private final PaymentService paymentService;
+    private final PointService pointService;
 
     @Transactional
-    public OrderResult.OrderDto createOrder(OrderCriteria.CreateOrder criteria) {
-        List<ProductCommand.OrderProduct> productDtos = criteria.products().stream()
-                .map(OrderCriteria.OrderProduct::toCommand)
-                .toList();
+    public OrderResult.Payment order(OrderCriteria.Order criteria) {
+        List<ProductInfo.Product> products = productService.orderProducts(criteria.toProductCommand());
+        List<OrderCommand.OrderProduct> orderProducts = OrderCommand.createOrderProducts(criteria, products);
+        OrderInfo.Order order = orderService.order(new OrderCommand.Order(criteria.userId(), orderProducts));
+        CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.couponId())
+                                        .map(couponId -> couponService.use(new CouponCommand.Issue(criteria.userId(), couponId)))
+                                        .orElse(null);
+        PaymentInfo.Payment payment = paymentService.payment(order.orderId(), order.totalAmount(),
+                Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(0));
+        pointService.use(new PointCommand.Use(criteria.userId(), payment.paymentAmount()));
+        productService.deductStock(criteria.toProductCommand());
+        orderService.complete(order.orderId());
 
-        // 쿠폰 사용
-        int discountAmount = 0;
-        if (criteria.couponId() != null) {
-            CouponInfo.UserCouponDto userCouponDto = couponService.useCoupon(criteria.userId(), criteria.couponId());
-            discountAmount = userCouponDto.amount();
-        }
-
-        // 재고 차감, 총 금액 계산
-        int totalAmount = productService.deductStockAndCalculateTotal(productDtos);
-
-        // 주문 생성
-        OrderInfo.OrderDto order = orderService.createOrder(criteria.userId(), totalAmount, discountAmount, productDtos);
-
-        // 잔액 사용
-        userService.useBalance(criteria.userId(), order.paymentAmount());
-
-        // 결제 생성
-        paymentService.payment(order.orderId(), order.paymentAmount());
-
-        return OrderResult.of(order);
+        return OrderResult.of(payment);
     }
+
 }
