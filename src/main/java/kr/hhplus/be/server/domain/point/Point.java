@@ -1,9 +1,6 @@
 package kr.hhplus.be.server.domain.point;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.*;
@@ -21,6 +18,9 @@ public class Point {
     private Long userId;
 
     private int point;
+
+    @Version
+    private Integer version;
 
     public void add(int amount) {
         if (amount <= 0) throw new CustomException(ErrorCode.INVALID_CHARGE_AMOUNT);

@@ -28,7 +28,7 @@ class PointServiceTest {
     void 잔액_충전_시_요청금액이_0원이면_예외가_발생한다() {
         // given
         PointCommand.Charge command = PointCommand.Charge.builder().userId(1L).amount(0).build();
-        Point point = new Point(1L, 1L, 50000);
+        Point point = new Point(1L, 1L, 50000, 0);
 
         given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
 
@@ -42,7 +42,7 @@ class PointServiceTest {
     void 잔액_충전_요청_시_요청금액이_정상이면_보유잔액에_합산한다() {
         // given
         PointCommand.Charge command = PointCommand.Charge.builder().userId(1L).amount(10000).build();
-        Point point = new Point(1L, 1L, 50000);
+        Point point = new Point(1L, 1L, 50000, 0);
         PointHistory pointHistory = PointHistory.create(1L, 10000, PointHistoryType.CHARGE);
 
         given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
@@ -59,7 +59,7 @@ class PointServiceTest {
     void 잔액_사용_시_요청금액이_보유잔액보다_크면_예외가_발생한다() {
         // given
         PointCommand.Use command = PointCommand.Use.builder().userId(1L).amount(60000).build();
-        Point point = new Point(1L, 1L, 50000);
+        Point point = new Point(1L, 1L, 50000, 0);
 
         given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
 
@@ -73,7 +73,7 @@ class PointServiceTest {
     void 잔액_사용_요청_시_요청금액이_정상이면_보유잔액에서_차감한다() {
         // given
         PointCommand.Use command = PointCommand.Use.builder().userId(1L).amount(10000).build();
-        Point point = new Point(1L, 1L, 50000);
+        Point point = new Point(1L, 1L, 50000, 0);
         PointHistory pointHistory = PointHistory.create(1L, 10000, PointHistoryType.USE);
 
         given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
