@@ -30,8 +30,8 @@ class TestcontainersConfiguration {
 				.withExposedPorts(6379); // Redis 기본 포트
 		REDIS_CONTAINER.start();
 
-		System.setProperty("spring.redis.host", REDIS_CONTAINER.getHost());
-		System.setProperty("spring.redis.port", REDIS_CONTAINER.getMappedPort(6379).toString());
+		System.setProperty("spring.data.redis.host", REDIS_CONTAINER.getHost());
+		System.setProperty("spring.data.redis.port", REDIS_CONTAINER.getMappedPort(6379).toString());
 	}
 
 	@PreDestroy
