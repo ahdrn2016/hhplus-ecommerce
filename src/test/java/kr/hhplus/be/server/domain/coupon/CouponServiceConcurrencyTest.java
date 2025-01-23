@@ -39,6 +39,8 @@ class CouponServiceConcurrencyTest {
                 try {
                     CouponCommand.Issue command = CouponCommand.Issue.builder().userId(userId).couponId(coupon.getId()).build();
                     couponService.issue(command);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 } finally {
                     latch.countDown();
                 }

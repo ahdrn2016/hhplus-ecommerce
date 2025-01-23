@@ -44,7 +44,7 @@ class CouponServiceTest {
         given(issuedCouponRepository.findCouponByUserIdAndCouponId(1L, 1L)).willReturn(issuedCoupon);
 
         // when // then
-        assertThatThrownBy(() -> couponService.issue(command))
+        assertThatThrownBy(() -> couponService.issuedCoupon(command))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.DUPLICATE_ISSUE_COUPON.getMessage());
     }
@@ -58,13 +58,13 @@ class CouponServiceTest {
         given(couponRepository.findByIdWithLock(1L)).willReturn(coupon);
 
         // when // then
-        assertThatThrownBy(() -> couponService.issue(command))
+        assertThatThrownBy(() -> couponService.issuedCoupon(command))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.SOLD_OUT_COUPON.getMessage());
     }
 
     @Test
-    void 쿠폰_발급_요청_시_유저에게_쿠폰을_발급한다() {
+    void 쿠폰_발급_요청_시_유저에게_쿠폰을_발급한다() throws InterruptedException {
         // given
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
         Coupon coupon = Coupon.create("5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
@@ -74,7 +74,7 @@ class CouponServiceTest {
         given(issuedCouponRepository.save(any(IssuedCoupon.class))).willReturn(issuedCoupon);
 
         // when
-        CouponInfo.IssuedCoupon result = couponService.issue(command);
+        CouponInfo.IssuedCoupon result = couponService.issuedCoupon(command);
 
         // then
         assertEquals(9, coupon.getQuantity());
