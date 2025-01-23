@@ -32,9 +32,10 @@ dependencyManagement {
 dependencies {
     // Spring
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation("org.springframework.retry:spring-retry")
 
 	// Swagger UI
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")

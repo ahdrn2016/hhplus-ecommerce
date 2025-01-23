@@ -1,6 +1,9 @@
 package kr.hhplus.be.server.domain.point;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,11 @@ public class PointService {
         return PointInfo.of(point);
     }
 
+    @Retryable(
+            retryFor = ObjectOptimisticLockingFailureException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 500)
+    )
     @Transactional
     public PointInfo.Point charge(PointCommand.Charge command) {
         Point point = pointRepository.findByUserIdWithLock(command.userId());
@@ -24,6 +32,11 @@ public class PointService {
         return PointInfo.of(point);
     }
 
+    @Retryable(
+            retryFor = ObjectOptimisticLockingFailureException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 500)
+    )
     @Transactional
     public PointInfo.Point use(PointCommand.Use command) {
         Point point = pointRepository.findByUserIdWithLock(command.userId());

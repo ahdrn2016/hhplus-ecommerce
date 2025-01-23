@@ -17,7 +17,7 @@ class PointServiceConcurrencyTest {
     private PointService pointService;
 
     @Test
-    void 유저가_동시에_포인트_충전_2회_요청_시_1번만_성공한다() throws InterruptedException {
+    void 유저가_동시에_포인트_충전_2회_요청_시_요청에_성공한다() throws InterruptedException {
         // given
         int threads = 2;
         ExecutorService executorService = Executors.newFixedThreadPool(threads);
@@ -39,11 +39,11 @@ class PointServiceConcurrencyTest {
 
         // then
         PointInfo.Point result = pointService.point(3L);
-        assertEquals(10000, result.point());
+        assertEquals(20000, result.point());
     }
 
     @Test
-    void 유저가_동시에_포인트_사용_2회_요청_시_1번만_성공한다() throws InterruptedException {
+    void 유저가_동시에_포인트_사용_2회_요청_시_요청에_성공한다() throws InterruptedException {
         // given
         int threads = 2;
         ExecutorService executorService = Executors.newFixedThreadPool(threads);
@@ -65,7 +65,7 @@ class PointServiceConcurrencyTest {
 
         // then
         PointInfo.Point result = pointService.point(4L);
-        assertEquals(10000, result.point());
+        assertEquals(0, result.point());
     }
 
 }
