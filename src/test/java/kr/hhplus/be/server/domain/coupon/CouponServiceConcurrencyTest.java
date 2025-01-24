@@ -20,6 +20,9 @@ class CouponServiceConcurrencyTest {
     @Autowired
     private CouponService couponService;
 
+    @Autowired
+    private IssuedCouponRepository issuedCouponRepository;
+
     @Test
     void 쿠폰_수량_5개일_때_유저_10명이_동시에_쿠폰_발급_요청_시_5명만_성공한다() throws InterruptedException {
         // given
@@ -33,14 +36,12 @@ class CouponServiceConcurrencyTest {
         CountDownLatch latch = new CountDownLatch(threads);
 
         // when
-        for(int i = 1; i <= threads; i++) {
+        for(int i = 3; i <= 13; i++) {
             long userId = i;
             executorService.submit(() -> {
                 try {
                     CouponCommand.Issue command = CouponCommand.Issue.builder().userId(userId).couponId(coupon.getId()).build();
                     couponService.issue(command);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
                 } finally {
                     latch.countDown();
                 }
@@ -52,6 +53,8 @@ class CouponServiceConcurrencyTest {
         //then
         Coupon result = couponRepository.findById(savedCoupon.getId());
         assertEquals(0, result.getQuantity());
+        int issuedCoupon = issuedCouponRepository.countByCouponId(coupon.getId());
+        assertEquals(5, issuedCoupon);
     }
 
 }

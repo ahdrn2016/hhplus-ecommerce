@@ -44,7 +44,7 @@ class CouponServiceTest {
         given(issuedCouponRepository.findCouponByUserIdAndCouponId(1L, 1L)).willReturn(issuedCoupon);
 
         // when // then
-        assertThatThrownBy(() -> couponService.issuedCoupon(command))
+        assertThatThrownBy(() -> couponService.issue(command))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.DUPLICATE_ISSUE_COUPON.getMessage());
     }
@@ -55,10 +55,10 @@ class CouponServiceTest {
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
         Coupon coupon = Coupon.create( "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 0);
 
-        given(couponRepository.findByIdWithLock(1L)).willReturn(coupon);
+        given(couponRepository.findById(1L)).willReturn(coupon);
 
         // when // then
-        assertThatThrownBy(() -> couponService.issuedCoupon(command))
+        assertThatThrownBy(() -> couponService.issue(command))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.SOLD_OUT_COUPON.getMessage());
     }
@@ -70,11 +70,11 @@ class CouponServiceTest {
         Coupon coupon = Coupon.create("5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
         IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, 5000, IssuedCouponStatus.UNUSED);
 
-        given(couponRepository.findByIdWithLock(1L)).willReturn(coupon);
+        given(couponRepository.findById(1L)).willReturn(coupon);
         given(issuedCouponRepository.save(any(IssuedCoupon.class))).willReturn(issuedCoupon);
 
         // when
-        CouponInfo.IssuedCoupon result = couponService.issuedCoupon(command);
+        CouponInfo.IssuedCoupon result = couponService.issue(command);
 
         // then
         assertEquals(9, coupon.getQuantity());
