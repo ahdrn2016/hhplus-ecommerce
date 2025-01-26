@@ -54,20 +54,20 @@ public class ProductService {
         }
     }
 
-    private static List<Long> getProductIds(List<ProductCommand.Product> products) {
+    public static List<Long> getProductIds(List<ProductCommand.Product> products) {
         return products.stream()
                 .map(ProductCommand.Product::productId)
                 .collect(Collectors.toList());
     }
 
-    private void stoppedProduct(List<Long> productIds) {
+    public void stoppedProduct(List<Long> productIds) {
         boolean stoppedProduct = productRepository.existsByIdInAndStatus(productIds, ProductStatus.STOP);
         if (stoppedProduct) {
             throw new CustomException(ErrorCode.HAS_STOPPED_PRODUCT);
         }
     }
 
-    private static Map<Long, Integer> createOrderProductMap(List<ProductCommand.Product> products) {
+    public static Map<Long, Integer> createOrderProductMap(List<ProductCommand.Product> products) {
         return products.stream()
                 .collect(Collectors.toMap(
                         ProductCommand.Product::productId,

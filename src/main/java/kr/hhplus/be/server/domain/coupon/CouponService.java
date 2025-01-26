@@ -47,7 +47,7 @@ public class CouponService {
         return CouponInfo.of(issuedCoupon);
     }
 
-    private IssuedCoupon createIssuedCoupon(Long userId, Coupon coupon) {
+    public IssuedCoupon createIssuedCoupon(Long userId, Coupon coupon) {
         IssuedCoupon issuedCoupon = IssuedCoupon.create(userId, coupon.getId(), coupon.getAmount(), IssuedCouponStatus.UNUSED);
         return issuedCouponRepository.save(issuedCoupon);
     }

@@ -32,14 +32,13 @@ public class OrderFacade {
     @Transactional
     public OrderResult.Payment order(OrderCriteria.Order criteria) {
         List<ProductInfo.Product> products = productService.orderProducts(criteria.toProductCommand());
-        List<OrderCommand.OrderProduct> orderProducts = OrderCommand.createOrderProducts(criteria, products);
-        OrderInfo.Order order = orderService.order(new OrderCommand.Order(criteria.userId(), orderProducts));
+        OrderInfo.Order order = orderService.order(criteria.toOrderCommand(criteria, products));
         CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.couponId())
-                                        .map(couponId -> couponService.use(new CouponCommand.Issue(criteria.userId(), couponId)))
+                                        .map(couponId -> couponService.use(criteria.toCouponCommand(criteria, couponId)))
                                         .orElse(null);
         PaymentInfo.Payment payment = paymentService.payment(order.orderId(), order.totalAmount(),
                 Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(0));
-        pointService.use(new PointCommand.Use(criteria.userId(), payment.paymentAmount()));
+        pointService.use(criteria.toPointCommand(criteria, payment));
         productService.deductStock(criteria.toProductCommand());
         orderService.complete(order.orderId());
 

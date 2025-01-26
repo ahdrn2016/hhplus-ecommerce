@@ -45,7 +45,7 @@ public class PointService {
         return PointInfo.of(point);
     }
 
-    private void createPointHistory(Long pointId, int amount, PointHistoryType type) {
+    public void createPointHistory(Long pointId, int amount, PointHistoryType type) {
         PointHistory pointHistory = PointHistory.create(pointId, amount, type);
         pointHistoryRepository.save(pointHistory);
     }

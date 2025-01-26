@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.order;
 
-import kr.hhplus.be.server.domain.order.OrderInfo;
 import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import lombok.Builder;
 
