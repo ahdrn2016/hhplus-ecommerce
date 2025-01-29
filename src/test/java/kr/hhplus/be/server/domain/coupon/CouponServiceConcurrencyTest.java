@@ -28,7 +28,7 @@ class CouponServiceConcurrencyTest {
         // given
         LocalDateTime validStartDate = LocalDateTime.of(2025, 1, 1, 0, 0);
         LocalDateTime validEndDate = LocalDateTime.of(2025, 1, 31, 23, 59);
-        Coupon coupon = Coupon.create("5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 5);
+        Coupon coupon = Coupon.create("10000원 할인 쿠폰", 10000, validStartDate, validEndDate, 5);
         Coupon savedCoupon = couponRepository.save(coupon);
 
         int threads = 10;
@@ -36,7 +36,7 @@ class CouponServiceConcurrencyTest {
         CountDownLatch latch = new CountDownLatch(threads);
 
         // when
-        for(int i = 3; i <= 13; i++) {
+        for(int i = 1; i <= 10; i++) {
             long userId = i;
             executorService.submit(() -> {
                 try {
