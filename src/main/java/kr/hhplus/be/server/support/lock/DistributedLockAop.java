@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -16,11 +18,11 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class DistributedLockAop {
 
     private static final String REDISSON_LOCK_PREFIX = "redisson";
     private final RedissonClient redissonClient;
-    private final AopForTransaction aopForTransaction;
 
     @Around("@annotation(kr.hhplus.be.server.support.lock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
@@ -33,19 +35,17 @@ public class DistributedLockAop {
 
         try {
             boolean available = rLock.tryLock(distributedLock.waitTime(), distributedLock.leaseTime(), distributedLock.timeUnit());
-            log.info("===== Lock start : {} =====", key);
             if (!available) {
                 return false;
             }
 
-            return aopForTransaction.proceed(joinPoint);
+            return joinPoint.proceed();
 
         } catch (InterruptedException e) {
             throw new InterruptedException();
         } finally {
             try {
                 rLock.unlock();
-                log.info("===== Lock end : {} =====", key);
             } catch (IllegalMonitorStateException e) {
                 log.info("Redisson Lock Already Unlocked: {}", method.getName());
             }

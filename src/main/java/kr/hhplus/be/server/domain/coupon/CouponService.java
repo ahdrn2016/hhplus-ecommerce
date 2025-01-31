@@ -5,7 +5,6 @@ import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ public class CouponService {
 
     private final IssuedCouponRepository issuedCouponRepository;
     private final CouponRepository couponRepository;
-    private final RedissonClient redissonClient;
 
     public List<CouponInfo.IssuedCoupon> coupons(Long userId) {
         List<IssuedCoupon> issuedCoupons = issuedCouponRepository.findCouponsByUserId(userId);
@@ -26,6 +24,7 @@ public class CouponService {
     }
 
     @DistributedLock(key = "'lock:coupon:' + #command.couponId()")
+    @Transactional
     public CouponInfo.IssuedCoupon issue(CouponCommand.Issue command) {
         IssuedCoupon issuedCoupon = issuedCouponRepository.findCouponByUserIdAndCouponId(command.userId(), command.couponId());
         if (issuedCoupon != null) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
