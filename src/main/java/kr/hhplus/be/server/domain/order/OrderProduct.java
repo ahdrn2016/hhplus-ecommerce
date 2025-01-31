@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -21,12 +23,12 @@ public class OrderProduct {
 
     private Long productId;
 
-    private int price;
+    private BigDecimal price;
 
     private int quantity;
 
     @Builder
-    public OrderProduct(Order order, Long productId, int price, int quantity) {
+    public OrderProduct(Order order, Long productId, BigDecimal price, int quantity) {
         this.order = order;
         this.productId = productId;
         this.price = price;

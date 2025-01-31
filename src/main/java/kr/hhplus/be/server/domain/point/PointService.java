@@ -7,6 +7,8 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 @RequiredArgsConstructor
 public class PointService {
@@ -45,7 +47,7 @@ public class PointService {
         return PointInfo.of(point);
     }
 
-    public void createPointHistory(Long pointId, int amount, PointHistoryType type) {
+    public void createPointHistory(Long pointId, BigDecimal amount, PointHistoryType type) {
         PointHistory pointHistory = PointHistory.create(pointId, amount, type);
         pointHistoryRepository.save(pointHistory);
     }

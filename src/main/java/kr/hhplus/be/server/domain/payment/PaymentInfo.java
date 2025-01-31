@@ -2,6 +2,8 @@ package kr.hhplus.be.server.domain.payment;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
+
 public class PaymentInfo {
     public static Payment of(kr.hhplus.be.server.domain.payment.Payment payment) {
         return Payment.builder()
@@ -12,7 +14,7 @@ public class PaymentInfo {
 
     public record Payment(
             Long orderId,
-            int paymentAmount
+            BigDecimal paymentAmount
     ) {
         @Builder
         public Payment {}

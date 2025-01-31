@@ -3,6 +3,8 @@ package kr.hhplus.be.server.domain.order;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
+
 public class OrderInfo {
 
     public static Order of(kr.hhplus.be.server.domain.order.Order order) {
@@ -14,7 +16,7 @@ public class OrderInfo {
 
     public record Order(
             Long orderId,
-            int totalAmount
+            BigDecimal totalAmount
     ) {
         @Builder
         public Order {}

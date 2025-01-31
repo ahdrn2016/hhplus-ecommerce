@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class ProductInfo {
     public record Product(
             Long productId,
             String name,
-            int price,
+            BigDecimal price,
             ProductStatus status
     ) {
         @Builder
@@ -43,7 +44,7 @@ public class ProductInfo {
     public record PopularProduct(
             Long productId,
             String name,
-            int price
+            BigDecimal price
     ) {
         public Product of() {
             return Product.builder()

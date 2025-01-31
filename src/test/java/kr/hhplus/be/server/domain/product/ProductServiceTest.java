@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -34,8 +35,8 @@ class ProductServiceTest {
         PageRequest pageable = PageRequest.of(page, size);
 
         List<Product> productList = List.of(
-                new Product(1L, "상품 A", 1000, ProductStatus.SELLING, 10),
-                new Product(2L, "상품 B", 2000, ProductStatus.SELLING, 20)
+                new Product(1L, "상품 A", BigDecimal.valueOf(1000), ProductStatus.SELLING, 10),
+                new Product(2L, "상품 B", BigDecimal.valueOf(2000), ProductStatus.SELLING, 20)
         );
         Page<Product> productPage = new PageImpl<>(productList, pageable, 10);
 
@@ -76,8 +77,8 @@ class ProductServiceTest {
         );
         List<Long> productIds = List.of(1L, 2L);
         List<Product> products = List.of(
-                new Product(1L, "Product A", 1000, ProductStatus.SELLING, 2),
-                new Product(2L, "Product B", 2000, ProductStatus.SELLING, 2)    // 2번 상품 재고 부족
+                new Product(1L, "Product A", BigDecimal.valueOf(1000), ProductStatus.SELLING, 2),
+                new Product(2L, "Product B", BigDecimal.valueOf(2000), ProductStatus.SELLING, 2)    // 2번 상품 재고 부족
         );
 
         given(productRepository.findAllByIdIn(productIds)).willReturn(products);
@@ -86,6 +87,17 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.deductStock(command))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.SOLD_OUT_PRODUCT.getMessage());
+    }
+
+    @Test
+    void 인기상품을_조회한다() {
+        // given
+        
+        // when 
+        
+        
+        // then
+        
     }
 
 }

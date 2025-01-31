@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.product.ProductInfo;
 import lombok.Builder;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ProductResponse {
@@ -29,7 +30,7 @@ public class ProductResponse {
     public record Product(
             Long productId,
             String name,
-            int price
+            BigDecimal price
     ) {
         @Builder
         public Product {}

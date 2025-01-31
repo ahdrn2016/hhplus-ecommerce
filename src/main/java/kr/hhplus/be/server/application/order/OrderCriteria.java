@@ -6,6 +6,8 @@ import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.point.PointCommand;
 import kr.hhplus.be.server.domain.product.ProductCommand;
 import kr.hhplus.be.server.domain.product.ProductInfo;
+import kr.hhplus.be.server.support.exception.CustomException;
+import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.Builder;
 
 import java.util.List;
@@ -34,13 +36,11 @@ public class OrderCriteria {
             List<OrderCommand.OrderProduct> orderProducts = products.stream()
                     .map(product -> {
                         Long productId = product.productId();
-                        int price = product.price();
-                        int quantity = criteria.products().stream()
+                        OrderProduct orderProduct = criteria.products().stream()
                                 .filter(p -> p.productId().equals(productId))
                                 .findFirst()
-                                .map(OrderCriteria.OrderProduct::quantity)
-                                .orElse(0);
-                        return new OrderCommand.OrderProduct(productId, price, quantity);
+                                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+                        return new OrderCommand.OrderProduct(productId, product.price(), orderProduct.quantity);
                     })
                     .collect(Collectors.toList());
 

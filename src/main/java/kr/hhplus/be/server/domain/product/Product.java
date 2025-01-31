@@ -5,6 +5,8 @@ import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -16,7 +18,7 @@ public class Product {
 
     private String name;
 
-    private int price;
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
@@ -24,7 +26,7 @@ public class Product {
     private int stock;
 
     @Builder
-    public Product(Long id, String name, int price, ProductStatus status, int stock) {
+    public Product(Long id, String name, BigDecimal price, ProductStatus status, int stock) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -39,7 +41,4 @@ public class Product {
         this.stock -= quantity;
     }
 
-    public int sum(int quantity) {
-        return quantity * this.price;
-    }
 }

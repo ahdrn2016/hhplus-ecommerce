@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class OrderFacade {
                                         .map(couponId -> couponService.use(criteria.toCouponCommand(criteria, couponId)))
                                         .orElse(null);
         PaymentInfo.Payment payment = paymentService.payment(order.orderId(), order.totalAmount(),
-                Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(0));
+                Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(BigDecimal.ZERO));
         pointService.use(criteria.toPointCommand(criteria, payment));
         productService.deductStock(criteria.toProductCommand());
         orderService.complete(order.orderId());

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -28,7 +29,7 @@ class CouponServiceConcurrencyTest {
         // given
         LocalDateTime validStartDate = LocalDateTime.of(2025, 1, 1, 0, 0);
         LocalDateTime validEndDate = LocalDateTime.of(2025, 1, 31, 23, 59);
-        Coupon coupon = Coupon.create("10000원 할인 쿠폰", 10000, validStartDate, validEndDate, 5);
+        Coupon coupon = Coupon.create("10000원 할인 쿠폰", BigDecimal.valueOf(10000), validStartDate, validEndDate, 5);
         Coupon savedCoupon = couponRepository.save(coupon);
 
         int threads = 10;

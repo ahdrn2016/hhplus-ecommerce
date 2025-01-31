@@ -15,7 +15,8 @@ public enum ErrorCode {
 
 
     HAS_STOPPED_PRODUCT(HttpStatus.BAD_REQUEST, "판매 중단된 상품이 포함되어 있습니다."),
-    SOLD_OUT_PRODUCT(HttpStatus.BAD_REQUEST, "상품의 재고가 부족합니다.");
+    SOLD_OUT_PRODUCT(HttpStatus.BAD_REQUEST, "상품의 재고가 부족합니다."),
+    PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "상품을 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;

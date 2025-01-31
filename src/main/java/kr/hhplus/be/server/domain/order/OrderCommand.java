@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.order;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderCommand {
@@ -16,7 +17,7 @@ public class OrderCommand {
 
     public record OrderProduct(
             Long productId,
-            int price,
+            BigDecimal price,
             int quantity
     ) {
     }
