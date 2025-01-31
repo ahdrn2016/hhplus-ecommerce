@@ -19,3 +19,19 @@ values (1, 10000, 0),
        (2, 60000, 0),
        (3, 0, 0),
        (4, 20000, 0);
+
+insert into orders(user_id, status, total_amount, created_at)
+values (1, 'COMPLETE', 8000, '2025-01-29 11:11:11'),
+       (2, 'COMPLETE', 12000, '2025-01-29 11:11:11'),
+       (3, 'COMPLETE', 15000, '2025-01-30 11:11:11'),
+       (4, 'COMPLETE', 15000, '2025-01-30 11:11:11'),
+       (5, 'COMPLETE', 10000, '2025-01-31 11:11:11'),
+       (6, 'COMPLETE', 10000, '2025-01-31 11:11:11');
+
+insert into order_product(order_id, product_id, price, quantity)
+values (1, 1, 8000, 1),
+       (2, 2, 12000, 1),
+       (3, 3, 15000, 1),
+       (4, 4, 15000, 1),
+       (5, 5, 10000, 1),
+       (6, 5, 10000, 1);

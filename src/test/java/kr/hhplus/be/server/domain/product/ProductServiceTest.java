@@ -89,15 +89,4 @@ class ProductServiceTest {
                 .hasMessage(ErrorCode.SOLD_OUT_PRODUCT.getMessage());
     }
 
-    @Test
-    void 인기상품을_조회한다() {
-        // given
-        
-        // when 
-        
-        
-        // then
-        
-    }
-
 }

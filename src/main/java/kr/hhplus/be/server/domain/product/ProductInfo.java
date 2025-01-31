@@ -44,7 +44,8 @@ public class ProductInfo {
     public record PopularProduct(
             Long productId,
             String name,
-            BigDecimal price
+            BigDecimal price,
+            int totalQuantity
     ) {
         public Product of() {
             return Product.builder()

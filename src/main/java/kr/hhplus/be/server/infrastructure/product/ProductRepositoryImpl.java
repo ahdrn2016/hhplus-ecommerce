@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import kr.hhplus.be.server.domain.order.OrderStatus;
 import kr.hhplus.be.server.domain.order.QOrder;
 import kr.hhplus.be.server.domain.order.QOrderProduct;
 import kr.hhplus.be.server.domain.product.*;
@@ -49,7 +50,10 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .from(qOrderProduct)
                 .join(qOrder).on(qOrderProduct.order.id.eq(qOrder.id))
                 .join(qProduct).on(qOrderProduct.productId.eq(qProduct.id))
-                .where(qOrder.createdAt.goe(threeDaysAgo))
+                .where(
+                        qOrder.status.eq(OrderStatus.COMPLETE),
+                        qOrder.createdAt.goe(threeDaysAgo)
+                )
                 .groupBy(qProduct.id, qProduct.name, qProduct.price)
                 .orderBy(qOrderProduct.quantity.sum().desc())
                 .limit(5)
