@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,12 +40,12 @@ class CouponServiceTest {
     void 쿠폰_발급_요청_시_유저에게_해당_쿠폰이_있으면_예외가_발생한다() {
         // given
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
-        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, 5000, IssuedCouponStatus.UNUSED);
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, BigDecimal.valueOf(5000), IssuedCouponStatus.UNUSED);
 
         given(issuedCouponRepository.findCouponByUserIdAndCouponId(1L, 1L)).willReturn(issuedCoupon);
 
         // when // then
-        assertThatThrownBy(() -> couponService.issuedCoupon(command))
+        assertThatThrownBy(() -> couponService.issue(command))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.DUPLICATE_ISSUE_COUPON.getMessage());
     }
@@ -53,12 +54,12 @@ class CouponServiceTest {
     void 쿠폰_발급_요청_시_선착순_재고_없으면_예외가_발생한다() {
         // given
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
-        Coupon coupon = Coupon.create( "5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 0);
+        Coupon coupon = Coupon.create( "5000원 할인 쿠폰", BigDecimal.valueOf(5000), validStartDate, validEndDate, 0);
 
-        given(couponRepository.findByIdWithLock(1L)).willReturn(coupon);
+        given(couponRepository.findById(1L)).willReturn(coupon);
 
         // when // then
-        assertThatThrownBy(() -> couponService.issuedCoupon(command))
+        assertThatThrownBy(() -> couponService.issue(command))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.SOLD_OUT_COUPON.getMessage());
     }
@@ -67,14 +68,14 @@ class CouponServiceTest {
     void 쿠폰_발급_요청_시_유저에게_쿠폰을_발급한다() throws InterruptedException {
         // given
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
-        Coupon coupon = Coupon.create("5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
-        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, 5000, IssuedCouponStatus.UNUSED);
+        Coupon coupon = Coupon.create("5000원 할인 쿠폰", BigDecimal.valueOf(5000), validStartDate, validEndDate, 10);
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, BigDecimal.valueOf(5000), IssuedCouponStatus.UNUSED);
 
-        given(couponRepository.findByIdWithLock(1L)).willReturn(coupon);
+        given(couponRepository.findById(1L)).willReturn(coupon);
         given(issuedCouponRepository.save(any(IssuedCoupon.class))).willReturn(issuedCoupon);
 
         // when
-        CouponInfo.IssuedCoupon result = couponService.issuedCoupon(command);
+        CouponInfo.IssuedCoupon result = couponService.issue(command);
 
         // then
         assertEquals(9, coupon.getQuantity());
@@ -101,8 +102,8 @@ class CouponServiceTest {
         // given
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
 
-        Coupon coupon = Coupon.create("5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 10);
-        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, 5000,IssuedCouponStatus.UNUSED);
+        Coupon coupon = Coupon.create("5000원 할인 쿠폰", BigDecimal.valueOf(5000), validStartDate, validEndDate, 10);
+        IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, BigDecimal.valueOf(5000),IssuedCouponStatus.UNUSED);
 
         given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(issuedCoupon);
 

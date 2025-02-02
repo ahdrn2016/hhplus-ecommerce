@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -20,12 +21,15 @@ class CouponServiceConcurrencyTest {
     @Autowired
     private CouponService couponService;
 
+    @Autowired
+    private IssuedCouponRepository issuedCouponRepository;
+
     @Test
     void 쿠폰_수량_5개일_때_유저_10명이_동시에_쿠폰_발급_요청_시_5명만_성공한다() throws InterruptedException {
         // given
         LocalDateTime validStartDate = LocalDateTime.of(2025, 1, 1, 0, 0);
         LocalDateTime validEndDate = LocalDateTime.of(2025, 1, 31, 23, 59);
-        Coupon coupon = Coupon.create("5000원 할인 쿠폰", 5000, validStartDate, validEndDate, 5);
+        Coupon coupon = Coupon.create("10000원 할인 쿠폰", BigDecimal.valueOf(10000), validStartDate, validEndDate, 5);
         Coupon savedCoupon = couponRepository.save(coupon);
 
         int threads = 10;
@@ -33,14 +37,12 @@ class CouponServiceConcurrencyTest {
         CountDownLatch latch = new CountDownLatch(threads);
 
         // when
-        for(int i = 1; i <= threads; i++) {
+        for(int i = 1; i <= 10; i++) {
             long userId = i;
             executorService.submit(() -> {
                 try {
                     CouponCommand.Issue command = CouponCommand.Issue.builder().userId(userId).couponId(coupon.getId()).build();
                     couponService.issue(command);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
                 } finally {
                     latch.countDown();
                 }
@@ -52,6 +54,8 @@ class CouponServiceConcurrencyTest {
         //then
         Coupon result = couponRepository.findById(savedCoupon.getId());
         assertEquals(0, result.getQuantity());
+        int issuedCoupon = issuedCouponRepository.countByCouponId(coupon.getId());
+        assertEquals(5, issuedCoupon);
     }
 
 }

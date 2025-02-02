@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -115,8 +116,7 @@ class OrderFacadeIntegrationTest {
         OrderResult.Payment payment = orderFacade.order(criteria);
 
         // then
-        assertEquals(30000, payment.paymentAmount());
-
+        assertEquals(0, BigDecimal.valueOf(30000).compareTo(payment.paymentAmount()));
     }
 
 }

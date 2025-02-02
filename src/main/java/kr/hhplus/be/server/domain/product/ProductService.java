@@ -24,18 +24,15 @@ public class ProductService {
         return ProductInfo.of(products);
     }
 
-    public List<ProductInfo.Product> popularProducts() {
-        List<ProductInfo.PopularProduct> products = productRepository.findPopularProducts();
-        return products.stream()
-                .map(ProductInfo.PopularProduct::of)
-                .collect(Collectors.toList());
+    public List<ProductInfo.PopularProduct> popularProducts() {
+        return productRepository.findPopularProducts();
     }
 
     public List<ProductInfo.Product> orderProducts(List<ProductCommand.Product> command) {
         List<Long> productIds = getProductIds(command);
         stoppedProduct(productIds);
 
-        List<Product> products = productRepository.findAllByIdIn(productIds);
+        List<Product> products = productRepository.findAllByIdInWithLock(productIds);
         return products.stream()
                 .map(ProductInfo.Product::of)
                 .collect(Collectors.toList());
@@ -44,30 +41,30 @@ public class ProductService {
     @Transactional
     public void deductStock(List<ProductCommand.Product> command) {
         List<Long> productIds = getProductIds(command);
-        List<Product> products = productRepository.findAllByIdIn(productIds);
+        List<Product> products = productRepository.findAllByIdInWithLock(productIds);
 
-        Map<Long, Integer> OrderProductMap = createOrderProductMap(command);
+        Map<Long, Integer> orderProductMap = createOrderProductMap(command);
 
         for(Product product : products) {
-            int quantity = OrderProductMap.get(product.getId());
+            int quantity = orderProductMap.get(product.getId());
             product.deductStock(quantity);
         }
     }
 
-    private static List<Long> getProductIds(List<ProductCommand.Product> products) {
+    public static List<Long> getProductIds(List<ProductCommand.Product> products) {
         return products.stream()
                 .map(ProductCommand.Product::productId)
                 .collect(Collectors.toList());
     }
 
-    private void stoppedProduct(List<Long> productIds) {
+    public void stoppedProduct(List<Long> productIds) {
         boolean stoppedProduct = productRepository.existsByIdInAndStatus(productIds, ProductStatus.STOP);
         if (stoppedProduct) {
             throw new CustomException(ErrorCode.HAS_STOPPED_PRODUCT);
         }
     }
 
-    private static Map<Long, Integer> createOrderProductMap(List<ProductCommand.Product> products) {
+    public static Map<Long, Integer> createOrderProductMap(List<ProductCommand.Product> products) {
         return products.stream()
                 .collect(Collectors.toMap(
                         ProductCommand.Product::productId,

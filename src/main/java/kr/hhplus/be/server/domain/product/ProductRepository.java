@@ -13,7 +13,7 @@ public interface ProductRepository {
 
     boolean existsByIdInAndStatus(List<Long> productIds, ProductStatus status);
 
-    List<Product> findAllByIdIn(List<Long> productIds);
+    List<Product> findAllByIdInWithLock(List<Long> productIds);
 
     Product findById(long id);
 }

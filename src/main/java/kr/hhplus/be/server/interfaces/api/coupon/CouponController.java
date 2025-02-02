@@ -29,7 +29,7 @@ public class CouponController {
     @Operation(summary = "쿠폰 발급", description = "쿠폰을 발급합니다.", tags = { "coupon" })
     public ResponseEntity<CouponResponse.IssuedCoupon> issue(
             @RequestBody CouponRequest.Issue request
-    ) throws InterruptedException {
+    ) {
         CouponInfo.IssuedCoupon response = couponService.issue(request.toCommand());
         return ResponseEntity.ok(CouponResponse.of(response));
     }

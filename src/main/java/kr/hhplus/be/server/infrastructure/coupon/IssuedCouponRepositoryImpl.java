@@ -34,4 +34,9 @@ public class IssuedCouponRepositoryImpl implements IssuedCouponRepository {
         return issuedCouponJpaRepository.findByUserIdAndCouponIdAndStatus(userId, couponId, status);
     }
 
+    @Override
+    public int countByCouponId(Long couponId) {
+        return issuedCouponJpaRepository.countByCouponId(couponId);
+    }
+
 }

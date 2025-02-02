@@ -4,16 +4,18 @@ import kr.hhplus.be.server.domain.product.ProductInfo;
 import lombok.Builder;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ProductResponse {
 
-    public static List<Product> of(List<ProductInfo.Product> products) {
+    public static List<PopularProduct> of(List<ProductInfo.PopularProduct> products) {
         return products.stream()
-                .map(product -> Product.builder()
+                .map(product -> PopularProduct.builder()
                         .productId(product.productId())
                         .name(product.name())
                         .price(product.price())
+                        .totalQuantity(product.totalQuantity())
                         .build())
                 .toList();
     }
@@ -29,10 +31,19 @@ public class ProductResponse {
     public record Product(
             Long productId,
             String name,
-            int price
+            BigDecimal price
     ) {
         @Builder
         public Product {}
     }
 
+    public record PopularProduct(
+            Long productId,
+            String name,
+            BigDecimal price,
+            int totalQuantity
+    ) {
+        @Builder
+        public PopularProduct {}
+    }
 }

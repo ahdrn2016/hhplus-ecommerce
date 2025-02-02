@@ -13,4 +13,6 @@ public interface IssuedCouponJpaRepository extends JpaRepository<IssuedCoupon, L
     IssuedCoupon findCouponByUserIdAndCouponId(Long userId, Long couponId);
 
     IssuedCoupon findByUserIdAndCouponIdAndStatus(Long userId, Long couponId, IssuedCouponStatus status);
+
+    int countByCouponId(Long couponId);
 }

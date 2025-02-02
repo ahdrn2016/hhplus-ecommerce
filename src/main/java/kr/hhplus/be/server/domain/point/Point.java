@@ -5,6 +5,8 @@ import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -17,19 +19,19 @@ public class Point {
 
     private Long userId;
 
-    private int point;
+    private BigDecimal point;
 
     @Version
     private Integer version;
 
-    public void add(int amount) {
-        if (amount <= 0) throw new CustomException(ErrorCode.INVALID_CHARGE_AMOUNT);
-        this.point += amount;
+    public void add(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) throw new CustomException(ErrorCode.INVALID_CHARGE_AMOUNT);
+        this.point = this.point.add(amount);
     }
 
-    public void minus(int amount) {
-        if (this.point < amount) throw new CustomException(ErrorCode.INSUFFICIENT_POINT);
-        this.point -= amount;
+    public void minus(BigDecimal amount) {
+        if (this.point.compareTo(amount) < 0) throw new CustomException(ErrorCode.INSUFFICIENT_POINT);
+        this.point = this.point.subtract(amount);
     }
 
 }

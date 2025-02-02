@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.coupon;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ public class CouponInfo {
                 .build();
     }
 
-    public static IssuedCoupon of(kr.hhplus.be.server.domain.coupon.IssuedCoupon issuedCoupon, int amount) {
+    public static IssuedCoupon of(kr.hhplus.be.server.domain.coupon.IssuedCoupon issuedCoupon, BigDecimal amount) {
         return IssuedCoupon.builder()
                 .userId(issuedCoupon.getUserId())
                 .couponId(issuedCoupon.getCouponId())
@@ -34,7 +35,7 @@ public class CouponInfo {
     public record IssuedCoupon(
             Long userId,
             Long couponId,
-            int amount,
+            BigDecimal amount,
             String status
     ) {
         @Builder
