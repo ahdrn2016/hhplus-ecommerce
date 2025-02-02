@@ -81,7 +81,7 @@ class ProductServiceTest {
                 new Product(2L, "Product B", BigDecimal.valueOf(2000), ProductStatus.SELLING, 2)    // 2번 상품 재고 부족
         );
 
-        given(productRepository.findAllByIdIn(productIds)).willReturn(products);
+        given(productRepository.findAllByIdInWithLock(productIds)).willReturn(products);
 
         // when // then
         assertThatThrownBy(() -> productService.deductStock(command))

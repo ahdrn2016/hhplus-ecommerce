@@ -16,10 +16,8 @@ class ProductServiceIntegrationTest {
 
     @Test
     void 최근_3일간_주문량_많은_상품_5개를_조회한다() {
-        // given
-
         // when
-        List<ProductInfo.Product> products = productService.popularProducts();
+        List<ProductInfo.PopularProduct> products = productService.popularProducts();
 
         // then
         assertEquals(5, products.size());

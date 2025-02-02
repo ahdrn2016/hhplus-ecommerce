@@ -1,27 +1,16 @@
 package kr.hhplus.be.server.infrastructure.product;
 
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import kr.hhplus.be.server.domain.order.OrderStatus;
-import kr.hhplus.be.server.domain.order.QOrder;
-import kr.hhplus.be.server.domain.order.QOrderProduct;
 import kr.hhplus.be.server.domain.product.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
-
-    @PersistenceContext
-    private final EntityManager em;
 
     private final ProductJpaRepository productJpaRepository;
 
@@ -32,34 +21,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<ProductInfo.PopularProduct> findPopularProducts() {
-        QOrderProduct qOrderProduct = QOrderProduct.orderProduct;
-        QOrder qOrder = QOrder.order;
-        QProduct qProduct = QProduct.product;
-
-        LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
-
-        JPAQuery<ProductInfo> query = new JPAQuery<>(em);
-
-        List<ProductInfo.PopularProduct> result = query.select(Projections.constructor(
-                        ProductInfo.PopularProduct.class,
-                        qProduct.id,
-                        qProduct.name,
-                        qProduct.price,
-                        qOrderProduct.quantity.sum().as("totalQuantity")
-                ))
-                .from(qOrderProduct)
-                .join(qOrder).on(qOrderProduct.order.id.eq(qOrder.id))
-                .join(qProduct).on(qOrderProduct.productId.eq(qProduct.id))
-                .where(
-                        qOrder.status.eq(OrderStatus.COMPLETE),
-                        qOrder.createdAt.goe(threeDaysAgo)
-                )
-                .groupBy(qProduct.id, qProduct.name, qProduct.price)
-                .orderBy(qOrderProduct.quantity.sum().desc())
-                .limit(5)
-                .fetch();
-
-        return result;
+        return productJpaRepository.findPopularProducts();
     }
 
     @Override
@@ -68,8 +30,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAllByIdIn(List<Long> productIds) {
-        return productJpaRepository.findAllByIdIn(productIds);
+    public List<Product> findAllByIdInWithLock(List<Long> productIds) {
+        return productJpaRepository.findAllByIdInWithLock(productIds);
     }
 
     @Override

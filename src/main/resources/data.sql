@@ -21,12 +21,12 @@ values (1, 10000, 0),
        (4, 20000, 0);
 
 insert into orders(user_id, status, total_amount, created_at)
-values (1, 'COMPLETE', 8000, '2025-01-29 11:11:11'),
-       (2, 'COMPLETE', 12000, '2025-01-29 11:11:11'),
-       (3, 'COMPLETE', 15000, '2025-01-30 11:11:11'),
-       (4, 'COMPLETE', 15000, '2025-01-30 11:11:11'),
-       (5, 'COMPLETE', 10000, '2025-01-31 11:11:11'),
-       (6, 'COMPLETE', 10000, '2025-01-31 11:11:11');
+values (1, 'COMPLETE', 8000, NOW()),
+       (2, 'COMPLETE', 12000, NOW()),
+       (3, 'COMPLETE', 15000, NOW()),
+       (4, 'COMPLETE', 15000, NOW()),
+       (5, 'COMPLETE', 10000, NOW()),
+       (6, 'COMPLETE', 10000, NOW());
 
 insert into order_product(order_id, product_id, price, quantity)
 values (1, 1, 8000, 1),

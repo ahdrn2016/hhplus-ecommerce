@@ -32,8 +32,8 @@ public class ProductController {
 
     @GetMapping(path = "/popular", produces = { "application/json" })
     @Operation(summary = "인기 상품 목록 조회", description = "인기 상품 목록을 조회합니다.", tags = { "product" })
-    public ResponseEntity<List<ProductResponse.Product>> popularProducts() {
-        List<ProductInfo.Product> response = productService.popularProducts();
+    public ResponseEntity<List<ProductResponse.PopularProduct>> popularProducts() {
+        List<ProductInfo.PopularProduct> response = productService.popularProducts();
         return ResponseEntity.ok(ProductResponse.of(response));
     }
 }

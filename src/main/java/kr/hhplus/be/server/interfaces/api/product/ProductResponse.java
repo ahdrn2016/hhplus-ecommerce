@@ -9,12 +9,13 @@ import java.util.List;
 
 public class ProductResponse {
 
-    public static List<Product> of(List<ProductInfo.Product> products) {
+    public static List<PopularProduct> of(List<ProductInfo.PopularProduct> products) {
         return products.stream()
-                .map(product -> Product.builder()
+                .map(product -> PopularProduct.builder()
                         .productId(product.productId())
                         .name(product.name())
                         .price(product.price())
+                        .totalQuantity(product.totalQuantity())
                         .build())
                 .toList();
     }
@@ -36,4 +37,13 @@ public class ProductResponse {
         public Product {}
     }
 
+    public record PopularProduct(
+            Long productId,
+            String name,
+            BigDecimal price,
+            int totalQuantity
+    ) {
+        @Builder
+        public PopularProduct {}
+    }
 }

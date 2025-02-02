@@ -46,13 +46,5 @@ public class ProductInfo {
             String name,
             BigDecimal price,
             int totalQuantity
-    ) {
-        public Product of() {
-            return Product.builder()
-                    .productId(productId)
-                    .name(name)
-                    .price(price)
-                    .build();
-        }
-    }
+    ) {}
 }
