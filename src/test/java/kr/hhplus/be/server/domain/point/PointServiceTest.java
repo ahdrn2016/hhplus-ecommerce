@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -27,8 +29,8 @@ class PointServiceTest {
     @Test
     void 잔액_충전_시_요청금액이_0원이면_예외가_발생한다() {
         // given
-        PointCommand.Charge command = PointCommand.Charge.builder().userId(1L).amount(0).build();
-        Point point = new Point(1L, 1L, 50000);
+        PointCommand.Charge command = PointCommand.Charge.builder().userId(1L).amount(BigDecimal.ZERO).build();
+        Point point = new Point(1L, 1L, BigDecimal.valueOf(5000), 0);
 
         given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
 
@@ -41,9 +43,9 @@ class PointServiceTest {
     @Test
     void 잔액_충전_요청_시_요청금액이_정상이면_보유잔액에_합산한다() {
         // given
-        PointCommand.Charge command = PointCommand.Charge.builder().userId(1L).amount(10000).build();
-        Point point = new Point(1L, 1L, 50000);
-        PointHistory pointHistory = PointHistory.create(1L, 10000, PointHistoryType.CHARGE);
+        PointCommand.Charge command = PointCommand.Charge.builder().userId(1L).amount(BigDecimal.valueOf(10000)).build();
+        Point point = new Point(1L, 1L, BigDecimal.valueOf(50000), 0);
+        PointHistory pointHistory = PointHistory.create(1L, BigDecimal.valueOf(10000), PointHistoryType.CHARGE);
 
         given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
         given(pointHistoryRepository.save(any(PointHistory.class))).willReturn(pointHistory);
@@ -52,14 +54,14 @@ class PointServiceTest {
         PointInfo.Point result = pointService.charge(command);
 
         // then
-        assertEquals(60000, result.point());
+        assertEquals(BigDecimal.valueOf(60000), result.point());
     }
 
     @Test
     void 잔액_사용_시_요청금액이_보유잔액보다_크면_예외가_발생한다() {
         // given
-        PointCommand.Use command = PointCommand.Use.builder().userId(1L).amount(60000).build();
-        Point point = new Point(1L, 1L, 50000);
+        PointCommand.Use command = PointCommand.Use.builder().userId(1L).amount(BigDecimal.valueOf(60000)).build();
+        Point point = new Point(1L, 1L, BigDecimal.valueOf(50000), 0);
 
         given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
 
@@ -72,9 +74,9 @@ class PointServiceTest {
     @Test
     void 잔액_사용_요청_시_요청금액이_정상이면_보유잔액에서_차감한다() {
         // given
-        PointCommand.Use command = PointCommand.Use.builder().userId(1L).amount(10000).build();
-        Point point = new Point(1L, 1L, 50000);
-        PointHistory pointHistory = PointHistory.create(1L, 10000, PointHistoryType.USE);
+        PointCommand.Use command = PointCommand.Use.builder().userId(1L).amount(BigDecimal.valueOf(10000)).build();
+        Point point = new Point(1L, 1L, BigDecimal.valueOf(50000), 0);
+        PointHistory pointHistory = PointHistory.create(1L, BigDecimal.valueOf(10000), PointHistoryType.USE);
 
         given(pointRepository.findByUserIdWithLock(1L)).willReturn(point);
         given(pointHistoryRepository.save(any(PointHistory.class))).willReturn(pointHistory);
@@ -83,6 +85,6 @@ class PointServiceTest {
         PointInfo.Point result = pointService.use(command);
 
         // then
-        assertEquals(40000, result.point());
+        assertEquals(BigDecimal.valueOf(40000), result.point());
     }
 }

@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class PointHistory extends BaseEntity {
@@ -16,19 +18,19 @@ public class PointHistory extends BaseEntity {
 
     private Long pointId;
 
-    private int point;
+    private BigDecimal point;
 
     @Enumerated(EnumType.STRING)
     private PointHistoryType type;
 
     @Builder
-    public PointHistory(Long pointId, int point, PointHistoryType type) {
+    public PointHistory(Long pointId, BigDecimal point, PointHistoryType type) {
         this.pointId = pointId;
         this.point = point;
         this.type = type;
     }
 
-    public static PointHistory create(Long pointId, int amount, PointHistoryType type) {
+    public static PointHistory create(Long pointId, BigDecimal amount, PointHistoryType type) {
         return PointHistory.builder()
                 .pointId(pointId)
                 .point(amount)

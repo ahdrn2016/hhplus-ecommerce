@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -19,20 +21,20 @@ public class IssuedCoupon {
 
     private Long couponId;
 
-    private int amount;
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     private IssuedCouponStatus status;
 
     @Builder
-    public IssuedCoupon(Long userId, Long couponId, int amount, IssuedCouponStatus status) {
+    public IssuedCoupon(Long userId, Long couponId, BigDecimal amount, IssuedCouponStatus status) {
         this.userId = userId;
         this.couponId = couponId;
         this.amount = amount;
         this.status = status;
     }
 
-    public static IssuedCoupon create(Long userId, Long couponId, int amount, IssuedCouponStatus status) {
+    public static IssuedCoupon create(Long userId, Long couponId, BigDecimal amount, IssuedCouponStatus status) {
         return IssuedCoupon.builder()
                 .userId(userId)
                 .couponId(couponId)

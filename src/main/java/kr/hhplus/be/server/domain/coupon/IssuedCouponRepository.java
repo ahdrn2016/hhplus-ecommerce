@@ -11,4 +11,6 @@ public interface IssuedCouponRepository {
     IssuedCoupon save(IssuedCoupon issuedCoupon);
 
     IssuedCoupon findByUserIdAndCouponIdAndStatus(Long userId, Long couponId, IssuedCouponStatus status);
+
+    int countByCouponId(Long couponId);
 }

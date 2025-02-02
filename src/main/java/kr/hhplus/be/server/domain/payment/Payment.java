@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -21,22 +23,22 @@ public class Payment extends BaseEntity {
 
     private Long orderId;
 
-    private int totalAmount;
+    private BigDecimal totalAmount;
 
-    private int discountAmount;
+    private BigDecimal discountAmount;
 
-    private int paymentAmount;
+    private BigDecimal paymentAmount;
 
     @Builder
-    public Payment(Long id, Long orderId, int totalAmount, int discountAmount) {
+    public Payment(Long id, Long orderId, BigDecimal totalAmount, BigDecimal discountAmount) {
         this.id = id;
         this.orderId = orderId;
         this.totalAmount = totalAmount;
         this.discountAmount = discountAmount;
-        this.paymentAmount = totalAmount - discountAmount;
+        this.paymentAmount = totalAmount.subtract(discountAmount);
     }
 
-    public static Payment create(Long orderId, int totalAmount, int discountAmount) {
+    public static Payment create(Long orderId, BigDecimal totalAmount, BigDecimal discountAmount) {
         return Payment.builder()
                 .orderId(orderId)
                 .totalAmount(totalAmount)

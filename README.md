@@ -7,6 +7,7 @@
 - [시퀀스 다이어그램](docs/SequenceDiagram/SequenceDiagram.md)
 - [ERD](docs/erd/ERD.md)
 - [API 명세서](docs/api/API.md)
+- [동시성 제어 방식 분석 보고서](docs/concurrency/concurrencyControl.md)
 
 ---
 

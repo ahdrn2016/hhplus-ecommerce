@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,7 +22,7 @@ public class Coupon {
 
     private String name;
 
-    private int amount;
+    private BigDecimal amount;
 
     private LocalDateTime validStartDate;
 
@@ -30,7 +31,7 @@ public class Coupon {
     private int quantity;
 
     @Builder
-    public Coupon(String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
+    public Coupon(String name, BigDecimal amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
         this.name = name;
         this.amount = amount;
         this.validStartDate = validStartDate;
@@ -38,7 +39,7 @@ public class Coupon {
         this.quantity = quantity;
     }
 
-    public static Coupon create(String name, int amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
+    public static Coupon create(String name, BigDecimal amount, LocalDateTime validStartDate, LocalDateTime validEndDate, int quantity) {
         return Coupon.builder()
                 .name(name)
                 .amount(amount)

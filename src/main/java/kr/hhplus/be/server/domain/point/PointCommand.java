@@ -2,10 +2,12 @@ package kr.hhplus.be.server.domain.point;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
+
 public class PointCommand {
     public record Charge(
             Long userId,
-            int amount
+            BigDecimal amount
     ) {
         @Builder
         public Charge {}
@@ -13,7 +15,7 @@ public class PointCommand {
 
     public record Use(
             Long userId,
-            int amount
+            BigDecimal amount
     ) {
         @Builder
         public Use {}
