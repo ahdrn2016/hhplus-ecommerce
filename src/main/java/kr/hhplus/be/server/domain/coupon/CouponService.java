@@ -36,6 +36,10 @@ public class CouponService {
         return CouponInfo.of(savedIssuedCoupon);
     }
 
+    public void couponIssue(CouponCommand.Issue command) {
+        couponRepository.addCouponRequest(command.couponId(), command.userId());
+    }
+
     @Transactional
     public CouponInfo.IssuedCoupon use(CouponCommand.Issue command) {
         IssuedCoupon issuedCoupon = issuedCouponRepository.findByUserIdAndCouponIdAndStatus(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);

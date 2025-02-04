@@ -6,4 +6,5 @@ public interface CouponRepository {
 
     Coupon save(Coupon coupon);
 
+    void addCouponRequest(Long couponId, Long userId);
 }
