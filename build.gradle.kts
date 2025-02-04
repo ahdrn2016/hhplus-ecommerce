@@ -37,6 +37,7 @@ dependencies {
 	implementation("org.springframework.retry:spring-retry")
 
 	// Redis
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.redisson:redisson-spring-boot-starter:3.18.0")
 
 	// Swagger UI
