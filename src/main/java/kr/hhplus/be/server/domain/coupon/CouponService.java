@@ -36,10 +36,6 @@ public class CouponService {
         return CouponInfo.of(savedIssuedCoupon);
     }
 
-    public void couponIssue(CouponCommand.Issue command) {
-        couponRepository.addCouponRequest(command.couponId(), command.userId());
-    }
-
     @Transactional
     public CouponInfo.IssuedCoupon use(CouponCommand.Issue command) {
         IssuedCoupon issuedCoupon = issuedCouponRepository.findByUserIdAndCouponIdAndStatus(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);
@@ -55,4 +51,19 @@ public class CouponService {
         return issuedCouponRepository.save(issuedCoupon);
     }
 
+    public boolean couponIssue(CouponCommand.Issue command) {
+        boolean hasCoupon = couponRepository.getIssuedCoupon(command.couponId(), command.userId());
+        if (hasCoupon) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
+        return couponRepository.addCouponRequest(command.couponId(), command.userId());
+    }
+
+    public void issue() {
+        /**
+         * 1. 쿠폰 수량 비교
+         * 2. 발급 가능하면 ZRANGE 10개씩 발급 요청 및 ZPOPMIN 대기열에서 제거
+         * 3. createIssuedCoupon 메서드 호출
+         * 4. issued_coupon Sets에 SADD 신규 발급자
+         */
+
+    }
 }

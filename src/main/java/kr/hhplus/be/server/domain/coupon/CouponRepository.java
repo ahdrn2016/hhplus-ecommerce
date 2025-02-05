@@ -6,5 +6,8 @@ public interface CouponRepository {
 
     Coupon save(Coupon coupon);
 
-    void addCouponRequest(Long couponId, Long userId);
+    boolean getIssuedCoupon(Long coup, Long userI);
+
+    boolean addCouponRequest(Long couponId, Long userId);
+
 }

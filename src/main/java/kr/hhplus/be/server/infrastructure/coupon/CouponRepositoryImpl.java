@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public class CouponRepositoryImpl implements CouponRepository {
 
     private final CouponJpaRepository couponJpaRepository;
-    private final CouponCacheRepository couponCacheRepository;
+    private final CouponCacheStorage couponCacheStorage;
 
     @Override
     public Coupon findById(Long couponId) {
@@ -23,7 +23,12 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public void addCouponRequest(Long couponId, Long userId) {
-        couponCacheRepository.addCouponRequest(couponId, userId);
+    public boolean getIssuedCoupon(Long couponId, Long userId) {
+        return couponCacheStorage.getIssuedCoupon(couponId, userId);
+    }
+
+    @Override
+    public boolean addCouponRequest(Long couponId, Long userId) {
+        return couponCacheStorage.addCouponRequest(couponId, userId);
     }
 }
