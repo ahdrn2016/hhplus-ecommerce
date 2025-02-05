@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,6 +18,11 @@ public class CouponService {
 
     private final IssuedCouponRepository issuedCouponRepository;
     private final CouponRepository couponRepository;
+
+    public void createCoupon(Coupon coupon) {
+        Coupon savedCoupon = couponRepository.save(coupon);
+        couponRepository.setCouponQuantity(savedCoupon.getId(), savedCoupon.getQuantity());
+    }
 
     public List<CouponInfo.IssuedCoupon> coupons(Long userId) {
         List<IssuedCoupon> issuedCoupons = issuedCouponRepository.findCouponsByUserId(userId);
@@ -52,18 +58,36 @@ public class CouponService {
     }
 
     public boolean couponIssue(CouponCommand.Issue command) {
+        // 잔여 수량 확인
+        int quantity = couponRepository.getCouponQuantity(command.couponId());
+        if (quantity <= 0) throw new CustomException(ErrorCode.SOLD_OUT_COUPON);
+
+        // 발급 이력 확인
         boolean hasCoupon = couponRepository.getIssuedCoupon(command.couponId(), command.userId());
         if (hasCoupon) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
-        return couponRepository.addCouponRequest(command.couponId(), command.userId());
+
+        // Sorted Sets 저장
+        boolean addRequest = couponRepository.addCouponRequest(command.couponId(), command.userId());
+        if (addRequest) couponRepository.decrementCouponQuantity(command.couponId());
+
+        return addRequest;
     }
 
     public void issue() {
-        /**
-         * 1. 쿠폰 수량 비교
-         * 2. 발급 가능하면 ZRANGE 10개씩 발급 요청 및 ZPOPMIN 대기열에서 제거
-         * 3. createIssuedCoupon 메서드 호출
-         * 4. issued_coupon Sets에 SADD 신규 발급자
-         */
+        Set<Long> couponIds = couponRepository.getCouponIds();
+        for (Long couponId : couponIds) {
 
+            Coupon coupon = couponRepository.findById(couponId);
+            Long issuedCouponCount = couponRepository.getIssuedCouponCount(couponId);
+            while (coupon.getQuantity() > issuedCouponCount) { // DB 쿠폰 수량과 redis 발급 이력 수량 비교
+
+                Set<Long> userIds = couponRepository.getUserIds(couponId);
+                if (userIds.isEmpty()) break; // 유저 없으면 종료
+                for(Long userId : userIds) {
+                    createIssuedCoupon(userId, coupon); // 쿠폰 이력 DB 저장
+                    couponRepository.setIssuedCoupon(couponId, userId); // redis 발급 이력에 저장
+                }
+            }
+        }
     }
 }
