@@ -19,9 +19,10 @@ public class CouponService {
     private final IssuedCouponRepository issuedCouponRepository;
     private final CouponRepository couponRepository;
 
-    public void createCoupon(Coupon coupon) {
+    public Coupon createCoupon(Coupon coupon) {
         Coupon savedCoupon = couponRepository.save(coupon);
         couponRepository.setCouponQuantity(savedCoupon.getId(), savedCoupon.getQuantity());
+        return savedCoupon;
     }
 
     public List<CouponInfo.IssuedCoupon> coupons(Long userId) {
@@ -57,6 +58,7 @@ public class CouponService {
         return issuedCouponRepository.save(issuedCoupon);
     }
 
+    @DistributedLock(key = "'lock:coupon:' + #command.couponId()")
     public boolean couponIssue(CouponCommand.Issue command) {
         // 잔여 수량 확인
         int quantity = couponRepository.getCouponQuantity(command.couponId());
