@@ -28,9 +28,9 @@ class CouponServiceConcurrencyTest {
     void 쿠폰_수량_5개일_때_유저_10명이_동시에_쿠폰_발급_요청_시_5명만_성공한다() throws InterruptedException {
         // given
         LocalDateTime validStartDate = LocalDateTime.of(2025, 1, 1, 0, 0);
-        LocalDateTime validEndDate = LocalDateTime.of(2025, 1, 31, 23, 59);
+        LocalDateTime validEndDate = LocalDateTime.of(2025, 12, 31, 23, 59);
         Coupon coupon = Coupon.create("10000원 할인 쿠폰", BigDecimal.valueOf(10000), validStartDate, validEndDate, 5);
-        Coupon savedCoupon = couponRepository.save(coupon);
+        Coupon savedCoupon = couponService.createCoupon(coupon);
 
         int threads = 10;
         ExecutorService executorService = Executors.newFixedThreadPool(threads);
@@ -41,8 +41,7 @@ class CouponServiceConcurrencyTest {
             long userId = i;
             executorService.submit(() -> {
                 try {
-                    CouponCommand.Issue command = CouponCommand.Issue.builder().userId(userId).couponId(coupon.getId()).build();
-                    couponService.issue(command);
+                    couponService.couponIssue(new CouponCommand.Issue(userId, savedCoupon.getId()));
                 } finally {
                     latch.countDown();
                 }
@@ -51,9 +50,9 @@ class CouponServiceConcurrencyTest {
         latch.await();
         executorService.shutdown();
 
-        //then
-        Coupon result = couponRepository.findById(savedCoupon.getId());
-        assertEquals(0, result.getQuantity());
+        couponService.issue(); // 쿠폰 발급 배치 실행
+
+        // then
         int issuedCoupon = issuedCouponRepository.countByCouponId(coupon.getId());
         assertEquals(5, issuedCoupon);
     }
