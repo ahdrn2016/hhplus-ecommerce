@@ -38,7 +38,7 @@ dependencies {
 
 	// Redis
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
-	implementation("org.redisson:redisson-spring-boot-starter:3.18.0")
+	implementation("org.redisson:redisson-spring-boot-starter:3.22.0")
 
 	// Swagger UI
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
