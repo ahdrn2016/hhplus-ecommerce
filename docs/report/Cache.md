@@ -95,3 +95,40 @@ public void cachePopularProducts() {
 }
 ```
 매일 00시에 배치가 실행되어 ```@CachePut```을 사용하여 기존 캐시 데이터를 최신 데이터로 새로 갱신할 수 있도록 적용했습니다.
+
+```java
+@Test
+void 캐시_없이_인기_상품_목록을_100번_조회한다() {
+    // when
+    for (int i = 0; i < 100; i++) {
+        productService.popularProducts();
+    }
+
+    // then
+    verify(productRepository, times(100)).findPopularProducts();
+}
+```
+![NoCacheTest](NoCacheTest.png)
+
+```java
+@Test
+void 인기_상품_조회에_캐시_적용하여_DB에_한_번만_접근한다() {
+    // given
+    cacheManager.getCache("popular_products").clear();
+
+    // when
+    for (int i = 0; i < 100; i++) {
+        productService.popularProducts();
+    }
+
+    // then
+    verify(productRepository, times(1)).findPopularProducts();
+}
+```
+![CacheTest](CacheTest.png)
+
+인기 상품 조회 서비스를 100번 호출하는 성능 테스트를 진행한 결과, 캐시를 적용했을 때 응답 속도가 향상됨을 확인하였습니다.
+
+요청 수가 증가할 경우 캐시 적용 여부에 따른 응답 속도 차이가 더욱 커질 것으로 예상됩니다.
+
+이를 통해 캐시 적용이 대량 트래픽 환경에서 시스템 성능을 개선하는 데 중요한 역할을 한다는 것을 알 수 있었습니다.

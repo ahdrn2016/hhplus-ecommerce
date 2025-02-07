@@ -35,13 +35,14 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    void 인기_상품_조회에_캐싱_적용하여_메서드를_한_번만_호출한다() {
+    void 인기_상품_조회에_캐시_적용하여_DB에_한_번만_접근한다() {
         // given
         cacheManager.getCache("popular_products").clear();
 
         // when
-        productService.popularProducts();
-        productService.popularProducts();
+        for (int i = 0; i < 100; i++) {
+            productService.popularProducts();
+        }
 
         // then
         verify(productRepository, times(1)).findPopularProducts();
