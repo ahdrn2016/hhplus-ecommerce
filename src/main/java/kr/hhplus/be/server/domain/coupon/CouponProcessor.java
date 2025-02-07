@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.coupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Set;
 
@@ -10,8 +11,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CouponProcessor {
 
+    private static final int BATCH_SIZE = 10;
     private final CouponRepository couponRepository;
     private final CouponService couponService;
+
 
     @Transactional
     public void processCouponIssue() {
@@ -22,8 +25,8 @@ public class CouponProcessor {
             Long issuedCouponCount = couponRepository.getIssuedCouponCount(couponId);
             while (coupon.getQuantity() > issuedCouponCount) { // DB 쿠폰 수량과 redis 발급 이력 수량 비교
 
-                Set<Long> userIds = couponRepository.getUserIds(couponId);
-                if (userIds.isEmpty()) break;
+                Set<Long> userIds = couponRepository.getUserIds(couponId, BATCH_SIZE);
+                if (CollectionUtils.isEmpty(userIds)) break;
                 for(Long userId : userIds) {
                     couponService.createIssuedCoupon(userId, coupon); // 쿠폰 이력 DB 저장
                     couponRepository.setIssuedCoupon(couponId, userId); // redis 발급 이력에 저장

@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,9 +53,16 @@ public class CouponCacheRepository {
                 .collect(Collectors.toSet());
     }
 
-    public Set<Long> getUserIds(Long couponId) {
-        return redisTemplate.opsForZSet().popMin(COUPON_REQUEST_KEY + couponId, 10).stream()
+    public Set<Long> getUserIds(Long couponId, int batchSize) {
+        Set<ZSetOperations.TypedTuple<String>> userIds = redisTemplate.opsForZSet().popMin(COUPON_REQUEST_KEY + couponId, batchSize - 1);
+
+        if(userIds == null || userIds.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        return userIds.stream()
                 .map(ZSetOperations.TypedTuple::getValue)
+                .filter(Objects::nonNull)
                 .map(Long::valueOf)
                 .collect(Collectors.toSet());
     }

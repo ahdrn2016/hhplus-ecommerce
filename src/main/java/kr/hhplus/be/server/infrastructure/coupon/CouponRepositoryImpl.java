@@ -60,8 +60,8 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public Set<Long> getUserIds(Long couponId) {
-        return CouponCacheRepository.getUserIds(couponId);
+    public Set<Long> getUserIds(Long couponId, int batchSize) {
+        return CouponCacheRepository.getUserIds(couponId, batchSize);
     }
 
     @Override

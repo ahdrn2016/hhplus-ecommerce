@@ -22,7 +22,7 @@ public interface CouponRepository {
 
     Set<Long> getCouponIds();
 
-    Set<Long> getUserIds(Long couponId);
+    Set<Long> getUserIds(Long couponId, int batchSize);
 
     void setIssuedCoupon(Long couponId, Long userId);
 }
