@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class CouponCacheStorage {
+public class CouponCacheRepository {
 
     private final StringRedisTemplate redisTemplate;
     private static final String COUPON_QUANTITY_KEY = "coupon_quantity:";

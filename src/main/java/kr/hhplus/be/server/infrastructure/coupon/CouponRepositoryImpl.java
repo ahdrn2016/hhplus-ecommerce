@@ -12,7 +12,7 @@ import java.util.Set;
 public class CouponRepositoryImpl implements CouponRepository {
 
     private final CouponJpaRepository couponJpaRepository;
-    private final CouponCacheStorage couponCacheStorage;
+    private final CouponCacheRepository CouponCacheRepository;
 
     @Override
     public Coupon findById(Long couponId) {
@@ -26,46 +26,46 @@ public class CouponRepositoryImpl implements CouponRepository {
 
     @Override
     public boolean getIssuedCoupon(Long couponId, Long userId) {
-        return couponCacheStorage.getIssuedCoupon(couponId, userId);
+        return CouponCacheRepository.getIssuedCoupon(couponId, userId);
     }
 
     @Override
     public Long getIssuedCouponCount(Long couponId) {
-        return couponCacheStorage.getIssuedCouponCount(couponId);
+        return CouponCacheRepository.getIssuedCouponCount(couponId);
     }
 
     @Override
     public boolean addCouponRequest(Long couponId, Long userId) {
-        return couponCacheStorage.addCouponRequest(couponId, userId);
+        return CouponCacheRepository.addCouponRequest(couponId, userId);
     }
 
     @Override
     public void setCouponQuantity(Long couponId, int quantity) {
-        couponCacheStorage.setCouponQuantity(couponId, quantity);
+        CouponCacheRepository.setCouponQuantity(couponId, quantity);
     }
 
     @Override
     public int getCouponQuantity(Long couponId) {
-        return couponCacheStorage.getCouponQuantity(couponId);
+        return CouponCacheRepository.getCouponQuantity(couponId);
     }
 
     @Override
     public void decrementCouponQuantity(Long couponId) {
-        couponCacheStorage.decrementCouponQuantity(couponId);
+        CouponCacheRepository.decrementCouponQuantity(couponId);
     }
 
     @Override
     public Set<Long> getCouponIds() {
-        return couponCacheStorage.getCouponIds();
+        return CouponCacheRepository.getCouponIds();
     }
 
     @Override
     public Set<Long> getUserIds(Long couponId) {
-        return couponCacheStorage.getUserIds(couponId);
+        return CouponCacheRepository.getUserIds(couponId);
     }
 
     @Override
     public void setIssuedCoupon(Long couponId, Long userId) {
-        couponCacheStorage.setIssuedCoupon(couponId, userId);
+        CouponCacheRepository.setIssuedCoupon(couponId, userId);
     }
 }

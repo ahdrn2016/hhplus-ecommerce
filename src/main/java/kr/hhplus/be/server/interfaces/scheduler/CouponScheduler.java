@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.interfaces.scheduler;
 
-import kr.hhplus.be.server.domain.coupon.CouponService;
+import kr.hhplus.be.server.domain.coupon.CouponProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CouponScheduler {
 
-    private final CouponService couponService;
+    private final CouponProcessor couponProcessor;
 
     @Scheduled(fixedDelay = 5000)
     public void couponIssue() {
-        couponService.issue();
+        couponProcessor.processCouponIssue();
     }
 }

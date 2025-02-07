@@ -22,6 +22,9 @@ class CouponServiceConcurrencyTest {
     private CouponService couponService;
 
     @Autowired
+    private CouponProcessor couponProcessor;
+
+    @Autowired
     private IssuedCouponRepository issuedCouponRepository;
 
     @Test
@@ -41,7 +44,7 @@ class CouponServiceConcurrencyTest {
             long userId = i;
             executorService.submit(() -> {
                 try {
-                    couponService.couponIssue(new CouponCommand.Issue(userId, savedCoupon.getId()));
+                    couponService.requestCouponIssue(new CouponCommand.Issue(userId, savedCoupon.getId()));
                 } finally {
                     latch.countDown();
                 }
@@ -50,7 +53,7 @@ class CouponServiceConcurrencyTest {
         latch.await();
         executorService.shutdown();
 
-        couponService.issue(); // 쿠폰 발급 배치 실행
+        couponProcessor.processCouponIssue(); // 쿠폰 발급 배치 실행
 
         // then
         int issuedCoupon = issuedCouponRepository.countByCouponId(coupon.getId());

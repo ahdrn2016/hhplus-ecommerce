@@ -59,7 +59,8 @@ public class CouponService {
     }
 
     @DistributedLock(key = "'lock:coupon:' + #command.couponId()")
-    public boolean couponIssue(CouponCommand.Issue command) {
+    @Transactional
+    public boolean requestCouponIssue(CouponCommand.Issue command) {
         // 잔여 수량 확인
         int quantity = couponRepository.getCouponQuantity(command.couponId());
         if (quantity <= 0) throw new CustomException(ErrorCode.SOLD_OUT_COUPON);
@@ -75,21 +76,4 @@ public class CouponService {
         return addRequest;
     }
 
-    public void issue() {
-        Set<Long> couponIds = couponRepository.getCouponIds();
-        for (Long couponId : couponIds) {
-
-            Coupon coupon = couponRepository.findById(couponId);
-            Long issuedCouponCount = couponRepository.getIssuedCouponCount(couponId);
-            while (coupon.getQuantity() > issuedCouponCount) { // DB 쿠폰 수량과 redis 발급 이력 수량 비교
-
-                Set<Long> userIds = couponRepository.getUserIds(couponId);
-                if (userIds.isEmpty()) break; // 유저 없으면 종료
-                for(Long userId : userIds) {
-                    createIssuedCoupon(userId, coupon); // 쿠폰 이력 DB 저장
-                    couponRepository.setIssuedCoupon(couponId, userId); // redis 발급 이력에 저장
-                }
-            }
-        }
-    }
 }
