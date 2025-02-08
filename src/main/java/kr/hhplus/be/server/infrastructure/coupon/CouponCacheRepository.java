@@ -54,7 +54,7 @@ public class CouponCacheRepository {
     }
 
     public Set<Long> getUserIds(Long couponId, int batchSize) {
-        Set<ZSetOperations.TypedTuple<String>> userIds = redisTemplate.opsForZSet().popMin(COUPON_REQUEST_KEY + couponId, batchSize - 1);
+        Set<ZSetOperations.TypedTuple<String>> userIds = redisTemplate.opsForZSet().popMin(COUPON_REQUEST_KEY + couponId, batchSize);
 
         if(userIds == null || userIds.isEmpty()) {
             return Collections.emptySet();
