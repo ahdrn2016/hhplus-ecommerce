@@ -5,10 +5,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -32,10 +29,6 @@ public class CouponCacheRepository {
 
     public boolean getIssuedCoupon(Long couponId, Long userId) {
         return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(ISSUED_COUPON_KEY + couponId, String.valueOf(userId)));
-    }
-
-    public Long getIssuedCouponCount(Long couponId) {
-        return redisTemplate.opsForSet().size(ISSUED_COUPON_KEY + couponId);
     }
 
     public boolean addCouponRequest(Long couponId, Long userId) {
@@ -69,5 +62,13 @@ public class CouponCacheRepository {
 
     public void setIssuedCoupon(Long couponId, Long userId) {
         redisTemplate.opsForSet().add(ISSUED_COUPON_KEY + couponId, String.valueOf(userId));
+    }
+
+    public Long getIssuedCouponCount(Long couponId) {
+        return redisTemplate.opsForSet().size(ISSUED_COUPON_KEY + couponId);
+    }
+
+    public void deleteCouponIssue(Long couponId) {
+        redisTemplate.delete(Arrays.asList(COUPON_QUANTITY_KEY + couponId, COUPON_REQUEST_KEY + couponId,  ISSUED_COUPON_KEY + couponId));
     }
 }

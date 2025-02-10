@@ -30,4 +30,15 @@ public class CouponProcessor {
         }
     }
 
+    public void processDeleteCouponIssue() {
+        Set<Long> couponIds = couponRepository.getCouponIds();
+        for (Long couponId : couponIds) {
+            Coupon coupon = couponRepository.findById(couponId);
+            Long issuedCouponCount = couponRepository.getIssuedCouponCount(couponId);
+
+            if (coupon.getQuantity() == issuedCouponCount) {
+                couponRepository.deleteCouponIssue(couponId);
+            }
+        }
+    }
 }

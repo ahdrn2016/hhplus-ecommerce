@@ -10,8 +10,6 @@ public interface CouponRepository {
 
     boolean getIssuedCoupon(Long couponId, Long userId);
 
-    Long getIssuedCouponCount(Long couponId);
-
     boolean addCouponRequest(Long couponId, Long userId);
 
     void setCouponQuantity(Long couponId, int quantity);
@@ -25,4 +23,8 @@ public interface CouponRepository {
     Set<Long> getUserIds(Long couponId, int batchSize);
 
     void setIssuedCoupon(Long couponId, Long userId);
+
+    Long getIssuedCouponCount(Long couponId);
+
+    void deleteCouponIssue(Long couponId);
 }

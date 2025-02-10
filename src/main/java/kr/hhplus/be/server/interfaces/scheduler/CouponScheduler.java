@@ -15,4 +15,9 @@ public class CouponScheduler {
     public void couponIssue() {
         couponProcessor.processCouponIssue();
     }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteCouponIssue() {
+        couponProcessor.processDeleteCouponIssue();
+    }
 }
