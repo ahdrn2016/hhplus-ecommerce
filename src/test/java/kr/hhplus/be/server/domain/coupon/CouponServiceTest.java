@@ -89,7 +89,7 @@ class CouponServiceTest {
         // given
         CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
 
-        given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(null);
+        given(issuedCouponRepository.getIssuedCoupon(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(null);
 
         // when // then
         assertThatThrownBy(() -> couponService.use(command))
@@ -105,7 +105,7 @@ class CouponServiceTest {
         Coupon coupon = Coupon.create("5000원 할인 쿠폰", BigDecimal.valueOf(5000), validStartDate, validEndDate, 10);
         IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, BigDecimal.valueOf(5000),IssuedCouponStatus.UNUSED);
 
-        given(issuedCouponRepository.findByUserIdAndCouponIdAndStatus(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(issuedCoupon);
+        given(issuedCouponRepository.getIssuedCoupon(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(issuedCoupon);
 
         // when
         CouponInfo.IssuedCoupon result = couponService.use(command);

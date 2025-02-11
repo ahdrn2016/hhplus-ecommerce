@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,6 +18,12 @@ public class CouponService {
 
     private final IssuedCouponRepository issuedCouponRepository;
     private final CouponRepository couponRepository;
+
+    public Coupon createCoupon(Coupon coupon) {
+        Coupon savedCoupon = couponRepository.save(coupon);
+        couponRepository.setCouponQuantity(savedCoupon.getId(), savedCoupon.getQuantity());
+        return savedCoupon;
+    }
 
     public List<CouponInfo.IssuedCoupon> coupons(Long userId) {
         List<IssuedCoupon> issuedCoupons = issuedCouponRepository.findCouponsByUserId(userId);
@@ -38,7 +45,7 @@ public class CouponService {
 
     @Transactional
     public CouponInfo.IssuedCoupon use(CouponCommand.Issue command) {
-        IssuedCoupon issuedCoupon = issuedCouponRepository.findByUserIdAndCouponIdAndStatus(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);
+        IssuedCoupon issuedCoupon = issuedCouponRepository.getIssuedCoupon(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);
         if (issuedCoupon == null) {
             throw new CustomException(ErrorCode.NO_AVAILABLE_COUPON);
         }
@@ -49,6 +56,24 @@ public class CouponService {
     public IssuedCoupon createIssuedCoupon(Long userId, Coupon coupon) {
         IssuedCoupon issuedCoupon = IssuedCoupon.create(userId, coupon.getId(), coupon.getAmount(), IssuedCouponStatus.UNUSED);
         return issuedCouponRepository.save(issuedCoupon);
+    }
+
+    @DistributedLock(key = "'lock:coupon:' + #command.couponId()")
+    @Transactional
+    public boolean requestCouponIssue(CouponCommand.Issue command) {
+        // 잔여 수량 확인
+        int quantity = couponRepository.getCouponQuantity(command.couponId());
+        if (quantity <= 0) throw new CustomException(ErrorCode.SOLD_OUT_COUPON);
+
+        // 발급 이력 확인
+        boolean hasCoupon = couponRepository.getIssuedCoupon(command.couponId(), command.userId());
+        if (hasCoupon) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
+
+        // Sorted Sets 저장
+        boolean addRequest = couponRepository.addCouponRequest(command.couponId(), command.userId());
+        if (addRequest) couponRepository.decrementCouponQuantity(command.couponId());
+
+        return addRequest;
     }
 
 }

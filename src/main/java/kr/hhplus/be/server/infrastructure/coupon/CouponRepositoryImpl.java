@@ -5,11 +5,14 @@ import kr.hhplus.be.server.domain.coupon.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 @Repository
 @RequiredArgsConstructor
 public class CouponRepositoryImpl implements CouponRepository {
 
     private final CouponJpaRepository couponJpaRepository;
+    private final CouponCacheRepository couponCacheRepository;
 
     @Override
     public Coupon findById(Long couponId) {
@@ -19,5 +22,55 @@ public class CouponRepositoryImpl implements CouponRepository {
     @Override
     public Coupon save(Coupon coupon) {
         return couponJpaRepository.save(coupon);
+    }
+
+    @Override
+    public boolean getIssuedCoupon(Long couponId, Long userId) {
+        return couponCacheRepository.getIssuedCoupon(couponId, userId);
+    }
+
+    @Override
+    public boolean addCouponRequest(Long couponId, Long userId) {
+        return couponCacheRepository.addCouponRequest(couponId, userId);
+    }
+
+    @Override
+    public void setCouponQuantity(Long couponId, int quantity) {
+        couponCacheRepository.setCouponQuantity(couponId, quantity);
+    }
+
+    @Override
+    public int getCouponQuantity(Long couponId) {
+        return couponCacheRepository.getCouponQuantity(couponId);
+    }
+
+    @Override
+    public void decrementCouponQuantity(Long couponId) {
+        couponCacheRepository.decrementCouponQuantity(couponId);
+    }
+
+    @Override
+    public Set<Long> getCouponIds() {
+        return couponCacheRepository.getCouponIds();
+    }
+
+    @Override
+    public Set<Long> getUserIds(Long couponId, int batchSize) {
+        return couponCacheRepository.getUserIds(couponId, batchSize);
+    }
+
+    @Override
+    public void setIssuedCoupon(Long couponId, Long userId) {
+        couponCacheRepository.setIssuedCoupon(couponId, userId);
+    }
+
+    @Override
+    public Long getIssuedCouponCount(Long couponId) {
+        return couponCacheRepository.getIssuedCouponCount(couponId);
+    }
+
+    @Override
+    public void deleteCouponIssue(Long couponId) {
+        couponCacheRepository.deleteCouponIssue(couponId);
     }
 }

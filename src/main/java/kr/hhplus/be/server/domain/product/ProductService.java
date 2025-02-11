@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,9 @@ public class ProductService {
         return ProductInfo.of(products);
     }
 
+    @Cacheable("popular_products")
     public List<ProductInfo.PopularProduct> popularProducts() {
-        return productRepository.findPopularProducts();
+        return productRepository.getPopularProducts();
     }
 
     public List<ProductInfo.Product> orderProducts(List<ProductCommand.Product> command) {
