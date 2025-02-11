@@ -18,7 +18,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ProductInfo.PopularProduct> findPopularProducts() {
+    public List<ProductInfo.PopularProduct> getPopularProducts() {
         QOrderProduct orderProduct = QOrderProduct.orderProduct;
         QOrder order = QOrder.order;
         QProduct product = QProduct.product;

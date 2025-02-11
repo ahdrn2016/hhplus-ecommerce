@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
 
-    List<ProductInfo.PopularProduct> findPopularProducts();
+    List<ProductInfo.PopularProduct> getPopularProducts();
 
 }

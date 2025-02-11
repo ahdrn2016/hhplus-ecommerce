@@ -45,7 +45,7 @@ class ProductServiceIntegrationTest {
         }
 
         // then
-        verify(productRepository, times(1)).findPopularProducts();
+        verify(productRepository, times(1)).getPopularProducts();
     }
 
 }

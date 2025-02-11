@@ -9,7 +9,7 @@ public interface ProductRepository {
 
     Page<Product> findAllByStatus(ProductStatus status, PageRequest pageRequest);
 
-    List<ProductInfo.PopularProduct> findPopularProducts();
+    List<ProductInfo.PopularProduct> getPopularProducts();
 
     boolean existsByIdInAndStatus(List<Long> productIds, ProductStatus status);
 

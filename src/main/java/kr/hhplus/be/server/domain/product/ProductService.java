@@ -27,7 +27,7 @@ public class ProductService {
 
     @Cacheable("popular_products")
     public List<ProductInfo.PopularProduct> popularProducts() {
-        return productRepository.findPopularProducts();
+        return productRepository.getPopularProducts();
     }
 
     public List<ProductInfo.Product> orderProducts(List<ProductCommand.Product> command) {

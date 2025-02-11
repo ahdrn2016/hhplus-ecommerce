@@ -20,8 +20,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<ProductInfo.PopularProduct> findPopularProducts() {
-        return productJpaRepository.findPopularProducts();
+    public List<ProductInfo.PopularProduct> getPopularProducts() {
+        return productJpaRepository.getPopularProducts();
     }
 
     @Override
