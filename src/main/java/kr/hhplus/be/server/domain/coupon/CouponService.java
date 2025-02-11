@@ -45,7 +45,7 @@ public class CouponService {
 
     @Transactional
     public CouponInfo.IssuedCoupon use(CouponCommand.Issue command) {
-        IssuedCoupon issuedCoupon = issuedCouponRepository.findByUserIdAndCouponIdAndStatus(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);
+        IssuedCoupon issuedCoupon = issuedCouponRepository.getIssuedCoupon(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);
         if (issuedCoupon == null) {
             throw new CustomException(ErrorCode.NO_AVAILABLE_COUPON);
         }
