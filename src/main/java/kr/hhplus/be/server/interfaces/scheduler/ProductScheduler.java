@@ -16,8 +16,13 @@ public class ProductScheduler {
     private final ProductService productService;
 
     @Scheduled(cron = "0 0 0 * * *")
+    public void cachePopularProducts() {
+        updatePopularProducts();
+    }
+
     @CachePut("popular_products")
-    public List<ProductInfo.PopularProduct> cachePopularProducts() {
+    public List<ProductInfo.PopularProduct> updatePopularProducts() {
         return productService.popularProducts();
     }
+
 }
