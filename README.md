@@ -8,7 +8,7 @@
 - [ERD](docs/erd/ERD.md)
 - [API 명세서](docs/api/API.md)
 - [동시성 제어 방식 분석 보고서](docs/report/ConcurrencyControl.md)
-- [캐시 보고서](docs/report/Cache.md)
+- [캐시를 활용한 성능 개선 보고서](docs/report/Cache.md)
 
 ---
 
