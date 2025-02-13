@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.order;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final DataPlatformClient dataPlatformClient;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public OrderInfo.Order order(OrderCommand.Order command) {
@@ -28,10 +29,11 @@ public class OrderService {
         return OrderInfo.of(savedOrder);
     }
 
+    @Transactional
     public void complete(Long orderId) {
         Order order = orderRepository.findById(orderId);
         order.complete();
-        dataPlatformClient.sendData(order);
+        applicationEventPublisher.publishEvent(OrderEvent.of(order));
     }
 
 }

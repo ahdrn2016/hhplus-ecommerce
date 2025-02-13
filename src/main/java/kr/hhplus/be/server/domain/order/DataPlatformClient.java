@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataPlatformClient {
 
-    public boolean sendData(Order order) {
+    public boolean sendData(OrderEvent.Complete order) {
         return true;
     }
 
