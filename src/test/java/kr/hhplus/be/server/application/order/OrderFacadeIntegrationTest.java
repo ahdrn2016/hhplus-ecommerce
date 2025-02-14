@@ -48,7 +48,7 @@ class OrderFacadeIntegrationTest {
 
         OrderCriteria.Order criteria = OrderCriteria.Order.builder()
                 .userId(1L)
-                .couponId(1L)
+                .issuedCouponId(1L)
                 .products(products)
                 .build();
 
@@ -68,7 +68,7 @@ class OrderFacadeIntegrationTest {
 
         OrderCriteria.Order criteria = OrderCriteria.Order.builder()
                 .userId(1L)
-                .couponId(2L)
+                .issuedCouponId(2L)
                 .products(products)
                 .build();
 
@@ -88,7 +88,7 @@ class OrderFacadeIntegrationTest {
 
         OrderCriteria.Order criteria = OrderCriteria.Order.builder()
                 .userId(2L)
-                .couponId(2L)
+                .issuedCouponId(2L)
                 .products(products)
                 .build();
 
@@ -108,7 +108,7 @@ class OrderFacadeIntegrationTest {
 
         OrderCriteria.Order criteria = OrderCriteria.Order.builder()
                 .userId(2L)
-                .couponId(2L)
+                .issuedCouponId(3L)
                 .products(products)
                 .build();
 

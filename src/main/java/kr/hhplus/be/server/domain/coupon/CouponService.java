@@ -44,8 +44,8 @@ public class CouponService {
     }
 
     @Transactional
-    public CouponInfo.IssuedCoupon use(CouponCommand.Issue command) {
-        IssuedCoupon issuedCoupon = issuedCouponRepository.getIssuedCoupon(command.userId(), command.couponId(), IssuedCouponStatus.UNUSED);
+    public CouponInfo.IssuedCoupon use(Long issuedCouponId) {
+        IssuedCoupon issuedCoupon = issuedCouponRepository.findIssuedCoupon(issuedCouponId, IssuedCouponStatus.UNUSED);
         if (issuedCoupon == null) {
             throw new CustomException(ErrorCode.NO_AVAILABLE_COUPON);
         }
@@ -66,7 +66,7 @@ public class CouponService {
         if (quantity <= 0) throw new CustomException(ErrorCode.SOLD_OUT_COUPON);
 
         // 발급 이력 확인
-        boolean hasCoupon = couponRepository.getIssuedCoupon(command.couponId(), command.userId());
+        boolean hasCoupon = couponRepository.findIssuedCoupon(command.couponId(), command.userId());
         if (hasCoupon) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
 
         // Sorted Sets 저장

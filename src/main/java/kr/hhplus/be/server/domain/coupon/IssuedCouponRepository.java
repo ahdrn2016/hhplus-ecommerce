@@ -12,5 +12,5 @@ public interface IssuedCouponRepository {
 
     int countByCouponId(Long couponId);
 
-    IssuedCoupon getIssuedCoupon(Long userId, Long couponId, IssuedCouponStatus status);
+    IssuedCoupon findIssuedCoupon(Long issuedCouponId, IssuedCouponStatus status);
 }

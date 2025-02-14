@@ -31,8 +31,8 @@ public class OrderFacade {
     public OrderResult.Payment order(OrderCriteria.Order criteria) {
         List<ProductInfo.Product> products = productService.orderProducts(criteria.toProductCommand());
         OrderInfo.Order order = orderService.order(criteria.toOrderCommand(criteria, products));
-        CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.couponId())
-                                        .map(couponId -> couponService.use(criteria.toCouponCommand(criteria, couponId)))
+        CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.issuedCouponId())
+                                        .map(couponService::use)
                                         .orElse(null);
         PaymentInfo.Payment payment = paymentService.payment(order.orderId(), order.totalAmount(),
                 Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(BigDecimal.ZERO));

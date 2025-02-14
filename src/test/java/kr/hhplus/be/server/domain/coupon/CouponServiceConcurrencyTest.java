@@ -22,7 +22,7 @@ class CouponServiceConcurrencyTest {
     private CouponService couponService;
 
     @Autowired
-    private CouponProcessor couponProcessor;
+    private CouponWaitingQueue couponWaitingQueue;
 
     @Autowired
     private IssuedCouponRepository issuedCouponRepository;
@@ -54,7 +54,7 @@ class CouponServiceConcurrencyTest {
         executorService.shutdown();
 
         for (int i = 0; i < threads / 10; i++) {
-            couponProcessor.processCouponIssue(); // 쿠폰 발급 배치 실행
+            couponWaitingQueue.couponIssue(); // 쿠폰 발급 배치 실행
         }
 
         // then

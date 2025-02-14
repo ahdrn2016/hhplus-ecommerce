@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class CouponProcessor {
+public class CouponWaitingQueue {
 
     private static final int BATCH_SIZE = 10;
     private final CouponRepository couponRepository;
@@ -17,7 +17,7 @@ public class CouponProcessor {
 
 
     @Transactional
-    public void processCouponIssue() {
+    public void couponIssue() {
         Set<Long> couponIds = couponRepository.getCouponIds();
         for (Long couponId : couponIds) {
             Coupon coupon = couponRepository.findById(couponId);
@@ -30,11 +30,11 @@ public class CouponProcessor {
         }
     }
 
-    public void processDeleteCouponIssue() {
+    public void deleteCouponWaitingQueue() {
         Set<Long> couponIds = couponRepository.getCouponIds();
         for (Long couponId : couponIds) {
             Coupon coupon = couponRepository.findById(couponId);
-            Long issuedCouponCount = couponRepository.getIssuedCouponCount(couponId);
+            Long issuedCouponCount = couponRepository.findIssuedCouponCount(couponId);
 
             if (coupon.getQuantity() == issuedCouponCount) {
                 couponRepository.deleteCouponIssue(couponId);

@@ -87,12 +87,10 @@ class CouponServiceTest {
     @Test
     void 쿠폰_사용_요청_시_유저에게_사용_가능한_쿠폰이_없으면_예외가_발생한다() {
         // given
-        CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
-
-        given(issuedCouponRepository.getIssuedCoupon(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(null);
+        given(issuedCouponRepository.findIssuedCoupon(1L, IssuedCouponStatus.UNUSED)).willReturn(null);
 
         // when // then
-        assertThatThrownBy(() -> couponService.use(command))
+        assertThatThrownBy(() -> couponService.use(1L))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.NO_AVAILABLE_COUPON.getMessage());
     }
@@ -100,15 +98,13 @@ class CouponServiceTest {
     @Test
     void 쿠폰_사용_요청_시_유저에게_사용_가능한_쿠폰이_있으면_쿠폰을_사용한다() {
         // given
-        CouponCommand.Issue command = CouponCommand.Issue.builder().userId(1L).couponId(1L).build();
-
         Coupon coupon = Coupon.create("5000원 할인 쿠폰", BigDecimal.valueOf(5000), validStartDate, validEndDate, 10);
         IssuedCoupon issuedCoupon = IssuedCoupon.create(1L, 1L, BigDecimal.valueOf(5000),IssuedCouponStatus.UNUSED);
 
-        given(issuedCouponRepository.getIssuedCoupon(1L, 1L, IssuedCouponStatus.UNUSED)).willReturn(issuedCoupon);
+        given(issuedCouponRepository.findIssuedCoupon(1L, IssuedCouponStatus.UNUSED)).willReturn(issuedCoupon);
 
         // when
-        CouponInfo.IssuedCoupon result = couponService.use(command);
+        CouponInfo.IssuedCoupon result = couponService.use(1L);
 
         // then
         assertEquals("USED", result.status());

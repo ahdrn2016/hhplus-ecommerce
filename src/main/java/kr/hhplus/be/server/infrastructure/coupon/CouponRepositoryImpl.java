@@ -12,7 +12,7 @@ import java.util.Set;
 public class CouponRepositoryImpl implements CouponRepository {
 
     private final CouponJpaRepository couponJpaRepository;
-    private final CouponCacheRepository couponCacheRepository;
+    private final CouponWaitingQueueRepository couponWaitingQueueRepository;
 
     @Override
     public Coupon findById(Long couponId) {
@@ -25,52 +25,52 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public boolean getIssuedCoupon(Long couponId, Long userId) {
-        return couponCacheRepository.getIssuedCoupon(couponId, userId);
+    public boolean findIssuedCoupon(Long couponId, Long userId) {
+        return couponWaitingQueueRepository.findIssuedCoupon(couponId, userId);
     }
 
     @Override
     public boolean addCouponRequest(Long couponId, Long userId) {
-        return couponCacheRepository.addCouponRequest(couponId, userId);
+        return couponWaitingQueueRepository.addCouponRequest(couponId, userId);
     }
 
     @Override
     public void setCouponQuantity(Long couponId, int quantity) {
-        couponCacheRepository.setCouponQuantity(couponId, quantity);
+        couponWaitingQueueRepository.setCouponQuantity(couponId, quantity);
     }
 
     @Override
     public int getCouponQuantity(Long couponId) {
-        return couponCacheRepository.getCouponQuantity(couponId);
+        return couponWaitingQueueRepository.getCouponQuantity(couponId);
     }
 
     @Override
     public void decrementCouponQuantity(Long couponId) {
-        couponCacheRepository.decrementCouponQuantity(couponId);
+        couponWaitingQueueRepository.decrementCouponQuantity(couponId);
     }
 
     @Override
     public Set<Long> getCouponIds() {
-        return couponCacheRepository.getCouponIds();
+        return couponWaitingQueueRepository.getCouponIds();
     }
 
     @Override
     public Set<Long> getUserIds(Long couponId, int batchSize) {
-        return couponCacheRepository.getUserIds(couponId, batchSize);
+        return couponWaitingQueueRepository.getUserIds(couponId, batchSize);
     }
 
     @Override
     public void setIssuedCoupon(Long couponId, Long userId) {
-        couponCacheRepository.setIssuedCoupon(couponId, userId);
+        couponWaitingQueueRepository.setIssuedCoupon(couponId, userId);
     }
 
     @Override
-    public Long getIssuedCouponCount(Long couponId) {
-        return couponCacheRepository.getIssuedCouponCount(couponId);
+    public Long findIssuedCouponCount(Long couponId) {
+        return couponWaitingQueueRepository.findIssuedCouponCount(couponId);
     }
 
     @Override
     public void deleteCouponIssue(Long couponId) {
-        couponCacheRepository.deleteCouponIssue(couponId);
+        couponWaitingQueueRepository.deleteCouponIssue(couponId);
     }
 }

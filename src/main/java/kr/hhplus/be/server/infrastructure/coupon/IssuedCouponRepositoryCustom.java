@@ -5,6 +5,6 @@ import kr.hhplus.be.server.domain.coupon.IssuedCouponStatus;
 
 public interface IssuedCouponRepositoryCustom {
 
-    IssuedCoupon getIssuedCoupon(Long userId, Long couponId, IssuedCouponStatus status);
+    IssuedCoupon findIssuedCoupon(Long issuedCouponId, IssuedCouponStatus status);
 
 }

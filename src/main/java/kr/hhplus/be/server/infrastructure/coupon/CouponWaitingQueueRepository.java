@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class CouponCacheRepository {
+public class CouponWaitingQueueRepository {
 
     private final StringRedisTemplate redisTemplate;
     private static final String COUPON_QUANTITY_KEY = "coupon_quantity:";
@@ -27,7 +27,7 @@ public class CouponCacheRepository {
                 .orElse(0);
     }
 
-    public boolean getIssuedCoupon(Long couponId, Long userId) {
+    public boolean findIssuedCoupon(Long couponId, Long userId) {
         return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(ISSUED_COUPON_KEY + couponId, String.valueOf(userId)));
     }
 
@@ -64,7 +64,7 @@ public class CouponCacheRepository {
         redisTemplate.opsForSet().add(ISSUED_COUPON_KEY + couponId, String.valueOf(userId));
     }
 
-    public Long getIssuedCouponCount(Long couponId) {
+    public Long findIssuedCouponCount(Long couponId) {
         return redisTemplate.opsForSet().size(ISSUED_COUPON_KEY + couponId);
     }
 
