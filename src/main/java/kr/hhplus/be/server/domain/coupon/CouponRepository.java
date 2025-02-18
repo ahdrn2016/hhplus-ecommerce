@@ -8,7 +8,7 @@ public interface CouponRepository {
 
     Coupon save(Coupon coupon);
 
-    boolean getIssuedCoupon(Long couponId, Long userId);
+    boolean findIssuedCoupon(Long couponId, Long userId);
 
     boolean addCouponRequest(Long couponId, Long userId);
 
@@ -24,7 +24,7 @@ public interface CouponRepository {
 
     void setIssuedCoupon(Long couponId, Long userId);
 
-    Long getIssuedCouponCount(Long couponId);
+    Long findIssuedCouponCount(Long couponId);
 
     void deleteCouponIssue(Long couponId);
 }

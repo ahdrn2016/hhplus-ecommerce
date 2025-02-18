@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.interfaces.scheduler;
 
-import kr.hhplus.be.server.domain.coupon.CouponProcessor;
+import kr.hhplus.be.server.domain.coupon.CouponWaitingQueue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CouponScheduler {
 
-    private final CouponProcessor couponProcessor;
+    private final CouponWaitingQueue couponWaitingQueue;
 
     @Scheduled(fixedDelay = 5000)
     public void couponIssue() {
-        couponProcessor.processCouponIssue();
+        couponWaitingQueue.couponIssue();
     }
 
     @Scheduled(cron = "0 0 0 * * *")
-    public void deleteCouponIssue() {
-        couponProcessor.processDeleteCouponIssue();
+    public void deleteCouponWaitingQueue() {
+        couponWaitingQueue.deleteCouponWaitingQueue();
     }
 }

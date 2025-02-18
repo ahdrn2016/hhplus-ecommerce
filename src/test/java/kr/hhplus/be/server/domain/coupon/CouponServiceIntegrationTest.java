@@ -17,7 +17,7 @@ class CouponServiceIntegrationTest {
     private CouponService couponService;
 
     @Autowired
-    private CouponProcessor couponProcessor;
+    private CouponWaitingQueue couponWaitingQueue;
 
     @Autowired
     private IssuedCouponRepository issuedCouponRepository;
@@ -32,7 +32,7 @@ class CouponServiceIntegrationTest {
 
         // when
         couponService.requestCouponIssue(new CouponCommand.Issue(1L, savedCoupon.getId()));
-        couponProcessor.processCouponIssue();
+        couponWaitingQueue.couponIssue();
 
         // then
         assertThat(issuedCouponRepository.findCouponByUserIdAndCouponId(1L, savedCoupon.getId()))

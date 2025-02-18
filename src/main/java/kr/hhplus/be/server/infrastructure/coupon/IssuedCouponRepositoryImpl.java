@@ -35,8 +35,8 @@ public class IssuedCouponRepositoryImpl implements IssuedCouponRepository {
     }
 
     @Override
-    public IssuedCoupon getIssuedCoupon(Long userId, Long couponId, IssuedCouponStatus status) {
-        return issuedCouponJpaRepository.getIssuedCoupon(userId, couponId, status);
+    public IssuedCoupon findIssuedCoupon(Long issuedCouponId, IssuedCouponStatus status) {
+        return issuedCouponJpaRepository.findIssuedCoupon(issuedCouponId, status);
     }
 
 }

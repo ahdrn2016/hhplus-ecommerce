@@ -17,7 +17,7 @@ public class OrderCriteria {
 
     public record Order(
             Long userId,
-            Long couponId,
+            Long issuedCouponId,
             List<OrderProduct> products
     ) {
         @Builder
@@ -54,13 +54,6 @@ public class OrderCriteria {
             return PointCommand.Use.builder()
                     .userId(criteria.userId)
                     .amount(payment.paymentAmount())
-                    .build();
-        }
-
-        public CouponCommand.Issue toCouponCommand(Order criteria, Long couponId) {
-            return CouponCommand.Issue.builder()
-                    .userId(criteria.userId)
-                    .couponId(couponId)
                     .build();
         }
     }

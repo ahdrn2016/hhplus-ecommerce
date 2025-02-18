@@ -1,14 +1,11 @@
 package kr.hhplus.be.server.application.order;
 
-import kr.hhplus.be.server.domain.coupon.CouponCommand;
 import kr.hhplus.be.server.domain.coupon.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.CouponService;
-import kr.hhplus.be.server.domain.order.OrderCommand;
 import kr.hhplus.be.server.domain.order.OrderInfo;
 import kr.hhplus.be.server.domain.order.OrderService;
 import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentService;
-import kr.hhplus.be.server.domain.point.PointCommand;
 import kr.hhplus.be.server.domain.point.PointService;
 import kr.hhplus.be.server.domain.product.ProductInfo;
 import kr.hhplus.be.server.domain.product.ProductService;
@@ -34,8 +31,8 @@ public class OrderFacade {
     public OrderResult.Payment order(OrderCriteria.Order criteria) {
         List<ProductInfo.Product> products = productService.orderProducts(criteria.toProductCommand());
         OrderInfo.Order order = orderService.order(criteria.toOrderCommand(criteria, products));
-        CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.couponId())
-                                        .map(couponId -> couponService.use(criteria.toCouponCommand(criteria, couponId)))
+        CouponInfo.IssuedCoupon coupon = Optional.ofNullable(criteria.issuedCouponId())
+                                        .map(couponService::use)
                                         .orElse(null);
         PaymentInfo.Payment payment = paymentService.payment(order.orderId(), order.totalAmount(),
                 Optional.ofNullable(coupon).map(CouponInfo.IssuedCoupon::amount).orElse(BigDecimal.ZERO));

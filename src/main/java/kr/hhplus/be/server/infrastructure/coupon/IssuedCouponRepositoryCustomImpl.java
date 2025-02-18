@@ -15,7 +15,7 @@ public class IssuedCouponRepositoryCustomImpl implements IssuedCouponRepositoryC
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public IssuedCoupon getIssuedCoupon(Long userId, Long couponId, IssuedCouponStatus status) {
+    public IssuedCoupon findIssuedCoupon(Long issuedCouponId, IssuedCouponStatus status) {
         QIssuedCoupon issuedCoupon = QIssuedCoupon.issuedCoupon;
         QCoupon coupon = QCoupon.coupon;
 
@@ -23,8 +23,7 @@ public class IssuedCouponRepositoryCustomImpl implements IssuedCouponRepositoryC
                 .selectFrom(issuedCoupon)
                 .join(coupon).on(issuedCoupon.couponId.eq(coupon.id))
                 .where(
-                    issuedCoupon.userId.eq(userId),
-                    issuedCoupon.couponId.eq(couponId),
+                    issuedCoupon.id.eq(issuedCouponId),
                     issuedCoupon.status.eq(status),
                     coupon.validStartDate.loe(LocalDateTime.now()),
                     coupon.validEndDate.goe(LocalDateTime.now())

@@ -9,13 +9,13 @@ public class OrderRequest {
 
     public record Order(
             Long userId,
-            Long couponId,
+            Long issuedCouponId,
             List<OrderProduct> products
     ) {
         public OrderCriteria.Order toCriteria() {
             return OrderCriteria.Order.builder()
                     .userId(userId)
-                    .couponId(couponId)
+                    .issuedCouponId(issuedCouponId)
                     .products(products.stream()
                             .map(OrderProduct::toCriteria)
                             .toList())
