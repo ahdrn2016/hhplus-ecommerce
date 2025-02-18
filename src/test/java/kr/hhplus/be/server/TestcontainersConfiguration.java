@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @Configuration
@@ -14,6 +15,7 @@ class TestcontainersConfiguration {
 
 	public static final MySQLContainer<?> MYSQL_CONTAINER;
 	public static final GenericContainer<?> REDIS_CONTAINER;
+	public static final ConfluentKafkaContainer KAFKA_CONTAINER;
 
 	static {
 		MYSQL_CONTAINER = new MySQLContainer<>(DockerImageName.parse("mysql:8.0"))
@@ -32,6 +34,11 @@ class TestcontainersConfiguration {
 
 		System.setProperty("spring.data.redis.host", REDIS_CONTAINER.getHost());
 		System.setProperty("spring.data.redis.port", REDIS_CONTAINER.getMappedPort(6379).toString());
+
+		KAFKA_CONTAINER = new ConfluentKafkaContainer("confluentinc/cp-kafka:latest");
+		KAFKA_CONTAINER.start();
+
+		System.setProperty("spring.kafka.bootstrap-servers", KAFKA_CONTAINER.getBootstrapServers());
 	}
 
 	@PreDestroy
@@ -42,6 +49,10 @@ class TestcontainersConfiguration {
 
 		if (REDIS_CONTAINER.isRunning()) {
 			REDIS_CONTAINER.stop();
+		}
+
+		if (KAFKA_CONTAINER.isRunning()) {
+			KAFKA_CONTAINER.stop();
 		}
 	}
 }
