@@ -6,19 +6,19 @@ import java.math.BigDecimal;
 
 public class OrderEvent {
 
-    public static Complete of(Order order) {
-        return Complete.builder()
+    public static Completed of(Order order) {
+        return Completed.builder()
                 .orderId(order.getId())
                 .totalAmount(order.getTotalAmount())
                 .build();
     }
 
-    public record Complete(
+    public record Completed(
             Long orderId,
             BigDecimal totalAmount
     ) {
         @Builder
-        public Complete {}
+        public Completed {}
     }
 
 }

@@ -1,7 +1,7 @@
-package kr.hhplus.be.server.interfaces.api.order;
+package kr.hhplus.be.server.interfaces.event;
 
-import kr.hhplus.be.server.domain.order.DataPlatformClient;
-import kr.hhplus.be.server.domain.order.OrderEvent;
+import kr.hhplus.be.server.domain.outbox.OutboxService;
+import kr.hhplus.be.server.infrastructure.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -15,16 +15,17 @@ import static org.springframework.transaction.event.TransactionPhase.*;
 @RequiredArgsConstructor
 public class OrderEventListener {
 
-    private final DataPlatformClient dataPlatformClient;
+    private final OutboxService orderOutboxService;
+    private final KafkaProducer kafkaProducer;
+
+    @TransactionalEventListener(phase = BEFORE_COMMIT)
+    public void create() {
+    }
 
     @Async
     @TransactionalEventListener(phase = AFTER_COMMIT)
-    public void handleOrderEvent(OrderEvent.Complete order) {
-        try {
-            dataPlatformClient.sendData(order);
-        } catch (Exception e) {
-            log.error("send to data platform failed: {}", e.getMessage());
-        }
+    public void handle() {
     }
+
 
 }
