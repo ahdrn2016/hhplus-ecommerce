@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.interfaces.event;
 
+import kr.hhplus.be.server.domain.order.OrderEvent;
+import kr.hhplus.be.server.domain.outbox.Outbox;
 import kr.hhplus.be.server.domain.outbox.OutboxService;
 import kr.hhplus.be.server.infrastructure.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
@@ -15,17 +17,18 @@ import static org.springframework.transaction.event.TransactionPhase.*;
 @RequiredArgsConstructor
 public class OrderEventListener {
 
-    private final OutboxService orderOutboxService;
+    private final OutboxService outboxService;
     private final KafkaProducer kafkaProducer;
 
     @TransactionalEventListener(phase = BEFORE_COMMIT)
-    public void create() {
+    public void create(OrderEvent.Completed event) {
+        outboxService.create(Outbox.of("order", event));
     }
 
     @Async
     @TransactionalEventListener(phase = AFTER_COMMIT)
-    public void handle() {
+    public void handle(OrderEvent.Completed event) {
+        kafkaProducer.send("order-completed.v1", event);
     }
-
 
 }
