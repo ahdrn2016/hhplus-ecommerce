@@ -5,9 +5,11 @@ import kr.hhplus.be.server.domain.BaseEntity;
 import kr.hhplus.be.server.domain.order.OrderEvent;
 import kr.hhplus.be.server.support.util.JsonConverter;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@Getter
 @Entity
 public class Outbox extends BaseEntity {
 
@@ -29,12 +31,17 @@ public class Outbox extends BaseEntity {
         this.payload = payload;
     }
 
-    public static Outbox of(String eventType, OrderEvent.Completed event) {
+    public static Outbox of(String eventType, OrderEvent.Completed order) {
         return Outbox.builder()
-                .messageId(event.messageId())
+                .messageId(order.messageId())
                 .eventType(eventType)
                 .status(OutboxStatus.INIT)
-                .payload(JsonConverter.toJson(event))
+                .payload(JsonConverter.toJson(order))
                 .build();
     }
+
+    public void success() {
+        this.status = OutboxStatus.SUCCESS;
+    }
+
 }

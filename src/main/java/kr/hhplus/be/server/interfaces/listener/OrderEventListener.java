@@ -1,34 +1,38 @@
-package kr.hhplus.be.server.interfaces.event;
+package kr.hhplus.be.server.interfaces.listener;
 
 import kr.hhplus.be.server.domain.order.OrderEvent;
+import kr.hhplus.be.server.domain.order.OrderMessageProducer;
 import kr.hhplus.be.server.domain.outbox.Outbox;
 import kr.hhplus.be.server.domain.outbox.OutboxService;
-import kr.hhplus.be.server.infrastructure.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import static org.springframework.transaction.event.TransactionPhase.*;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class OrderEventListener {
 
+    private static final String ORDER_EVENT = "order";
+
+    @Value("${commerce-api.order.topic-name}")
+    private String orderTopic;
+
     private final OutboxService outboxService;
-    private final KafkaProducer kafkaProducer;
+    private final OrderMessageProducer orderMessageProducer;
 
     @TransactionalEventListener(phase = BEFORE_COMMIT)
-    public void create(OrderEvent.Completed event) {
-        outboxService.create(Outbox.of("order", event));
+    public void createOutbox(OrderEvent.Completed order) {
+        outboxService.createOutbox(Outbox.of(ORDER_EVENT, order));
     }
 
     @Async
     @TransactionalEventListener(phase = AFTER_COMMIT)
-    public void handle(OrderEvent.Completed event) {
-        kafkaProducer.send("order-completed.v1", event);
+    public void sendOrderData(OrderEvent.Completed order) {
+        orderMessageProducer.send(orderTopic, order);
     }
 
 }

@@ -14,4 +14,11 @@ public class JsonConverter {
         }
     }
 
+    public static <T> T fromJson(String json, Class<T> type) {
+        try {
+            return objectMapper.readValue(json, type);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
