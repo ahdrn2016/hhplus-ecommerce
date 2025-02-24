@@ -32,15 +32,20 @@ public class CouponService {
 
     @DistributedLock(key = "'lock:coupon:' + #command.couponId()")
     @Transactional
-    public CouponInfo.IssuedCoupon issue(CouponCommand.Issue command) {
-        IssuedCoupon issuedCoupon = issuedCouponRepository.findCouponByUserIdAndCouponId(command.userId(), command.couponId());
-        if (issuedCoupon != null) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
+    public boolean issue(CouponCommand.Issue command) {
+        // 잔여 수량 확인
+        int quantity = couponRepository.getCouponQuantity(command.couponId());
+        if (quantity <= 0) throw new CustomException(ErrorCode.SOLD_OUT_COUPON);
 
-        Coupon coupon = couponRepository.findById(command.couponId());
-        coupon.issue();
+        // 발급 이력 확인
+        boolean hasCoupon = couponRepository.findIssuedCoupon(command.couponId(), command.userId());
+        if (hasCoupon) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
 
-        IssuedCoupon savedIssuedCoupon = createIssuedCoupon(command.userId(), coupon);
-        return CouponInfo.of(savedIssuedCoupon);
+        // Sorted Sets 저장
+        boolean addRequest = couponRepository.addCouponRequest(command.couponId(), command.userId());
+        if (addRequest) couponRepository.decrementCouponQuantity(command.couponId());
+
+        return addRequest;
     }
 
     @Transactional
@@ -56,24 +61,6 @@ public class CouponService {
     public IssuedCoupon createIssuedCoupon(Long userId, Coupon coupon) {
         IssuedCoupon issuedCoupon = IssuedCoupon.create(userId, coupon.getId(), coupon.getAmount(), IssuedCouponStatus.UNUSED);
         return issuedCouponRepository.save(issuedCoupon);
-    }
-
-    @DistributedLock(key = "'lock:coupon:' + #command.couponId()")
-    @Transactional
-    public boolean requestCouponIssue(CouponCommand.Issue command) {
-        // 잔여 수량 확인
-        int quantity = couponRepository.getCouponQuantity(command.couponId());
-        if (quantity <= 0) throw new CustomException(ErrorCode.SOLD_OUT_COUPON);
-
-        // 발급 이력 확인
-        boolean hasCoupon = couponRepository.findIssuedCoupon(command.couponId(), command.userId());
-        if (hasCoupon) throw new CustomException(ErrorCode.DUPLICATE_ISSUE_COUPON);
-
-        // Sorted Sets 저장
-        boolean addRequest = couponRepository.addCouponRequest(command.couponId(), command.userId());
-        if (addRequest) couponRepository.decrementCouponQuantity(command.couponId());
-
-        return addRequest;
     }
 
 }

@@ -31,7 +31,7 @@ class CouponServiceIntegrationTest {
         Coupon savedCoupon = couponService.createCoupon(coupon);
 
         // when
-        couponService.requestCouponIssue(new CouponCommand.Issue(1L, savedCoupon.getId()));
+        couponService.issue(new CouponCommand.Issue(1L, savedCoupon.getId()));
         couponWaitingQueue.couponIssue();
 
         // then
