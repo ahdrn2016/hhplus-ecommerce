@@ -16,9 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CouponServiceConcurrencyTest {
 
     @Autowired
-    private CouponRepository couponRepository;
-
-    @Autowired
     private CouponService couponService;
 
     @Autowired
@@ -44,7 +41,7 @@ class CouponServiceConcurrencyTest {
             long userId = i;
             executorService.submit(() -> {
                 try {
-                    couponService.requestCouponIssue(new CouponCommand.Issue(userId, savedCoupon.getId()));
+                    couponService.issue(new CouponCommand.Issue(userId, savedCoupon.getId()));
                 } finally {
                     latch.countDown();
                 }
