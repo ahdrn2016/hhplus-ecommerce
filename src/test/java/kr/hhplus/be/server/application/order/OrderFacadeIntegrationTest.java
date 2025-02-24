@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -121,18 +123,15 @@ class OrderFacadeIntegrationTest {
         // when
         OrderResult.Payment payment = orderFacade.order(criteria);
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         // then
         assertEquals(0, BigDecimal.valueOf(30000).compareTo(payment.paymentAmount()));
-        assertThat(outboxRepository.findAllByStatus(OutboxStatus.SUCCESS))
-                .hasSize(1)
-                .extracting("eventType")
-                .contains("order");
+
+        await().atMost(Duration.ofSeconds(2)).untilAsserted(() ->
+                assertThat(outboxRepository.findAllByStatus(OutboxStatus.SUCCESS))
+                        .hasSize(1)
+                        .extracting("eventType")
+                        .contains("order")
+        );
     }
 
 }

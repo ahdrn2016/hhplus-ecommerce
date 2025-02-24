@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.interfaces.consumer;
 
-import kr.hhplus.be.server.domain.order.DataPlatformClient;
 import kr.hhplus.be.server.domain.order.OrderEvent;
 import kr.hhplus.be.server.domain.outbox.OutboxService;
 import lombok.RequiredArgsConstructor;
@@ -12,16 +11,10 @@ import org.springframework.stereotype.Component;
 public class OrderMessageConsumer {
 
     private final OutboxService outboxService;
-    private final DataPlatformClient dataPlatformClient;
 
-    @KafkaListener(topics = "${commerce-api.order.topic-name}", groupId = "order-outbox")
+    @KafkaListener(topics = "${commerce-api.order.topic-name}", groupId = "order")
     public void updateOutbox(OrderEvent.Completed order) {
         outboxService.updateOutbox(order.messageId());
-    }
-
-    @KafkaListener(topics = "${commerce-api.order.topic-name}", groupId = "data-platform")
-    public void sendData(OrderEvent.Completed order) {
-        dataPlatformClient.sendData(order);
     }
 
 }

@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 @SpringBootTest
 class OutboxIntegrationTest {
@@ -34,16 +36,12 @@ class OutboxIntegrationTest {
         // when
         outboxScheduler.republish();
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         // then
-        assertThat(outboxRepository.findById(order.messageId()))
-                .extracting("eventType", "status")
-                .contains("order", OutboxStatus.SUCCESS);
+        await().atMost(Duration.ofSeconds(2)).untilAsserted(() ->
+                assertThat(outboxRepository.findById(order.messageId()))
+                        .extracting("eventType", "status")
+                        .contains("order", OutboxStatus.SUCCESS)
+        );
     }
 
 }
