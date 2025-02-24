@@ -27,11 +27,11 @@ public class CouponController {
 
     @PostMapping(path = "/issue", produces = { "application/json" }, consumes = { "application/json" })
     @Operation(summary = "쿠폰 발급", description = "쿠폰을 발급합니다.", tags = { "coupon" })
-    public ResponseEntity<CouponResponse.IssuedCoupon> issue(
+    public ResponseEntity<Boolean> issue(
             @RequestBody CouponRequest.Issue request
     ) {
-        CouponInfo.IssuedCoupon response = couponService.issue(request.toCommand());
-        return ResponseEntity.ok(CouponResponse.of(response));
+        boolean response = couponService.issue(request.toCommand());
+        return ResponseEntity.ok(response);
     }
 
 }
