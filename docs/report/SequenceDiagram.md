@@ -2,6 +2,14 @@
 
 ---
 
+## 목차
+1. [잔액 충전](#1-잔액-충전)
+2. [상품 조회](#2-상품-조회)
+3. [쿠폰 발급](#3-쿠폰-발급)
+4. [주문](#4-주문)
+5. [인기 상품 조회](#5-인기-상품-조회)
+
+---
 ## 1. 잔액 충전
 ```mermaid
 sequenceDiagram
@@ -21,6 +29,7 @@ sequenceDiagram
     
 ```
 
+---
 ## 2. 상품 조회
 ```mermaid
 sequenceDiagram
@@ -33,6 +42,7 @@ sequenceDiagram
     
 ```
 
+---
 ## 3. 쿠폰 발급
 ```mermaid
 sequenceDiagram
@@ -54,6 +64,7 @@ sequenceDiagram
     end
 ```
 
+---
 ## 4. 주문
 ```mermaid
 sequenceDiagram
@@ -98,6 +109,7 @@ sequenceDiagram
     
 ```
 
+---
 ## 5. 인기 상품 조회
 ```mermaid
 sequenceDiagram

@@ -48,6 +48,28 @@ spring:
     redis:
       host: localhost
       port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    properties:
+      auto:
+        offset.reset: latest
+        create.topics.enable: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        enable-auto-commit: false
+        spring:
+          json:
+            trusted:
+              packages: "*"
+commerce-api:
+  order:
+    topic-name: outside.v1.order.completed
+
 redisson:
   config: |
     singleServerConfig:

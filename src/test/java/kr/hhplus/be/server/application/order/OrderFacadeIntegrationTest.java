@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.application.order;
 
+import kr.hhplus.be.server.domain.outbox.OutboxRepository;
+import kr.hhplus.be.server.domain.outbox.OutboxStatus;
 import kr.hhplus.be.server.support.exception.CustomException;
 import kr.hhplus.be.server.support.exception.ErrorCode;
 import org.junit.jupiter.api.Test;
@@ -7,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -17,6 +22,9 @@ class OrderFacadeIntegrationTest {
 
     @Autowired
     private OrderFacade orderFacade;
+
+    @Autowired
+    private OutboxRepository outboxRepository;
 
     @Test
     void 주문_시_판매_중단_상품이_있으면_예외가_발생한다() {
@@ -117,6 +125,13 @@ class OrderFacadeIntegrationTest {
 
         // then
         assertEquals(0, BigDecimal.valueOf(30000).compareTo(payment.paymentAmount()));
+
+        await().atMost(Duration.ofSeconds(2)).untilAsserted(() ->
+                assertThat(outboxRepository.findAllByStatus(OutboxStatus.SUCCESS))
+                        .hasSize(1)
+                        .extracting("eventType")
+                        .contains("order")
+        );
     }
 
 }

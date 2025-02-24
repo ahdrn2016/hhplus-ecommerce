@@ -40,6 +40,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.redisson:redisson-spring-boot-starter:3.22.0")
 
+	// kafka
+	implementation("org.springframework.kafka:spring-kafka")
+
 	// Swagger UI
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 
@@ -52,6 +55,7 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testImplementation ("com.redis.testcontainers:testcontainers-redis:1.6.4")
+	testImplementation("org.testcontainers:kafka")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	// Lombok

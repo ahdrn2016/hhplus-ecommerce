@@ -3,22 +3,25 @@ package kr.hhplus.be.server.domain.order;
 import lombok.Builder;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class OrderEvent {
 
-    public static Complete of(Order order) {
-        return Complete.builder()
+    public static Completed of(Order order) {
+        return Completed.builder()
                 .orderId(order.getId())
                 .totalAmount(order.getTotalAmount())
+                .messageId(UUID.randomUUID().toString())
                 .build();
     }
 
-    public record Complete(
+    public record Completed(
             Long orderId,
-            BigDecimal totalAmount
+            BigDecimal totalAmount,
+            String messageId
     ) {
         @Builder
-        public Complete {}
+        public Completed {}
     }
 
 }
