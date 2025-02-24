@@ -2,7 +2,7 @@
 
 ---
 
-![ERD](ERD.png)
+![ERD](../images/ERD.png)
 
 
 - **user** : 사용자 정보를 저장합니다.
