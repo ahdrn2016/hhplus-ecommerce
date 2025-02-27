@@ -11,6 +11,7 @@
 - [캐시를 활용한 성능 개선 보고서](docs/report/Cache.md)
 - [인덱스(index)를 이용한 쿼리 성능 개선 보고서](https://velog.io/@rowen/SQL-%EC%9D%B8%EB%8D%B1%EC%8A%A4index%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%BF%BC%EB%A6%AC-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0)
 - [MSA 형태로 서비스 분리에 따른 트랜잭션 처리 한계 보고서](docs/report/MSA.md)
+- [서비스 부하 테스트 분석 보고서](docs/report/LoadTesting.md)
 
 ---
 
