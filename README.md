@@ -1,28 +1,47 @@
-## 프로젝트
+# 이커머스 서비스
 
 ---
+## API 요구사항
+1️⃣ 잔액 충전 / 조회 API
 
-### 프로젝트 분석 및 설계
-- [마일스톤](https://github.com/users/ahdrn2016/projects/1)
+- 결제에 사용될 금액을 충전하는 API 를 작성합니다.
+- 사용자 식별자 및 충전할 금액을 받아 잔액을 충전합니다.
+- 사용자 식별자를 통해 해당 사용자의 잔액을 조회합니다.
+
+2️⃣ 상품 조회 API
+
+- 상품 정보 ( ID, 이름, 가격, 잔여 수량 ) 을 조회하는 API 를 작성합니다.
+- 조회 시점의 상품별 잔여 수량이 정확하면 좋습니다.
+
+3️⃣ 선착순 쿠폰 발급 API
+
+- 선착순 쿠폰 발급 API 및 보유 쿠폰 목록 조회 API 를 작성합니다.
+- 사용자는 선착순으로 할인 쿠폰을 발급 받을 수 있습니다.
+- 주문 시에 유효한 할인 쿠폰을 함께 제출하면, 전체 주문금액에 대해 할인 혜택을 부여받을 수 있습니다.
+
+4️⃣ 주문 / 결제 API
+
+- 사용자 식별자와 (상품 ID, 수량) 목록을 입력받아 주문하고 결제를 수행하는 API 를 작성합니다.
+- 결제는 기 충전된 잔액을 기반으로 수행하며 성공할 시 잔액을 차감해야 합니다.
+- 데이터 분석을 위해 결제 성공 시에 실시간으로 주문 정보를 데이터 플랫폼에 전송해야 합니다. ( 데이터 플랫폼이 어플리케이션 `외부` 라는 가정만 지켜 작업해 주시면 됩니다. )
+
+5️⃣ 상위 상품 조회 API
+- 최근 3일간 가장 많이 팔린 상위 5개 상품 정보를 제공하는 API 를 작성합니다.
+- 통계 정보를 다루기 위한 기술적 고민을 충분히 해보도록 합니다.
+
+<aside>
+💡 <b>KEY POINT</b>
+</aside>
+
+- 동시에 여러 주문이 들어올 경우, 유저의 보유 잔고에 대한 처리가 정확해야 합니다.
+- 각 상품의 재고 관리가 정상적으로 이루어져 잘못된 주문이 발생하지 않도록 해야 합니다.
+---
+## 프로젝트 분석 및 설계
 - [시퀀스 다이어그램](docs/report/SequenceDiagram.md)
 - [ERD](docs/report/ERD.md)
-- [API 명세서](docs/report/API.md)
+- [Swagger API 명세서](docs/report/API.md)
 - [동시성 제어 방식 분석 보고서](docs/report/ConcurrencyControl.md)
 - [캐시를 활용한 성능 개선 보고서](docs/report/Cache.md)
 - [인덱스(index)를 이용한 쿼리 성능 개선 보고서](https://velog.io/@rowen/SQL-%EC%9D%B8%EB%8D%B1%EC%8A%A4index%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%BF%BC%EB%A6%AC-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0)
 - [MSA 형태로 서비스 분리에 따른 트랜잭션 처리 한계 보고서](docs/report/MSA.md)
 - [서비스 부하 테스트 분석 보고서](docs/report/LoadTesting.md)
-
----
-
-## Getting Started
-
-### Prerequisites
-
-#### Running Docker Containers
-
-`local` profile 로 실행하기 위하여 인프라가 설정되어 있는 Docker 컨테이너를 실행해주셔야 합니다.
-
-```bash
-docker-compose up -d
-```
